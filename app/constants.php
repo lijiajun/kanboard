@@ -8,7 +8,7 @@ define('APP_DIR', __DIR__);
 
 // Data directory location
 defined('DATA_DIR') or define('DATA_DIR', ROOT_DIR.DIRECTORY_SEPARATOR.'data');
-
+define('APP_VERSION', '1.0.46');
 // Files directory (attachments)
 defined('FILES_DIR') or define('FILES_DIR', DATA_DIR.DIRECTORY_SEPARATOR.'files');
 
