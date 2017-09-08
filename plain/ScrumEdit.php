@@ -292,7 +292,7 @@ function post_kanban() {
 
 	$owner = "";
 	
-	if (in_array($sprintTask->taskProgress, $cfgCoderProgArr) {
+	if (in_array($sprintTask->taskProgress, $cfgCoderProgArr)) {
 		$owner = $sprintTask->taskCoder;
 	} else {
 		if ($sprintTask->taskTester != "") {
