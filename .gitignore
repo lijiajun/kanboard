@@ -23,3 +23,4 @@ data/cache
 !docker/kanboard/config.php
 node_modules
 bower_components
+/plain/ScrumCfg.php
