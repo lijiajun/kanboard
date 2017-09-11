@@ -71,9 +71,20 @@ function calc_sprintId() {
 	global $appNextSprintTaskId;
 	
 	$tmToday=strtotime(date("Y-m-d"));
-	$tmBaseDay=strtotime("2017-07-31");
-	$passDays=($tmToday-$tmBaseDay)/3600/24;
+	$iToday=intval(date("Ymd"));
+	
+	$tmBaseDay = strtotime("2017-07-31");
+	$tmBaseDay2nd = strtotime("2017-09-01");
+	$iBaseDay2nd = 20170901;
+	
+	$passDays=($tmBaseDay2nd-$tmBaseDay)/3600/24;
 	$sprintId = floor($passDays/14)+1;
+	
+	$sprintId += ((floor($iToday/10000) - floor($iBaseDay2nd/10000)) * 12 + floor($iToday/100 - $iBaseDay2nd/100))*2;
+	
+	if(($iToday % 100)>15) {
+		$sprintId += 1;
+	}
 	
 	if($sprintId != $appSprintId) {
 		$appSprintId = $sprintId;
@@ -576,6 +587,7 @@ function post_kanban() {
 		
 		theForm.action = theFormAction;
 		theForm.elements["method"].value="submitTask";
+		document.getElementByIdx("editSubmitBtn").disabled = true;
 		theForm.submit();
 	}
 	
@@ -700,8 +712,10 @@ $sprintTask->taskId = get_fixLenStr(calc_taskId(false));
 						<!--input type="checkbox" name="" value="true"/>PB-->
 					</td>
 					<td align="center" width="150">
+						<!--
 						<label><input type="checkbox" name="onceAgainFlag" value="true" <?=($sprintTask->onceAgainFlag=="true"?"checked":"")?>/>重录任务</label>
 						<label><input type="checkbox" name="nextSprintFlag" value="true" <?=($sprintTask->nextSprintFlag=="true"?"checked":"")?>/>下个迭代</label>
+						-->
 					</td>
 				  <td align="right" width="70">
 						<b>录入</b>:<a href="#" onclick="javascript:inputUserName(); return false;"><b id="operUserNameObj"><?php echo "{$sprintTask->operUser}" ?></b>
@@ -835,7 +849,7 @@ $sprintTask->taskId = get_fixLenStr(calc_taskId(false));
 	<table border="0" align="center">
 		<tr>
 			<td align="center" valign="bottom" colspan="3" height="50">
-				<input type="button" value="提交" onclick="doSubmit();"/>
+				<input type="button" value="提交" id="editSubmitBtn" onclick="doSubmit();"/>
 				&nbsp;&nbsp;
 				<input type="button" value="清空" onclick="doReset();"/>
 			</td>
