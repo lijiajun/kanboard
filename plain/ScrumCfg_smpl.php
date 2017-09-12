@@ -3,7 +3,7 @@ $_todayDate = date("Ymd", time());
 
 $cfgQueueRelPath = "queue";
 $cfgKanbanUrl = "http://kanban.xxx.com";
-$cfgFullDayXlsFile = "{$_todayDate}_task_user_all.xls";
+$cfgSprintXlsFile = "task_user_all_#SprintId.xls";
 
 $cfgJsonRpcCallUserName = "jsonrpc";
 $cfgJsonRpcCallPassword = "78b7bb385eedec22067c996efftfdcc67551a2cc5d5df0a4541d122ab5e7";
