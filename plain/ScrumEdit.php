@@ -1,10 +1,11 @@
 <?php
 header( 'Content-Type:text/html;charset=utf-8 ');
+//echo "{$_SERVER['DOCUMENT_ROOT']},{$_SERVER['PHP_SELF']}";
 
 require 'ScrumApp.php';
 require 'ScrumCfg.php';
 
-//echo "{$_SERVER['DOCUMENT_ROOT']},{$_SERVER['PHP_SELF']}";
+init_sprintXlsName();
 $scriptAbsPath = get_scriptAbsPath();
 $saveFilePath = "{$scriptAbsPath}/{$cfgQueueRelPath}";
 
@@ -179,6 +180,12 @@ function get_scriptAbsPath() {
 	return $absPath;
 }
 
+function init_sprintXlsName() {
+	global $cfgSprintXlsFile;
+	
+	$cfgSprintXlsFile = str_replace("#SprintId", get_fixLenStr(calc_sprintId()), $cfgSprintXlsFile);
+}
+
 function gen_arrSelectOption($optionArr) {
 	$strHtml = "";
 	foreach($optionArr as $key => $val) {
@@ -225,7 +232,7 @@ function save_taskInfo() {
 	global $cfgProvIdArr;
 	global $cfgProgIdArr;
 	
-	global $cfgFullDayXlsFile;
+	global $cfgSprintXlsFile;
 	
 	$sprintTask->sprintId 	= get_fixLenStr(calc_sprintId());
 	$sprintTask->taskId 	= get_fixLenStr(calc_taskId(true));
@@ -273,8 +280,8 @@ function save_taskInfo() {
 	
 	//$saveContent = iconv('UTF-8', 'GBK', $saveContent);
 
-	file_put_contents("{$saveFilePath}/ins/{$saveFileName}", $saveContent);
-	file_put_contents("{$saveFilePath}/{$cfgFullDayXlsFile}",	$saveContent, FILE_APPEND);
+	file_put_contents("{$saveFilePath}/ins/{$saveFileName}", 	$saveContent);
+	file_put_contents("{$saveFilePath}/{$cfgSprintXlsFile}",	$saveContent, FILE_APPEND);
 }
 
 /*
@@ -423,6 +430,7 @@ function post_kanban() {
 			initSelect(theForm.elements["progress"]);
 			initSelect(theForm.elements["coder"]);
 			initSelect(theForm.elements["tester"]);
+			initCoderTester();
 		}
 	}
 	
@@ -519,10 +527,33 @@ function post_kanban() {
 		if(userName != null) {
 			theForm.elements["userName"].value = userName;
 			document.all("operUserNameObj").innerHTML = userName;
+			initCoderTester();
 			return true;
 		}
 		
 		return false;
+	}
+	
+	function initCoderTester() {
+		var coderInputObj = theForm.elements["coder"];
+		var testerInputObj = theForm.elements["tester"];
+		
+		coderInputObj.options[0].selected = true;
+		testerInputObj.options[0].selected = true;
+		
+		for(var i=0; i<coderInputObj.options.length; i++) {
+			if(theForm.elements["userName"].value == coderInputObj.options[i].value) {
+				coderInputObj.options[i].selected = true;
+				return true;
+			}
+		}
+		
+		for(var i=0; i<testerInputObj.options.length; i++) {
+			if(theForm.elements["userName"].value == testerInputObj.options[i].value) {
+				testerInputObj.options[i].selected = true;
+				return true;
+			}
+		}
 	}
 	
 	function doReset() {
@@ -587,7 +618,7 @@ function post_kanban() {
 		
 		theForm.action = theFormAction;
 		theForm.elements["method"].value="submitTask";
-		document.getElementByIdx("editSubmitBtn").disabled = true;
+		document.all("editSubmitBtn").disabled = true;
 		theForm.submit();
 	}
 	
@@ -760,7 +791,7 @@ $sprintTask->taskId = get_fixLenStr(calc_taskId(false));
 			</td>
 		</tr>
 		<tr>
-			<th colspan="2" align="center">估算大小:</th>
+			<th colspan="2" align="center">估算点数:</th>
 			<td>
 				<select name="size" style="width:125px;" _value="<?=$sprintTask->taskSize?>"
 						onkeydown="onKeyDown()" onkeyup="jumpInput('name', 'progress');">
@@ -864,7 +895,7 @@ $sprintTask->taskId = get_fixLenStr(calc_taskId(false));
 		<br/>
 		任务单信息随时可提交，记录到后台 
 		<br/>
-		<a href="<?="./{$cfgQueueRelPath}/{$cfgFullDayXlsFile}"?>">点击下载当天所有任务单</a>
+		<a href="<?="./{$cfgQueueRelPath}/{$cfgSprintXlsFile}"?>">点击下载当前迭代所有任务单</a>
 		<br/>
 		</small>
 		<br/>
