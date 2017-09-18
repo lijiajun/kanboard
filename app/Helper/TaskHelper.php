@@ -157,12 +157,12 @@ class TaskHelper extends Base
         return $html;
     }
 
-    public function renderScoreField(array $values, array $errors = array(), array $attributes = array())
+    public function renderScoreField(array $score, array $values, array $errors = array(), array $attributes = array())
     {
         $attributes = array_merge(array('tabindex="13"'), $attributes);
 
-        $html = $this->helper->form->label(t('Complexity'), 'score');
-        $html .= $this->helper->form->number('score', $values, $errors, $attributes);
+        $html = $this->helper->form->label(t('Complexity'), 'score') ;
+        $html .= $this->helper->form->select('score', $score, $values, $errors, $attributes);
 
         return $html;
     }

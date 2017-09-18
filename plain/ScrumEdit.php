@@ -327,6 +327,7 @@ function post_kanban() {
 	$titleName =  $sprintTask->taskName. '(№' . $sprintTask->sprintId . $sprintTask->taskId . ')';
 	//$titleName = iconv('GBK', 'UTF-8', $titleName);
 	$data = $data . '"title": "' . $titleName . '", ';
+	$data = $data . '"score": ' . $sprintTask->taskSize . ', ';
 	$data = $data . '"column_id": ' . $cfgProgIdArr[$sprintTask->taskProgress] . ', ';
 	$data = $data . '"swimlane_id": ' . $cfgProvIdArr[$sprintTask->taskProv] .'}}';
 	
@@ -682,7 +683,7 @@ if($pageMethod == "submitTask") {
 							<td width="5">&nbsp;</td>
 						</tr>
 						<tr>
-						  <td align="left" colspan="2" width="80">预估点数:<?php echo "$sprintTask->taskSize" ?></td>
+						  <td align="left" colspan="2" width="100">预估点数:<?php echo $cfgTaskSizeArr["$sprintTask->taskSize"] ?></td>
 						  <td align="center" width="80"><b>&nbsp;</b></td>
 						  <td align="right" colspan="2" width="80">录_入_人:<?php echo "$sprintTask->operUser" ?></td>
 						</tr>
@@ -768,7 +769,7 @@ $sprintTask->taskId = get_fixLenStr(calc_taskId(false));
 			</td>
 		</tr>
 		<tr>
-			<th colspan="2" align="center" title="<?=join_taskTypeHint($cfgTypeInfoArr)?>">任务分类:</th>
+			<th colspan="2" align="center" title="<?=join_taskTypeHint($cfgTypeInfoArr)?>">任务分类:<img src="./image/help.jpg"></th>
 			<td>
 				<select name="type" style="width:125px" _value="<?=$sprintTask->taskType?>"
 						onkeydown="onKeyDown()" onkeyup="jumpInput('prov', 'name');">
