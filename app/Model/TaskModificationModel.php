@@ -12,6 +12,7 @@ use Kanboard\Core\Base;
  */
 class TaskModificationModel extends Base
 {
+    const TABLE_TRANS = 'transitions';
     /**
      * Update a task
      *
@@ -48,6 +49,16 @@ class TaskModificationModel extends Base
 
         if ($this->isAssigneeChanged($task, $changes)) {
             $events[] = TaskModel::EVENT_ASSIGNEE_CHANGE;
+            $time = time();
+            $this->db->table(self::TABLE_TRANS)->insert(array(
+                'user_id' => $task['owner_id'],
+                'project_id' => $task['project_id'],
+                'task_id' => $task['id'],
+                'src_column_id' => $task['column_id'],
+                'dst_column_id' => $task['column_id'],
+                'date' => $time,
+                'time_spent' => $time - $task['date_moved']
+            ));
         } elseif ($this->isModified($task, $changes)) {
             $events[] = TaskModel::EVENT_CREATE_UPDATE;
             $events[] = TaskModel::EVENT_UPDATE;
