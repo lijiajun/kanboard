@@ -30,7 +30,7 @@
             <?= $this->task->renderStartDateField($values, $errors) ?>
             <?= $this->task->renderTimeEstimatedField($values, $errors) ?>
             <?= $this->task->renderTimeSpentField($values, $errors) ?>
-            <?= $this->task->renderScoreField($values, $errors) ?>
+            <?= $this->task->renderScoreField($score_list, $values, $errors) ?>
             <?= $this->task->renderReferenceField($values, $errors) ?>
 
             <?= $this->hook->render('template:task:form:third-column', array('values' => $values, 'errors' => $errors)) ?>

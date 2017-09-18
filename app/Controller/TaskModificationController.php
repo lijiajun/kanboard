@@ -55,6 +55,16 @@ class TaskModificationController extends BaseController
 
         $values = $this->hook->merge('controller:task:form:default', $values, array('default_values' => $values));
         $values = $this->hook->merge('controller:task-modification:form:default', $values, array('default_values' => $values));
+        $score_list = array("0" => "Zero(0 points)",
+                            "5" => "XXS(1/2 points)",
+                            "10" => "XS(1 points)",
+                            "20" => "S(2 points)",
+                            "30" => "M(3 points)",
+                            "50" => "L(5 points)",
+                            "80" => "XL(8 points)",
+                            "130" => "XXL(13 points)",
+                            "200" => "XXXL(20 points)",
+                            "400" => "XXXXL(40 points)");
 
         $params = array(
             'project' => $project,
@@ -64,6 +74,7 @@ class TaskModificationController extends BaseController
             'tags' => $this->taskTagModel->getList($task['id']),
             'users_list' => $this->projectUserRoleModel->getAssignableUsersList($task['project_id']),
             'categories_list' => $this->categoryModel->getList($task['project_id']),
+            'score_list' => $score_list,
         );
 
         $this->renderTemplate($task, $params);
