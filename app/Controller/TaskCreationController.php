@@ -29,16 +29,16 @@ class TaskCreationController extends BaseController
         $values = $this->hook->merge('controller:task:form:default', $values, array('default_values' => $values));
         $values = $this->hook->merge('controller:task-creation:form:default', $values, array('default_values' => $values));
 
-        $score_list = array("0" => "Zero(0 points)",
-            "5" => "XXS(1/2 points)",
-            "10" => "XS(1 points)",
-            "20" => "S(2 points)",
-            "30" => "M(3 points)",
-            "50" => "L(5 points)",
-            "80" => "XL(8 points)",
-            "130" => "XXL(13 points)",
-            "200" => "XXXL(20 points)",
-            "400" => "XXXXL(40 points)");
+        $score_list = array("0" => "Zero(0点)",
+                            "5" => "XXS(½点)",
+                            "10" => "XS(1点)",
+                            "20" => "S(2点)",
+                            "30" => "M(3点)",
+                            "50" => "L(5点)",
+                            "80" => "XL(8点)",
+                            "130" => "XXL(13点)",
+                            "200" => "XXXL(20点)",
+                            "400" => "XXXXL(40点)");
 
         $this->response->html($this->template->render('task_creation/show', array(
             'project' => $project,
