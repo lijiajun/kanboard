@@ -50,6 +50,18 @@ $cfgProvIdArr = array(
 		"总部"   => 8
 );
 
+$cfgTaskSizeArr2 = array(
+    "Zero(0点)" =>	    "Zero (0点)",
+    "XXS(½点)"	  =>	"XXS  (½点)",
+    "XS(1点)"    =>	"XS  (1点)",
+    "S(2点)"     =>	"S  (2点)",
+    "M(3点)"     =>	"M  (3点)",
+    "L(5点)"     =>	"L  (5点)",
+    "XL(8点)"    =>	"XL  (8点)",
+    "XXL(13点)"  =>	"XXL  (13点)",
+    "XXXL(20点)" =>	"XXXL  (20点)"
+);
+
 $cfgTaskSizeArr = array(
 		"0"	    =>	"Zero (0点)",
 		"5"	    =>	"XXS  (½点)",
