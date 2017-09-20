@@ -46,7 +46,7 @@
         <?php if ($task['score']): ?>
             <span class="task-score" title="<?= t('Complexity') ?>">
                 <i class="fa fa-trophy"></i>
-                <?= $this->text->e($task['score']) ?>
+                <?= $this->text->e($task['score']/10) ?>
             </span>
         <?php endif ?>
 

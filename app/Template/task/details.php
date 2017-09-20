@@ -27,7 +27,7 @@
                     <?php endif ?>
                     <?php if (! empty($task['score'])): ?>
                         <li>
-                            <strong><?= t('Complexity:') ?></strong> <span><?= $this->text->e($task['score']) ?></span>
+                            <strong><?= t('Complexity:') ?></strong> <span><?= $this->text->e($task['score']/10) ?></span>
                         </li>
                     <?php endif ?>
                     <?php if ($project['is_public']): ?>

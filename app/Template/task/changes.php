@@ -25,7 +25,12 @@
                     echo '<li>'.t('New color: %s', $this->text->in($task['color_id'], $this->task->getColors())).'</li>';
                     break;
                 case 'score':
-                    echo '<li>'.t('New complexity: %d', $task['score']).'</li>';
+                    if (0 <  $task['score'] && $task['score'] < 10 ) {
+                        echo '<li>'.t('New complexity: %.1f', $task['score']/10).'</li>';
+                    }
+                    else {
+                        echo '<li>'.t('New complexity: %d', $task['score']/10).'</li>';
+                    }
                     break;
                 case 'date_due':
                     if (empty($task['date_due'])) {
@@ -58,6 +63,9 @@
                     if ($value != 0) {
                         echo '<li>'.t('Start date changed: ').$this->dt->datetime($task['date_started']).'</li>';
                     }
+                    break;
+                case 'priority':
+                    echo '<li>'.t('New priority: %d', $task['priority']).'</li>';
                     break;
                 default:
                     echo '<li>'.t('The field "%s" have been updated', $field).'</li>';

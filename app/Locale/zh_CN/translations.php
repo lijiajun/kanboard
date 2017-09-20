@@ -639,6 +639,8 @@ return array(
     'New category: %s' => '新分类：%s',
     'New color: %s' => '新颜色：%s',
     'New complexity: %d' => '新的复杂度：%d',
+    'New complexity: %.1f' => '新的复杂度：%.1f',
+    'New priority: %d'=> '新的优先级：%d',
     'The due date have been removed' => '超期时间已被移除',
     'There is no description anymore' => '当前没有描述',
     'Recurrence settings have been modified' => '循环周期已被更改',
