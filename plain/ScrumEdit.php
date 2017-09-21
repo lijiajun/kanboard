@@ -298,6 +298,8 @@ function post_kanban() {
 	global $cfgProvIdArr;
 	global $cfgProgIdArr;
 	global $cfgTypeInfoArr;
+	global $cfgCoderIdArr;
+	global $cfgTesterIdArr;
 	global $cfgKanbanUrl;
 	global $cfgCoderProgArr;
 	global $cfgJsonRpcCallUserName;
@@ -306,10 +308,18 @@ function post_kanban() {
 	$url = "{$cfgKanbanUrl}/jsonrpc.php";
 	$userpwd = "{$cfgJsonRpcCallUserName}:{$cfgJsonRpcCallPassword}";
 	
-	$data = '{"jsonrpc": "2.0", "method": "createTask", "params": {"creator_id": 10, "project_id": 1, ';
+	$data = '{"jsonrpc": "2.0", "method": "createTask", "params": {"project_id": 1, ';
+
+	if ($cfgCoderIdArr[$sprintTask->operUser]) {
+        $operUser = $cfgCoderIdArr[$sprintTask->operUser];
+    } elseif ($cfgTesterIdArr[$sprintTask->operUser]) {
+        $operUser = $cfgTesterIdArr[$sprintTask->operUser];
+    } else {
+        $operUser = 10;
+    }
+	$data = $data . '"creator_id": ' . $operUser . ', ';
 
 	$owner = "";
-	
 	if (in_array($sprintTask->taskProgress, $cfgCoderProgArr)) {
 		$owner = $sprintTask->taskCoder;
 	} else {
@@ -322,7 +332,7 @@ function post_kanban() {
 	if ($owner != "") {
 		$data = $data . '"owner_id": ' . calc_userId($owner) . ', ';
 	}
-	
+
 	$data = $data . '"category_id": ' . $cfgTypeInfoArr[$sprintTask->taskType][0]. ', ';
 	$titleName =  $sprintTask->taskName. '(№' . $sprintTask->sprintId . $sprintTask->taskId . ')';
 	//$titleName = iconv('GBK', 'UTF-8', $titleName);
