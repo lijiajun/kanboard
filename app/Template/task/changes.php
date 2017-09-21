@@ -26,10 +26,10 @@
                     break;
                 case 'score':
                     if (0 <  $task['score'] && $task['score'] < 10 ) {
-                        echo '<li>'.t('New complexity: %.1f', $task['score']/10).'</li>';
+                        echo '<li>'.t('New complexity: 1/2 points').'</li>';
                     }
                     else {
-                        echo '<li>'.t('New complexity: %d', $task['score']/10).'</li>';
+                        echo '<li>'.t('New complexity: %d points', $task['score']/10).'</li>';
                     }
                     break;
                 case 'date_due':
