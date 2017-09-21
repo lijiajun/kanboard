@@ -10,14 +10,16 @@
         </span>
     <?php endif ?>
 
-    <span class="task-score" title="<?= t('Complexity') ?>">
-            <i class="fa fa-trophy"></i>
-        <?php if (0 < $task['score'] && $task['score'] < 10): ?>
-            <strong><?= t('1/2') ?></strong>
-        <?php else: ?>
-            <?= $this->text->e($task['score']/10) ?>
-        <?php endif ?>
-    </span>
+    <?php if ($task['score']): ?>
+        <span class="task-score" title="<?= t('Complexity') ?>">
+                <i class="fa fa-trophy"></i>
+            <?php if ($task['score'] < 10): ?>
+                <strong><?= t('1/2') ?></strong>
+            <?php else: ?>
+                <?= $this->text->e($task['score']/10) ?>
+            <?php endif ?>
+        </span>
+    <?php endif ?>
 
     <?php if (! empty($task['time_estimated']) || ! empty($task['time_spent'])): ?>
         <span class="task-time-estimated" title="<?= t('Time spent and estimated') ?>">
