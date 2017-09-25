@@ -310,9 +310,9 @@ function post_kanban() {
 	
 	$data = '{"jsonrpc": "2.0", "method": "createTask", "params": {"project_id": 1, ';
 
-	if ($cfgCoderIdArr[$sprintTask->operUser]) {
+	if (isset($cfgCoderIdArr[$sprintTask->operUser])) {
         $operUser = $cfgCoderIdArr[$sprintTask->operUser];
-    } elseif ($cfgTesterIdArr[$sprintTask->operUser]) {
+    } elseif (isset($cfgTesterIdArr[$sprintTask->operUser])) {
         $operUser = $cfgTesterIdArr[$sprintTask->operUser];
     } else {
         $operUser = 10;
