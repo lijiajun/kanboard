@@ -55,7 +55,7 @@ class ProjectUserRoleModel extends Base
         $groupProjects = $this->projectGroupRoleModel->getProjectsByUser($user_id, $status);
         $projects = $userProjects + $groupProjects;
 
-        asort($projects);
+        //asort($projects);
 
         return $projects;
     }

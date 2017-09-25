@@ -36,6 +36,7 @@ class ProjectGroupRoleModel extends Base
             ->join(GroupMemberModel::TABLE, 'group_id', 'group_id', self::TABLE)
             ->eq(GroupMemberModel::TABLE.'.user_id', $user_id)
             ->in(ProjectModel::TABLE.'.is_active', $status)
+            ->asc(ProjectModel::TABLE.'.id')
             ->getAll(ProjectModel::TABLE.'.id', ProjectModel::TABLE.'.name');
     }
 
@@ -115,7 +116,7 @@ class ProjectGroupRoleModel extends Base
             ->eq(self::TABLE.'.project_id', $project_id)
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->in(self::TABLE.'.role', array(Role::PROJECT_MANAGER, Role::PROJECT_MEMBER))
-            ->asc(UserModel::TABLE.'.username')
+            ->asc(UserModel::TABLE.'.id')
             ->findAll();
     }
 

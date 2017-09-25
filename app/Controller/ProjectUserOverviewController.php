@@ -41,7 +41,7 @@ class ProjectUserOverviewController extends BaseController
         $paginator = $this->paginator
             ->setUrl('ProjectUserOverviewController', $action, array('user_id' => $user_id))
             ->setMax(30)
-            ->setOrder('projects.name')
+            ->setOrder('projects.id')
             ->setQuery($query)
             ->calculate();
 

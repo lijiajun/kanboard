@@ -96,7 +96,7 @@ class CategoryModel extends Base
     {
         $listing = $this->db->hashtable(self::TABLE)
             ->eq('project_id', $project_id)
-            ->asc('name')
+            ->asc('id')
             ->getAll('id', 'name');
 
         $prepend = array();
