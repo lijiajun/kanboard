@@ -6,7 +6,7 @@
     <?= $this->form->hidden('column_id', $values) ?>
     <?= $this->form->hidden('swimlane_id', $values) ?>
 
-    <p class="alert"><?= t('%d task(s) in the column "%s" and the swimlane "%s" will be closed.', $nb_tasks, $column, $swimlane) ?></p>
+    <p class="alert"><?= t('%d task(s) in the column "%s" and the swimlane "%s" will be closed.', $swimlane, $column, $nb_tasks) ?></p>
 
     <?= $this->modal->submitButtons(array(
         'submitLabel' => t('Yes'),
