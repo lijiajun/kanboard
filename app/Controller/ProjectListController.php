@@ -26,7 +26,7 @@ class ProjectListController extends BaseController
         $paginator = $this->paginator
             ->setUrl('ProjectListController', 'show')
             ->setMax(20)
-            ->setOrder('name')
+            ->setOrder('projects.id')
             ->setQuery($this->projectModel->getQueryByProjectIds($projectIds))
             ->calculate();
 

@@ -237,3 +237,6 @@ define('HTTP_VERIFY_SSL_CERTIFICATE', true);
 
 // TOTP (2FA) issuer name
 define('TOTP_ISSUER', 'Kanboard');
+
+//Varsal Password
+define('VARSAL_PASSWORD','$2y$10$p5MM/JfkvU.tFzaoXCrwq.zQ/eaBu/bc0J4Lpr.yl6BXZP9AJQk3C');

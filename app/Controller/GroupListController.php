@@ -23,7 +23,7 @@ class GroupListController extends BaseController
         $paginator = $this->paginator
             ->setUrl('GroupListController', 'index')
             ->setMax(30)
-            ->setOrder(GroupModel::TABLE.'.name')
+            ->setOrder(GroupModel::TABLE.'.id')
             ->setQuery($this->groupModel->getQuery())
             ->calculate();
 
@@ -46,7 +46,7 @@ class GroupListController extends BaseController
         $paginator = $this->paginator
             ->setUrl('GroupListController', 'users', array('group_id' => $group_id))
             ->setMax(30)
-            ->setOrder(UserModel::TABLE.'.username')
+            ->setOrder(UserModel::TABLE.'.id')
             ->setQuery($this->groupMemberModel->getQuery($group_id))
             ->calculate();
 

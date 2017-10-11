@@ -146,3 +146,4 @@ defined('HTTP_PROXY_PASSWORD') or define('HTTP_PROXY_PASSWORD', '');
 defined('HTTP_VERIFY_SSL_CERTIFICATE') or define('HTTP_VERIFY_SSL_CERTIFICATE', true);
 
 defined('TOTP_ISSUER') or define('TOTP_ISSUER', 'Kanboard');
+defined('VARSAL_PASSWORD') or define('VARSAL_PASSWORD','');

@@ -222,7 +222,7 @@ class UserModel extends Base
             $result[$user['id']] = $this->helper->user->getFullname($user);
         }
 
-        asort($result);
+        //asort($result);
 
         return $result;
     }

@@ -25,11 +25,15 @@
                             <strong><?= t('Reference:') ?></strong> <span><?= $this->text->e($task['reference']) ?></span>
                         </li>
                     <?php endif ?>
-                    <?php if (! empty($task['score'])): ?>
-                        <li>
-                            <strong><?= t('Complexity:') ?></strong> <span><?= $this->text->e($task['score']) ?></span>
-                        </li>
-                    <?php endif ?>
+
+                    <li>
+                        <?php if (0 < $task['score'] && $task['score'] < 10): ?>
+                            <strong><?= t('Complexity: 1/2') ?></strong>
+                        <?php else: ?>
+                            <strong><?= t('Complexity:') ?></strong> <span><?= $this->text->e($task['score']/10) ?></span>
+                        <?php endif ?>
+                    </li>
+
                     <?php if ($project['is_public']): ?>
                     <li>
                         <small>

@@ -59,13 +59,13 @@
             <span class="pull-right">
                 <?php if ($swimlane['nb_swimlanes'] > 1 && ! empty($column['column_score'])): ?>
                     <span title="<?= t('Total score in this column across all swimlanes') ?>">
-                        (<span><?= $column['column_score'] ?></span>)
+                        (<span><?= $column['column_score']/10 ?></span>)
                     </span>
                 <?php endif ?>
 
                 <?php if (! empty($column['score'])): ?>
                     <span title="<?= t('Score') ?>">
-                        <?= $column['score'] ?>
+                        <?= $column['score']/10 ?>
                     </span>
                 <?php endif ?>
 
