@@ -1,5 +1,11 @@
 <div class="form-login">
 
+    <?php if (LOGIN_TITLE != ""): ?>
+        <br/>
+        <p style="font-size:38px"><?php echo LOGIN_TITLE ?></p>
+        <br/>
+    <?php endif ?>
+
     <?= $this->hook->render('template:auth:login-form:before') ?>
 
     <?php if (isset($errors['login'])): ?>
@@ -24,17 +30,18 @@
         <?php endif ?>
 
         <?php if (REMEMBER_ME_AUTH): ?>
-            <?= $this->form->checkbox('remember_me', t('Remember Me'), 1, true) ?><br>
+                <?= $this->form->checkbox('remember_me', t('Remember Me'), 1, true) ?>
         <?php endif ?>
 
-        <div class="form-actions">
-            <button type="submit" class="btn btn-blue"><?= t('Sign in') ?></button>
-        </div>
         <?php if ($this->app->config('password_reset') == 1): ?>
             <div class="reset-password">
                 <?= $this->url->link(t('Forgot password?'), 'PasswordResetController', 'create') ?>
             </div>
         <?php endif ?>
+
+        <div class="form-actions" style="width:115px;margin:0 auto">
+            <button type="submit" class="btn btn-blue"><?= t('Sign in') ?></button>
+        </div>
     </form>
     <?php endif ?>
 
