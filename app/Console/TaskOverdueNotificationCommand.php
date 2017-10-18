@@ -18,8 +18,8 @@ class TaskOverdueNotificationCommand extends BaseCommand
             ->setName('notification:overdue-tasks')
             ->setDescription('Send notifications for overdue tasks')
             ->addOption('show', null, InputOption::VALUE_NONE, 'Show sent overdue tasks')
-            ->addOption('group', null, InputOption::VALUE_NONE, 'Group all overdue tasks for one user (from all projects) in one email')
-            ->addOption('manager', null, InputOption::VALUE_NONE, 'Send all overdue tasks to project manager(s) in one email')
+            ->addOption('group', 'g', InputOption::VALUE_NONE, 'Group all overdue tasks for one user (from all projects) in one email')
+            ->addOption('manager', 'm', InputOption::VALUE_NONE, 'Send all overdue tasks to project manager(s) in one email')
             ->addOption('project', 'p', InputOption::VALUE_REQUIRED, 'Send notifications only the given project')
         ;
     }

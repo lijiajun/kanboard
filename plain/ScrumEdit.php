@@ -320,18 +320,25 @@ function post_kanban() {
 	$data = $data . '"creator_id": ' . $operUser . ', ';
 
 	$owner = "";
+	$dueDate = "";
 	if (in_array($sprintTask->taskProgress, $cfgCoderProgArr)) {
 		$owner = $sprintTask->taskCoder;
+		$dueDate = $sprintTask->codePlanEndDate;
 	} else {
 		if ($sprintTask->taskTester != "") {
 			$owner = $sprintTask->taskTester;
+			$dueDate = $sprintTask->testPlanEndDate;
 		} else {
 			$owner = $sprintTask->taskCoder;
+			$dueDate = $sprintTask->codePlanEndDate;
 		}
 	}
+
 	if ($owner != "") {
 		$data = $data . '"owner_id": ' . calc_userId($owner) . ', ';
 	}
+
+	$data = $data . '"date_due": "' . $dueDate . '", ';
 
 	$data = $data . '"category_id": ' . $cfgTypeInfoArr[$sprintTask->taskType][0]. ', ';
 	$titleName =  $sprintTask->taskName. '(№' . $sprintTask->sprintId . $sprintTask->taskId . ')';
