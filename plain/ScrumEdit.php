@@ -211,7 +211,6 @@ function join_taskTypeHint($typeInfoArr) {
 	}
 	
 	return $strHtml;
-	
 }
 
 function calc_userId($userName) {
@@ -232,6 +231,7 @@ function save_taskInfo() {
 	global $cfgProvIdArr;
 	global $cfgProgIdArr;
 	
+	global $cfgTaskSizeArr;
 	global $cfgSprintXlsFile;
 	
 	$sprintTask->sprintId 	= get_fixLenStr(calc_sprintId());
@@ -241,6 +241,7 @@ function save_taskInfo() {
 	$sprintTask->taskType=$_POST['type'];
 	$sprintTask->taskName=$_POST['name'];
 	$sprintTask->taskSize=$_POST['size'];
+	$sprintTask->taskSizeName=$cfgTaskSizeArr[$_POST['size']];
 	$sprintTask->taskProgress=$_POST['progress'];
 	
 	$sprintTask->codePlanBeginDate = $_POST['codePlanBeginDate'];
@@ -272,7 +273,7 @@ function save_taskInfo() {
 	
 	$saveContent = "{$sprintTask->sprintId}\t{$sprintTask->taskId}\t{$sprintTask->taskProv}";
 	$saveContent = "{$saveContent}\t{$sprintTask->taskType}\t{$sprintTask->taskName}\t{$sprintTask->taskProgress}";
-	$saveContent = "{$saveContent}\t{$sprintTask->operUser}\t{$sprintTask->taskSize}";
+	$saveContent = "{$saveContent}\t{$sprintTask->operUser}\t{$sprintTask->taskSizeName}";
 	$saveContent = "{$saveContent}\t{$sprintTask->codePlanBeginDate}\t{$sprintTask->codePlanEndDate}"; 
 	$saveContent = "{$saveContent}\t{$sprintTask->testPlanBeginDate}\t{$sprintTask->testPlanEndDate}";
 	$saveContent = "{$saveContent}\t{$sprintTask->taskCoder}\t{$sprintTask->codeRealBeginDate}\t{$sprintTask->codeRealEndDate}";
@@ -574,10 +575,21 @@ function post_kanban() {
 		}
 	}
 	
-	function doReset() {
-		if(confirm("您确定要清空所有已输入数据吗？")) {
-			theForm.reset();
+	function doReset(confirmFlag) {
+		if(confirmFlag && !confirm("您确定要清空所有已输入数据吗？")) {
+			return false;
 		}
+		
+		theForm.reset();
+		theForm.elements["name"].value = "";
+		theForm.elements["codePlanBeginDate"].value = "";
+		theForm.elements["testPlanBeginDate"].value = "";
+		theForm.elements["codeRealBeginDate"].value = "";
+		theForm.elements["testRealBeginDate"].value = "";
+		theForm.elements["codePlanEndDate"].value = "";
+		theForm.elements["testPlanEndDate"].value = "";
+		theForm.elements["codeRealEndDate"].value = "";
+		theForm.elements["testRealEndDate"].value = "";
 	}
 	
 	function doSubmit() {
@@ -729,7 +741,7 @@ if($pageMethod == "submitTask") {
 			</tr>
 		</table> 
 		<br/>
-			<input type="button" value="全新再录" onclick="theForm.reset(); doModifySubmit();"/>
+			<input type="button" value="全新再录" onclick="doModifySubmit();doReset(false);"/>
 			&nbsp;&nbsp;
 			<input type="button" value="修改再录" onclick="doModifySubmit();"/>
 		<br/>
@@ -900,7 +912,7 @@ $sprintTask->taskId = get_fixLenStr(calc_taskId(false));
 			<td align="center" valign="bottom" colspan="3" height="50">
 				<input type="button" value="提交" id="editSubmitBtn" onclick="doSubmit();"/>
 				&nbsp;&nbsp;
-				<input type="button" value="清空" onclick="doReset();"/>
+				<input type="button" value="清空" onclick="doReset(true);"/>
 			</td>
 		</tr>
 	</table>
