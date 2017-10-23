@@ -155,6 +155,25 @@ class TaskFinderModel extends Base
     }
 
     /**
+     * Get all tasks for a given project and status order by $sort_field
+     *
+     * @access public
+     * @param  integer   $project_id      Project id
+     * @param  string    $sort_field      Field
+     * @param  integer   $status_id       Status id
+     * @return array
+     */
+    public function getAllSort($project_id, $sort_field, $status_id = TaskModel::STATUS_OPEN)
+    {
+        return $this->db
+            ->table(TaskModel::TABLE)
+            ->eq(TaskModel::TABLE.'.project_id', $project_id)
+            ->eq(TaskModel::TABLE.'.is_active', $status_id)
+            ->asc(TaskModel::TABLE.'.'.$sort_field)
+            ->findAll();
+    }
+
+    /**
      * Get all tasks for a given project and status
      *
      * @access public
