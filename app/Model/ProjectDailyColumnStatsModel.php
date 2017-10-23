@@ -167,7 +167,11 @@ class ProjectDailyColumnStatsModel extends Base
     {
         foreach ($metrics as $metric) {
             if ($metric['day'] === $day && $metric['column_id'] == $column_id) {
-                return (int) $metric[$field];
+                if ($field == 'score') {
+                    return (float) $metric[$field]/10;
+                } else {
+                    return (int) $metric[$field];
+                }
             }
         }
 
