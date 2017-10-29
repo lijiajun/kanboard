@@ -27,14 +27,20 @@
                         'swimlane' => $swimlane,
                         'not_editable' => isset($not_editable),
                     )) ?>
+                    <?php if ($swimlane['nb_tasks'] > 0 ): ?>
+                        <?= $this->render('board/table_column', array(
+                            'swimlane' => $swimlane,
+                            'not_editable' => isset($not_editable),
+                        )) ?>
+                    <?php endif ?>
                 <?php endif ?>
 
-                <?= $this->render('board/table_column', array(
-                    'swimlane' => $swimlane,
-                    'not_editable' => isset($not_editable),
-                )) ?>
-
                 <?php if ($index === 0 && $swimlane['nb_swimlanes'] > 1): ?>
+                    <?= $this->render('board/table_column', array(
+                        'swimlane' => $swimlane,
+                        'not_editable' => isset($not_editable),
+                    )) ?>
+
                     <?= $this->render('board/table_swimlane', array(
                         'project' => $project,
                         'swimlane' => $swimlane,
@@ -42,12 +48,14 @@
                     )) ?>
                 <?php endif ?>
 
-                <?= $this->render('board/table_tasks', array(
-                    'project' => $project,
-                    'swimlane' => $swimlane,
-                    'not_editable' => isset($not_editable),
-                    'board_highlight_period' => $board_highlight_period,
-                )) ?>
+                <?php if ($swimlane['nb_tasks'] > 0 ): ?>
+                    <?= $this->render('board/table_tasks', array(
+                        'project' => $project,
+                        'swimlane' => $swimlane,
+                        'not_editable' => isset($not_editable),
+                        'board_highlight_period' => $board_highlight_period,
+                    )) ?>
+                <?php endif ?>
 
             <?php endif ?>
         <?php endforeach ?>
