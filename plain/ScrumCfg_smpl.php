@@ -3,7 +3,7 @@ $_todayDate = date("Ymd", time());
 
 $cfgQueueRelPath = "queue";
 $cfgKanbanUrl = "http://kanban.xxx.com";
-$cfgFullDayXlsFile = "{$_todayDate}_task_user_all.xls";
+$cfgSprintXlsFile = "task_user_all_#SprintId.xls";
 
 $cfgJsonRpcCallUserName = "jsonrpc";
 $cfgJsonRpcCallPassword = "78b7bb385eedec22067c996efftfdcc67551a2cc5d5df0a4541d122ab5e7";
@@ -50,27 +50,15 @@ $cfgProvIdArr = array(
 		"总部"   => 8
 );
 
-$cfgTaskSizeArr2 = array(
-    "Zero(0点)" =>	    "Zero (0点)",
-    "XXS(½点)"	  =>	"XXS  (½点)",
-    "XS(1点)"    =>	"XS  (1点)",
-    "S(2点)"     =>	"S  (2点)",
-    "M(3点)"     =>	"M  (3点)",
-    "L(5点)"     =>	"L  (5点)",
-    "XL(8点)"    =>	"XL  (8点)",
-    "XXL(13点)"  =>	"XXL  (13点)",
-    "XXXL(20点)" =>	"XXXL  (20点)"
-);
-
 $cfgTaskSizeArr = array(
-		"0"	    =>	"Zero (0点)",
-		"5"	    =>	"XXS  (½点)",
-		"10"    =>	"XS  (1点)",
-		"20"    =>	"S  (2点)",
-		"30"    =>	"M  (3点)",
-		"50"    =>	"L  (5点)",
-		"80"    =>	"XL  (8点)",
-		"130"   =>	"XXL  (13点)",
-		"200"   =>	"XXXL  (20点)"
+		"0"		=>	"Zero(0点)",
+		"5"		=>	"XXS(½点)",
+		"10"	=>	"XS(1点)",
+		"20"	=>	"S(2点)",
+		"30"	=>	"M(3点)",
+		"50"	=>	"L(5点)",
+		"80"	=>	"XL(8点)",
+		"130"   =>	"XXL(13点)",
+		"200"   =>	"XXXL(20点)"
 );
 ?>

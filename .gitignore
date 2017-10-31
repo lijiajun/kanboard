@@ -24,3 +24,5 @@ data/cache
 node_modules
 bower_components
 /plain/ScrumCfg.php
+queue
+/plain/ScrumApp.php
