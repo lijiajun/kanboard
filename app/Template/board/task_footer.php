@@ -62,9 +62,9 @@
 
         <?php if (! empty($task['date_due'])): ?>
             <span class="task-date
-                <?php if (time() > $task['date_due']): ?>
+                <?php if (time() > $task['date_due'] && $task['column_id'] !=  $task['completed_column']): ?>
                      task-date-overdue
-                <?php elseif (date('Y-m-d') == date('Y-m-d', $task['date_due'])): ?>
+                <?php elseif (date('Y-m-d') == date('Y-m-d', $task['date_due'])  && $task['column_id'] !=  $task['completed_column']): ?>
                      task-date-today
                 <?php endif ?>
                 ">

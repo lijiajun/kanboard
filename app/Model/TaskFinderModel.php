@@ -86,6 +86,7 @@ class TaskFinderModel extends Base
                 '(SELECT COUNT(*) FROM '.SubtaskModel::TABLE.' WHERE '.SubtaskModel::TABLE.'.task_id=tasks.id AND status=2) AS nb_completed_subtasks',
                 '(SELECT COUNT(*) FROM '.TaskLinkModel::TABLE.' WHERE '.TaskLinkModel::TABLE.'.task_id = tasks.id) AS nb_links',
                 '(SELECT COUNT(*) FROM '.TaskExternalLinkModel::TABLE.' WHERE '.TaskExternalLinkModel::TABLE.'.task_id = tasks.id) AS nb_external_links',
+                '(SELECT MAX(' .ColumnModel::TABLE. '.id) from ' .ColumnModel::TABLE. ' WHERE ' .ColumnModel::TABLE. '.project_id = tasks.project_id) AS completed_column',
                 '(SELECT DISTINCT 1 FROM '.TaskLinkModel::TABLE.' WHERE '.TaskLinkModel::TABLE.'.task_id = tasks.id AND '.TaskLinkModel::TABLE.'.link_id = 9) AS is_milestone',
                 TaskModel::TABLE.'.id',
                 TaskModel::TABLE.'.reference',
@@ -155,6 +156,25 @@ class TaskFinderModel extends Base
     }
 
     /**
+     * Get all tasks for a given project and status order by $sort_field
+     *
+     * @access public
+     * @param  integer   $project_id      Project id
+     * @param  string    $sort_field      Field
+     * @param  integer   $status_id       Status id
+     * @return array
+     */
+    public function getAllSort($project_id, $sort_field, $status_id = TaskModel::STATUS_OPEN)
+    {
+        return $this->db
+            ->table(TaskModel::TABLE)
+            ->eq(TaskModel::TABLE.'.project_id', $project_id)
+            ->eq(TaskModel::TABLE.'.is_active', $status_id)
+            ->asc(TaskModel::TABLE.'.'.$sort_field)
+            ->findAll();
+    }
+
+    /**
      * Get all tasks for a given project and status
      *
      * @access public
@@ -180,6 +200,9 @@ class TaskFinderModel extends Base
      */
     public function getOverdueTasksQuery()
     {
+        $subquery = $this->db->table(TaskModel::TABLE)
+            ->columns('(SELECT MAX(' .ColumnModel::TABLE. '.id) from ' .ColumnModel::TABLE. ' WHERE ' .ColumnModel::TABLE. '.project_id = tasks.project_id) AS completed_column');
+
         return $this->db->table(TaskModel::TABLE)
                     ->columns(
                         TaskModel::TABLE.'.id',
@@ -188,15 +211,18 @@ class TaskFinderModel extends Base
                         TaskModel::TABLE.'.project_id',
                         TaskModel::TABLE.'.creator_id',
                         TaskModel::TABLE.'.owner_id',
+                        ColumnModel::TABLE.'.title AS column',
                         ProjectModel::TABLE.'.name AS project_name',
                         UserModel::TABLE.'.username AS assignee_username',
                         UserModel::TABLE.'.name AS assignee_name'
                     )
                     ->join(ProjectModel::TABLE, 'id', 'project_id')
                     ->join(UserModel::TABLE, 'id', 'owner_id')
+                    ->join(ColumnModel::TABLE, id, 'column_id')
                     ->eq(ProjectModel::TABLE.'.is_active', 1)
                     ->eq(TaskModel::TABLE.'.is_active', 1)
                     ->neq(TaskModel::TABLE.'.date_due', 0)
+                    ->notInSubquery(TaskModel::TABLE.'.column_id', $subquery)
                     ->lte(TaskModel::TABLE.'.date_due', time());
     }
 

@@ -23,7 +23,7 @@ class UserDistributionAnalytic extends Base
     {
         $metrics = array();
         $total = 0;
-        $tasks = $this->taskFinderModel->getAll($project_id);
+        $tasks = $this->taskFinderModel->getAllSort($project_id, 'owner_id');
         $users = $this->projectUserRoleModel->getAssignableUsersList($project_id);
 
         foreach ($tasks as $task) {
@@ -49,7 +49,7 @@ class UserDistributionAnalytic extends Base
             $metric['percentage'] = round(($metric['nb_tasks'] * 100) / $total, 2);
         }
 
-        ksort($metrics);
+        //ksort($metrics);
 
         return array_values($metrics);
     }
