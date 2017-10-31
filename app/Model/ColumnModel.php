@@ -153,6 +153,27 @@ class ColumnModel extends Base
     }
 
     /**
+     * Get the list of columns(without completed column) sorted by position [ column_id => title ]
+     *
+     * @access public
+     * @param  integer  $project_id   Project id
+     * @param  boolean  $prepend      Prepend a default value
+     * @return array
+     */
+    public function getListWithoutCompleteCol($project_id, $prepend = false)
+    {
+        $subquery = $this->db->table(self::TABLE)
+            ->columns('(SELECT MAX(' .self::TABLE. '.id) from ' .self::TABLE. ' WHERE ' .self::TABLE. '.project_id = ' . $project_id . ')');
+        $listing = $this->db->hashtable(self::TABLE)
+            ->eq('project_id', $project_id)
+            ->neq('id','5')
+            ->notInSubquery(self::TABLE.'.id', $subquery)
+            ->asc('position')
+            ->getAll('id', 'title');
+        return $prepend ? array(-1 => t('All columns')) + $listing : $listing;
+    }
+
+    /**
      * Add a new column to the board
      *
      * @access public
