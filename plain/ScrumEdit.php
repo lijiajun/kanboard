@@ -71,21 +71,30 @@ function calc_sprintId() {
 	global $appTaskId;
 	global $appNextSprintTaskId;
 	
-	$tmToday=strtotime(date("Y-m-d"));
 	$iToday=intval(date("Ymd"));
+	$tmToday=strtotime(date("Y-m-d"));
 	
+	$iBaseDay = 20170731;
 	$tmBaseDay = strtotime("2017-07-31");
-	$tmBaseDay2nd = strtotime("2017-09-01");
+	
 	$iBaseDay2nd = 20170901;
+	$tmBaseDay2nd = strtotime("2017-09-01");
+	
+	$iBaseDay3rd = 20171001;
+	$tmBaseDay3rd = strtotime("2017-10-01");
 	
 	$passDays=($tmBaseDay2nd-$tmBaseDay)/3600/24;
 	$sprintId = floor($passDays/14)+1;
 	
-	$sprintId += ((floor($iToday/10000) - floor($iBaseDay2nd/10000)) * 12 + floor($iToday/100 - $iBaseDay2nd/100))*2;
+	$sprintId += ((floor($iBaseDay3rd/10000) - floor($iBaseDay2nd/10000)) * 12 + floor($iBaseDay3rd/100 - $iBaseDay2nd/100))*2;
 	
-	if(($iToday % 100)>15) {
+	if(($iBaseDay3rd % 100)>15) {
 		$sprintId += 1;
 	}
+	
+	$passDays=($tmToday-$tmBaseDay3rd)/3600/24;
+	
+	$sprintId += floor($passDays/14);
 	
 	if($sprintId != $appSprintId) {
 		$appSprintId = $sprintId;
