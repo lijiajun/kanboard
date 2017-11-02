@@ -20,7 +20,7 @@
                     <?= $this->text->e($task['title']) ?>
                 <?php endif ?>
             </td>
-            <td style="border: 1px solid #eee;"><?= $this->text->e($task['column']) ?></td>
+            <td style="border: 1px solid #eee;"><?= $this->text->e($task['column_name']) ?></td>
             <td style="border: 1px solid #eee;"><?= $this->dt->datetime($task['date_due']) ?></td>
             <td style="border: 1px solid #eee;"><?= $this->text->e($task['project_name']) ?></td>
             <td style="border: 1px solid #eee;">

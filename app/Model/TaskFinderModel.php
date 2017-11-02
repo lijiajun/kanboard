@@ -211,14 +211,14 @@ class TaskFinderModel extends Base
                         TaskModel::TABLE.'.project_id',
                         TaskModel::TABLE.'.creator_id',
                         TaskModel::TABLE.'.owner_id',
-                        ColumnModel::TABLE.'.title AS column',
+                        ColumnModel::TABLE.'.title AS column_name',
                         ProjectModel::TABLE.'.name AS project_name',
                         UserModel::TABLE.'.username AS assignee_username',
                         UserModel::TABLE.'.name AS assignee_name'
                     )
                     ->join(ProjectModel::TABLE, 'id', 'project_id')
                     ->join(UserModel::TABLE, 'id', 'owner_id')
-                    ->join(ColumnModel::TABLE, id, 'column_id')
+                    ->join(ColumnModel::TABLE, 'id', 'column_id')
                     ->eq(ProjectModel::TABLE.'.is_active', 1)
                     ->eq(TaskModel::TABLE.'.is_active', 1)
                     ->neq(TaskModel::TABLE.'.date_due', 0)
