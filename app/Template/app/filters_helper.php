@@ -12,6 +12,7 @@
         <li><a href="#" class="filter-helper" data-filter="status:open"><?= t('Open tasks') ?></a></li>
         <li><a href="#" class="filter-helper" data-filter="status:open assignee:nobody"><?= t('Not assigned') ?></a></li>
         <li><a href="#" class="filter-helper" data-filter="status:open category:none"><?= t('No category') ?></a></li>
+        <li><a href="#" class="filter-helper" data-filter="status:open tag:none"><?= t('No tag') ?></a></li>
         <li>
             <?= $this->url->doc(t('View advanced search syntax'), 'search') ?>
         </li>
