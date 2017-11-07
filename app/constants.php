@@ -149,3 +149,5 @@ defined('TOTP_ISSUER') or define('TOTP_ISSUER', 'Kanboard');
 defined('VARSAL_PASSWORD') or define('VARSAL_PASSWORD','');
 defined('LOGIN_TITLE') or define('LOGIN_TITLE', '');
 defined('BURN_TAGS') or define('BURN_TAGS', '');
+
+defined('SPRINT_CYCLE_UNIT') or define('SPRINT_CYCLE_UNIT','');

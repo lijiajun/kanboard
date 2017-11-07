@@ -141,7 +141,7 @@ class AnalyticController extends BaseController
     private function commonAggregateMetrics($template, $column, $title)
     {
         $project = $this->getProject();
-        list($from, $to) = $this->getDates();
+        list($from, $to, $sprintID) = $this->getDates();
 
         $displayGraph = $this->projectDailyColumnStatsModel->countDays($project['id'], $from, $to) >= 2;
         $metrics = $displayGraph ? $this->projectDailyColumnStatsModel->getAggregatedMetrics($project['id'], $from, $to, $column) : array();
@@ -150,6 +150,7 @@ class AnalyticController extends BaseController
             'values'        => array(
                 'from' => $from,
                 'to'   => $to,
+                'sprintID'     => $sprintID,
             ),
             'display_graph' => $displayGraph,
             'metrics'       => $metrics,
@@ -162,14 +163,38 @@ class AnalyticController extends BaseController
     {
         $values = $this->request->getValues();
 
-        $from = $this->request->getStringParam('from', date('Y-m-d', strtotime('-1week')));
-        $to = $this->request->getStringParam('to', date('Y-m-d'));
+        $project = $this->getProject();
+        $baseDate = strtotime($project['start_date']);
+        $curDate = strtotime(Date("Y-m-d"));
+        $sprintID = -1;
+        $cycle_unit = SPRINT_CYCLE_UNIT != null ? SPRINT_CYCLE_UNIT : 2;
 
         if (! empty($values)) {
             $from = $this->dateParser->getIsoDate($values['from']);
             $to = $this->dateParser->getIsoDate($values['to']);
+            $sprintID = 0;
+            if ($baseDate != "" ) {
+                if ($values['sprintID'] != "" && $values['sprintID'] == 0) {
+                    $from = $project['start_date'];
+                    $to = Date("Y-m-d");
+                } else if ($values['sprintID'] > 0) {
+                    $sprintID = $values['sprintID'];
+                    $from = date("Y-m-d", $baseDate + 86400 * ($cycle_unit * 7 * ($sprintID - 1)));
+                    $to = date("Y-m-d", $baseDate + 86400 * ($cycle_unit * 7 * $sprintID - 1));
+                }
+            }
+        } else {
+            if ($baseDate != '') {
+                $days = floor(($curDate - $baseDate)/86400);
+                $sprintID = floor($days / ($cycle_unit * 7)) + 1;
+                $from = date("Y-m-d",$baseDate + 86400 * ($cycle_unit * 7 * ($sprintID - 1)));
+                $to =  date("Y-m-d",$baseDate + 86400 * ($cycle_unit * 7 * $sprintID - 1));
+            } else {
+                $from = $this->request->getStringParam('from', date('Y-m-d', strtotime('-1week')));
+                $to = $this->request->getStringParam('to', date('Y-m-d'));
+            }
         }
 
-        return array($from, $to);
+        return array($from, $to, $sprintID);
     }
 }
