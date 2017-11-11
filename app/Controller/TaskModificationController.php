@@ -66,7 +66,6 @@ class TaskModificationController extends BaseController
                             "200" => "XXXL(20点)",
                             "400" => "XXXXL(40点)");
 
-
         $params = array(
             'project' => $project,
             'values' => $values,
@@ -76,6 +75,8 @@ class TaskModificationController extends BaseController
             'users_list' => $this->projectUserRoleModel->getAssignableUsersList($task['project_id']),
             'categories_list' => $this->categoryModel->getList($task['project_id']),
             'score_list' => $score_list,
+            'columns_list' => $this->columnModel->getList($project['id']),
+            'swimlanes_list' => $this->swimlaneModel->getList($project['id'], false, true),
         );
 
         $this->renderTemplate($task, $params);
