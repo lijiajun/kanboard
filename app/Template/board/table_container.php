@@ -35,7 +35,7 @@
                     <?php endif ?>
                 <?php endif ?>
 
-                <?php if ($index === 0 && $swimlane['nb_swimlanes'] > 1): ?>
+                <?php if ($index === 0 && $swimlane['nb_swimlanes'] > 0): ?>
                     <?= $this->render('board/table_column', array(
                         'swimlane' => $swimlane,
                         'not_editable' => isset($not_editable),

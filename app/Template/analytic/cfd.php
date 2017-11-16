@@ -19,5 +19,9 @@
     <?= $this->form->csrf() ?>
     <?= $this->form->date(t('Start date'), 'from', $values) ?>
     <?= $this->form->date(t('End date'), 'to', $values) ?>
+    <?php if ($values['sprintID'] >= 0): ?>
+        <?= $this->form->label(t('Sprint ID'), 'sprintID') ?>
+        <?= $this->form->number('sprintID', $values) ?>
+    <?php endif ?>
     <?= $this->modal->submitButtons(array('submitLabel' => t('Execute'))) ?>
 </form>

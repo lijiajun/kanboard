@@ -86,7 +86,7 @@ class ProjectDailyColumnStatsModel extends Base
      */
     public function getAggregatedMetrics($project_id, $from, $to, $field = 'total')
     {
-        $columns = $this->columnModel->getList($project_id);
+        $columns = $this->columnModel->getListWithoutCompleteCol($project_id);
         $metrics = $this->getMetrics($project_id, $from, $to);
         return $this->buildAggregate($metrics, $columns, $field);
     }
@@ -211,13 +211,26 @@ class ProjectDailyColumnStatsModel extends Base
      */
     private function getScoreByColumns($project_id)
     {
-        $stats = $this->db->table(TaskModel::TABLE)
-            ->columns('column_id', 'SUM(score) AS score')
-            ->eq('project_id', $project_id)
-            ->eq('is_active', TaskModel::STATUS_OPEN)
-            ->notNull('score')
-            ->groupBy('column_id')
-            ->findAll();
+        if (BURN_TAGS == null) {
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'SUM(score) AS score')
+                ->eq('project_id', $project_id)
+                ->eq('is_active', TaskModel::STATUS_OPEN)
+                ->notNull('score')
+                ->groupBy('column_id')
+                ->findAll();
+        } else {
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'SUM(score) AS score')
+                ->eq('project_id', $project_id)
+                ->eq('is_active', TaskModel::STATUS_OPEN)
+                ->notNull('score')
+                ->in(TaskTagModel::TABLE.'.tag_id',array(33))
+                ->join(TaskTagModel::TABLE, 'task_id', 'id')
+                ->groupBy('column_id')
+                ->findAll();
+        }
+
 
         return array_column($stats, 'score', 'column_id');
     }
@@ -231,12 +244,24 @@ class ProjectDailyColumnStatsModel extends Base
      */
     private function getTotalByColumns($project_id)
     {
-        $stats = $this->db->table(TaskModel::TABLE)
-            ->columns('column_id', 'COUNT(*) AS total')
-            ->eq('project_id', $project_id)
-            ->in('is_active', $this->getTaskStatusConfig())
-            ->groupBy('column_id')
-            ->findAll();
+        if (BURN_TAGS == null) {
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'COUNT(*) AS total')
+                ->eq('project_id', $project_id)
+                ->in('is_active', $this->getTaskStatusConfig())
+                ->groupBy('column_id')
+                ->findAll();
+        } else {
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'COUNT(*) AS total')
+                ->eq('project_id', $project_id)
+                ->in('is_active', $this->getTaskStatusConfig())
+                ->in(TaskTagModel::TABLE.'.tag_id',array(BURN_TAGS))
+                ->join(TaskTagModel::TABLE, 'task_id', 'id')
+                ->groupBy('column_id')
+                ->findAll();
+        }
+
 
         return array_column($stats, 'total', 'column_id');
     }

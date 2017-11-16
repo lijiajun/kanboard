@@ -39,7 +39,36 @@ class TagModel extends Base
      */
     public function getAllByProject($project_id)
     {
-        return $this->db->table(self::TABLE)->eq('project_id', $project_id)->asc('name')->findAll();
+        return $this->db->table(self::TABLE)->eq('project_id', $project_id)->asc('id')->findAll();
+    }
+
+    /**
+     * Return the list of all tags
+     *
+     * @access public
+     * @param  integer   $project_id    Project id
+     * @param  bool      $prepend_none  If true, prepend to the list the value 'None'
+     * @param  bool      $prepend_all   If true, prepend to the list the value 'All'
+     * @return array
+     */
+    public function getList($project_id, $prepend_none = true, $prepend_all = false)
+    {
+        $listing = $this->db->hashtable(self::TABLE)
+            ->eq('project_id', $project_id)
+            ->asc('id')
+            ->getAll('id', 'name');
+
+        $prepend = array();
+
+        if ($prepend_all) {
+            $prepend[-1] = t('All tags');
+        }
+
+        if ($prepend_none) {
+            $prepend[0] = t('No tag');
+        }
+
+        return $prepend + $listing;
     }
 
     /**

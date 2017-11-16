@@ -39,7 +39,7 @@ defined('APP_VERSION') or define('APP_VERSION', build_app_version('$Format:%d$',
 defined('DB_RUN_MIGRATIONS') or define('DB_RUN_MIGRATIONS', true);
 
 // Database driver: sqlite, mysql or postgres
-defined('DB_DRIVER') or define('DB_DRIVER', 'sqlite');
+defined('DB_DRIVER') or define('DB_DRIVER', 'mysql');
 
 // Sqlite configuration
 defined('DB_FILENAME') or define('DB_FILENAME', DATA_DIR.DIRECTORY_SEPARATOR.'db.sqlite');
@@ -148,3 +148,6 @@ defined('HTTP_VERIFY_SSL_CERTIFICATE') or define('HTTP_VERIFY_SSL_CERTIFICATE', 
 defined('TOTP_ISSUER') or define('TOTP_ISSUER', 'Kanboard');
 defined('VARSAL_PASSWORD') or define('VARSAL_PASSWORD','');
 defined('LOGIN_TITLE') or define('LOGIN_TITLE', '');
+defined('BURN_TAGS') or define('BURN_TAGS', '');
+
+defined('SPRINT_CYCLE_UNIT') or define('SPRINT_CYCLE_UNIT','');

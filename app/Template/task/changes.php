@@ -21,6 +21,20 @@
                         echo '<li>'.t('New category: %s', $task['category_name']).'</li>';
                     }
                     break;
+                case 'swimlane_id':
+                    if (empty($task['swimlane_id'])) {
+                        echo '<li>'.t('There is no swimlane now').'</li>';
+                    } else {
+                        echo '<li>'.t('New swimlane: %s', $task['swimlane_name']).'</li>';
+                    }
+                    break;
+                case 'column_id':
+                    if (empty($task['column_id'])) {
+                        echo '<li>'.t('There is no column now').'</li>';
+                    } else {
+                        echo '<li>'.t('New column: %s', $task['column_title']).'</li>';
+                    }
+                    break;
                 case 'color_id':
                     echo '<li>'.t('New color: %s', $this->text->in($task['color_id'], $this->task->getColors())).'</li>';
                     break;

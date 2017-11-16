@@ -14,7 +14,7 @@
             <?php if (isset($custom_filters_list) && ! empty($custom_filters_list)): ?>
             <div class="input-addon-item">
                 <div class="dropdown">
-                    <a href="#" class="dropdown-menu dropdown-menu-link-icon" title="<?= t('Custom filters') ?>"><i class="fa fa-bookmark fa-fw"></i><i class="fa fa-caret-down"></i></a>
+                    <a href="#" class="dropdown-menu dropdown-menu-link-icon" title="<?= t('Custom filters') ?>"><i class="fa fa-puzzle-piece fa-fw"></i><i class="fa fa-caret-down"></i></a>
                     <ul>
                         <?php foreach ($custom_filters_list as $filter): ?>
                             <li><a href="#" class="filter-helper" data-<?php if ($filter['append']): ?><?= 'append-' ?><?php endif ?>filter='<?= $this->text->e($filter['filter']) ?>'><?= $this->text->e($filter['name']) ?></a></li>
@@ -39,19 +39,32 @@
             <?php endif ?>
 
             <?php if (isset($categories_list) && ! empty($categories_list)): ?>
+                <div class="input-addon-item">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-menu dropdown-menu-link-icon" title="<?= t('Category filters') ?>"><i class="fa fa-bookmark fa-fw"></i><i class="fa fa-caret-down"></i></a>
+                        <ul>
+                            <li><a href="#" class="filter-helper" data-unique-filter="category:none"><?= t('No category') ?></a></li>
+                            <?php foreach ($categories_list as $category): ?>
+                                <li><a href="#" class="filter-helper" data-unique-filter='category:"<?= $this->text->e($category) ?>"'><?= $this->text->e($category) ?></a></li>
+                            <?php endforeach ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php endif ?>
+
+            <?php if (isset($tags_list) && ! empty($tags_list)): ?>
             <div class="input-addon-item">
                 <div class="dropdown">
-                    <a href="#" class="dropdown-menu dropdown-menu-link-icon" title="<?= t('Category filters') ?>"><i class="fa fa-tags fa-fw"></i><i class="fa fa-caret-down"></i></a>
+                    <a href="#" class="dropdown-menu dropdown-menu-link-icon" title="<?= t('Tag filters') ?>"><i class="fa fa-tags fa-fw"></i><i class="fa fa-caret-down"></i></a>
                     <ul>
-                        <li><a href="#" class="filter-helper" data-unique-filter="category:none"><?= t('No category') ?></a></li>
-                        <?php foreach ($categories_list as $category): ?>
-                            <li><a href="#" class="filter-helper" data-unique-filter='category:"<?= $this->text->e($category) ?>"'><?= $this->text->e($category) ?></a></li>
+                        <li><a href="#" class="filter-helper" data-unique-filter="tag:none"><?= t('No tag') ?></a></li>
+                        <?php foreach ($tags_list as $tag): ?>
+                            <li><a href="#" class="filter-helper" data-unique-filter='tag:"<?= $this->text->e($tag) ?>"'><?= $this->text->e($tag) ?></a></li>
                         <?php endforeach ?>
                     </ul>
                 </div>
             </div>
             <?php endif ?>
         </div>
-
     </form>
 </div>

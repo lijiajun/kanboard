@@ -4,11 +4,11 @@
         <?php if (! $not_editable): ?>
             <a href="#" class="board-swimlane-toggle" data-swimlane-id="<?= $swimlane['id'] ?>">
                 <?php if ($swimlane['nb_tasks'] > 0): ?>
-                    <i class="fa fa-chevron-circle-up hide-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Collapse swimlane') ?>"></i>
-                    <i class="fa fa-chevron-circle-down show-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Expand swimlane') ?>" style="display: none"></i>
+                    <i class="fa fa-chevron-circle-down hide-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Collapse swimlane') ?>"></i>
+                    <i class="fa fa-chevron-circle-right show-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Expand swimlane') ?>" style="display: none"></i>
                 <?php else: ?>
-                    <i class="fa fa-chevron-circle-up hide-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Collapse swimlane') ?>" style="display: none"></i>
-                    <i class="fa fa-chevron-circle-down show-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Expand swimlane') ?>"></i>
+                    <i class="fa fa-chevron-circle-down hide-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Collapse swimlane') ?>" style="display: none"></i>
+                    <i class="fa fa-chevron-circle-right show-icon-swimlane-<?= $swimlane['id'] ?>" title="<?= t('Expand swimlane') ?>"></i>
                 <?php endif ?>
             </a>
         <?php endif ?>

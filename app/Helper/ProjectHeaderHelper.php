@@ -51,6 +51,7 @@ class ProjectHeaderHelper extends Base
             'project' => $project,
             'filters' => $filters,
             'categories_list' => $this->categoryModel->getList($project['id'], false),
+            'tags_list' => $this->tagModel->getList($project['id'], false),
             'users_list' => $this->projectUserRoleModel->getAssignableUsersList($project['id'], false),
             'custom_filters_list' => $this->customFilterModel->getAll($project['id'], $this->userSession->getId()),
             'board_view' => $boardView,
