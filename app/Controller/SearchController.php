@@ -66,4 +66,33 @@ class SearchController extends BaseController
             'events' => $events,
         )));
     }
+
+    public function userlist()
+    {
+        $search = urldecode($this->request->getStringParam('search'));
+        $nb_tasks = 0;
+
+        $paginator = $this->paginator
+            ->setUrl('SearchController', 'userlist', array('search' => $search))
+            ->setMax(30)
+            ->setOrder(UserModel::TABLE . '.id')
+            ->setDirection('DESC');
+
+        //模糊查找
+        if ($search !== '') {
+            $paginator = $this->userPagination->getListingPaginatorByName($search);
+            $nb_tasks = $paginator->getTotal();
+        }
+
+        $this->response->html($this->helper->layout->app('search/userlist', array(
+               'values' => array(
+                'search' => $search,
+                'controller' => 'SearchController',
+                'action' => 'userlist',
+            ),
+            'paginator' => $paginator,
+            'title' => t('Search by user').($nb_tasks > 0 ? ' ('.$nb_tasks.')' : '')
+        )));
+    }
+
 }

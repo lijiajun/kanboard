@@ -29,4 +29,14 @@ class UserPagination extends Base
             ->setQuery($this->userModel->getQuery())
             ->calculate();
     }
+
+    public function getListingPaginatorByName($userName)
+    {
+        return $this->paginator
+           ->setUrl('SearchController', 'userlist',array('search' => $userName))
+            ->setMax(30)
+            ->setOrder(UserModel::TABLE.'.id')
+            ->setQuery($this->userModel->getQuery()->ilike('username', '%'.$userName.'%'))
+            ->calculate();
+    }
 }

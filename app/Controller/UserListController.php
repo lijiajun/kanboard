@@ -21,6 +21,11 @@ class UserListController extends BaseController
 
         $this->response->html($this->helper->layout->app('user_list/listing', array(
             'title' => t('Users').' ('.$paginator->getTotal().')',
+            'values' => array(
+            'search' => '',
+            'controller' => 'SearchController',
+            'action' => 'userlist',
+            ),
             'paginator' => $paginator,
         )));
     }
