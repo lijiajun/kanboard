@@ -2,12 +2,13 @@
     <div class="page-header">
         <h2><?= $title ?></h2>
     </div>
-<?php else: ?>
+<?php elseif(!isset($no_layout) || $no_layout == false): ?>
     <?= $this->projectHeader->render($project, 'TaskListController', 'show') ?>
 <?php endif ?>
 <section class="sidebar-container">
-    <?= $this->render($sidebar_template, array('project' => $project)) ?>
-
+    <?php if (!isset($no_layout) || $no_layout == false): ?>
+        <?= $this->render($sidebar_template, array('project' => $project)) ?>
+    <?php endif ?>
     <div class="sidebar-content">
         <?= $content_for_sublayout ?>
     </div>

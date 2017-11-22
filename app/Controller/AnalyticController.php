@@ -21,7 +21,7 @@ class AnalyticController extends BaseController
     public function leadAndCycleTime()
     {
         $project = $this->getProject();
-        list($from, $to) = $this->getDates();
+        list($from, $to) = $this->getDates($project);
 
         $this->response->html($this->helper->layout->analytic('analytic/lead_cycle_time', array(
             'values' => array(
@@ -120,6 +120,17 @@ class AnalyticController extends BaseController
         $this->commonAggregateMetrics('analytic/cfd', 'total', t('Cumulative flow diagram'));
     }
 
+    public function cfd_readonly()
+    {
+        $token = $this->request->getStringParam('token');
+        $project = $this->projectModel->getByToken($token);
+
+        if (empty($project)) {
+            throw AccessForbiddenException::getInstance()->withoutLayout();
+        }
+
+        $this->commonAggregateMetrics('analytic/cfd', 'total', t('Cumulative flow diagram'),$project);
+    }
     /**
      * Show burndown chart
      *
@@ -130,6 +141,17 @@ class AnalyticController extends BaseController
         $this->commonAggregateMetrics('analytic/burndown', 'score', t('Burndown chart'));
     }
 
+    public function burndown_readonly()
+    {
+        $token = $this->request->getStringParam('token');
+        $project = $this->projectModel->getByToken($token);
+
+        if (empty($project)) {
+            throw AccessForbiddenException::getInstance()->withoutLayout();
+        }
+
+        $this->commonAggregateMetrics('analytic/burndown', 'score', t('Burndown chart'),$project);
+    }
     /**
      * Common method for CFD and Burdown chart
      *
@@ -138,10 +160,16 @@ class AnalyticController extends BaseController
      * @param string $column
      * @param string $title
      */
-    private function commonAggregateMetrics($template, $column, $title)
+    private function commonAggregateMetrics($template, $column, $title, $project = '')
     {
-        $project = $this->getProject();
-        list($from, $to, $sprintID) = $this->getDates();
+        if ($project == '') {
+            $project = $this->getProject();
+            $noLayout = false;
+        } else {
+            $noLayout = true;
+        }
+
+        list($from, $to, $sprintID) = $this->getDates($project);
 
         $displayGraph = $this->projectDailyColumnStatsModel->countDays($project['id'], $from, $to) >= 2;
         $metrics = $displayGraph ? $this->projectDailyColumnStatsModel->getAggregatedMetrics($project['id'], $from, $to, $column) : array();
@@ -156,14 +184,14 @@ class AnalyticController extends BaseController
             'metrics'       => $metrics,
             'project'       => $project,
             'title'         => $title,
+            'no_layout'     => $noLayout,
         )));
     }
 
-    private function getDates()
+    private function getDates($project)
     {
         $values = $this->request->getValues();
 
-        $project = $this->getProject();
         $baseDate = strtotime($project['start_date']);
         $curDate = strtotime(Date("Y-m-d"));
         $sprintID = -1;
