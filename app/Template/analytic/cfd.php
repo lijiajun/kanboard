@@ -23,5 +23,7 @@
         <?= $this->form->label(t('Sprint ID'), 'sprintID') ?>
         <?= $this->form->number('sprintID', $values) ?>
     <?php endif ?>
-    <?= $this->modal->submitButtons(array('submitLabel' => t('Execute'))) ?>
+    <?php if ($no_layout == false): ?>
+        <?= $this->modal->submitButtons(array('submitLabel' => t('Execute'))) ?>
+    <?php endif ?>
 </form>
