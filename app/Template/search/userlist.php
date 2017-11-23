@@ -10,7 +10,7 @@
         <?= $this->form->hidden('controller', $values) ?>
         <?= $this->form->hidden('action', $values) ?>
         <div class="input-addon">
-            <?= $this->form->text('search', $values, array(), array(empty($values['search']) ? 'autofocus' : '', 'placeholder="'.t('Search by user').'"'), 'input-addon-field') ?>
+            <?= $this->form->text('search', $values, array(), array(empty($values['search']) ? 'autofocus' : '', 'placeholder="'.t('Please search by user').'"'), 'input-addon-field') ?>
         </div>
     </form>
 </div>

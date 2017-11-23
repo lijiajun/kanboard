@@ -32,11 +32,17 @@ class UserPagination extends Base
 
     public function getListingPaginatorByName($userName)
     {
+        $query = $this->userModel->getQuery();
+        $query->beginOr()
+        ->ilike('username', '%'.$userName.'%')
+        ->ilike('name', '%'.$userName.'%')
+        ->closeOr();
+
         return $this->paginator
            ->setUrl('SearchController', 'userlist',array('search' => $userName))
             ->setMax(30)
             ->setOrder(UserModel::TABLE.'.id')
-            ->setQuery($this->userModel->getQuery()->ilike('username', '%'.$userName.'%'))
+            ->setQuery($query)
             ->calculate();
     }
 }

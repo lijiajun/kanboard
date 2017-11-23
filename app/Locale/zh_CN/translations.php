@@ -1356,6 +1356,7 @@ return array(
     'Write one subject by line.' => '一行写一个主题。',
     'This task is now linked to the task %s with the relation "%s"' => '这个任务现在与%s任务相关联，关系是"%s"',
     'The link with the relation "%s" to the task %s have been removed' => '关系"%s"到%s任务之间的关联被删除',
-    'Search by user'=> '请输入用户名查询，可支持模糊查找',
+    'Please search by user'=> '请输入用户名查询，可支持模糊查找',
+    'Search by user'=> '按用户名查询',
 
 );

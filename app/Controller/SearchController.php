@@ -4,6 +4,7 @@ namespace Kanboard\Controller;
 
 use Kanboard\Filter\TaskProjectsFilter;
 use Kanboard\Model\TaskModel;
+use Kanboard\Model\UserModel;
 
 /**
  * Search Controller
