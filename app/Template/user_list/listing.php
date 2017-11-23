@@ -17,6 +17,16 @@
     <?php endif ?>
 </div>
 
+<div class="filter-box margin-bottom">
+    <form method="get" action="<?= $this->url->dir() ?>" class="search">
+        <?= $this->form->hidden('controller', $values) ?>
+        <?= $this->form->hidden('action', $values) ?>
+        <div class="input-addon">
+            <?= $this->form->text('search', $values, array(), array(empty($values['search']) ? 'autofocus' : '', 'placeholder="'.t('Search by user').'"'), 'input-addon-field') ?>
+        </div>
+    </form>
+</div>
+
 <?php if ($paginator->isEmpty()): ?>
     <p class="alert"><?= t('No users found.') ?></p>
 <?php elseif (! $paginator->isEmpty()): ?>
