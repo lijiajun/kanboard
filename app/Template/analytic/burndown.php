@@ -9,7 +9,6 @@
 <?php else: ?>
     <?= $this->app->component('chart-project-burndown', array(
         'metrics' => $metrics,
-        'labelTotal' => t('Total for all columns'),
         'dateFormat' => e('%%Y-%%m-%%d'),
     )) ?>
 <?php endif ?>

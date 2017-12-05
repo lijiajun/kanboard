@@ -86,28 +86,9 @@ class ProjectDailyColumnStatsModel extends Base
      */
     public function getAggregatedMetrics($project_id, $from, $to, $field = 'total')
     {
-        $columns = $this->columnModel->getListWithoutCompleteCol($project_id);
+        $columns = $this->columnModel->getList($project_id);
         $metrics = $this->getMetrics($project_id, $from, $to);
         return $this->buildAggregate($metrics, $columns, $field);
-    }
-
-    /**
-     * Fetch metrics
-     *
-     * @access public
-     * @param  integer    $project_id    Project id
-     * @param  string     $from          Start date (ISO format YYYY-MM-DD)
-     * @param  string     $to            End date
-     * @return array
-     */
-    public function getMetrics($project_id, $from, $to)
-    {
-        return $this->db->table(self::TABLE)
-            ->eq('project_id', $project_id)
-            ->gte('day', $from)
-            ->lte('day', $to)
-            ->asc(self::TABLE.'.day')
-            ->findAll();
     }
 
     /**
@@ -148,6 +129,109 @@ class ProjectDailyColumnStatsModel extends Base
 
         foreach ($column_ids as $column_id) {
             $row[] = $this->findValueInMetrics($metrics, $day, $column_id, $field);
+        }
+
+        return $row;
+    }
+
+    /**
+     * Get aggregated metrics for the project within a data range
+     *
+     * [
+     *    ['Date', 'plan', 'real'],
+     *    ['2014-11-16', 2, 5],
+     *    ['2014-11-17', 20, 15],
+     * ]
+     *
+     * @access public
+     * @param  integer    $project_id    Project id
+     * @param  string     $from          Start date (ISO format YYYY-MM-DD)
+     * @param  string     $to            End date
+     * @param  string     $field         Column to aggregate
+     * @return array
+     */
+    public function getAggregatedMetricsBurn($project_id, $from, $to, $field = 'total')
+    {
+        $columns = $this->columnModel->getListWithoutCompleteCol($project_id);
+        $metrics = $this->getMetrics($project_id, $from, $to);
+        return $this->buildAggregateBurn($metrics, $columns, $field, $from, $to);
+    }
+
+    /**
+     * Fetch metrics
+     *
+     * @access public
+     * @param  integer    $project_id    Project id
+     * @param  string     $from          Start date (ISO format YYYY-MM-DD)
+     * @param  string     $to            End date
+     * @return array
+     */
+    public function getMetrics($project_id, $from, $to)
+    {
+        return $this->db->table(self::TABLE)
+            ->eq('project_id', $project_id)
+            ->gte('day', $from)
+            ->lte('day', $to)
+            ->asc(self::TABLE.'.day')
+            ->findAll();
+    }
+
+    /**
+     * Build aggregate
+     *
+     * @access private
+     * @param  array   $metrics
+     * @param  array   $columns
+     * @param  string  $field
+     * @return array
+     */
+    private function buildAggregateBurn(array &$metrics, array &$columns, $field, $from, $to)
+    {
+        $column_ids = array_keys($columns);
+        $rows = array(array_merge(array(e('Date')), array(e('Plan completion')), array(e('Actual completion'))));
+
+        $days = (strtotime($to) - strtotime($from)) / 86400 + 1;
+        for($i=0; $i < $days; $i++){
+            $rows[] = $this->buildRowAggregateBurn($metrics, $column_ids, $from, $i, $days, $field);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Build one row of the aggregate
+     *
+     * @access private
+     * @param  array   $metrics
+     * @param  array   $column_ids
+     * @param  string  $date
+     * @param  string  $field
+     * @return array
+     */
+    private function buildRowAggregateBurn(array &$metrics, array &$column_ids, $from, $day_index, $days, $field)
+    {
+        static $actual_comp = 0;
+        $actual_tmp = 0;
+        $plan_comp = 0;
+        $date = date('Y-m-d', strtotime($from) + (86400 * $day_index));
+        $row = array($date);
+
+        foreach ($column_ids as $column_id) {
+            $plan_comp += $this->findValueInMetrics($metrics, $from, $column_id, $field);
+        }
+        $plan_comp = $plan_comp - (float) ($plan_comp * $day_index)/ ($days - 1);
+        $row[] = round($plan_comp, 2);
+
+        if (strtotime(Date("Y-m-d")) > strtotime($date)) {
+            foreach ($column_ids as $column_id) {
+                $actual_tmp += $this->findValueInMetrics($metrics, $date, $column_id, $field);
+            }
+            if ($actual_tmp > 0) {
+                $row[] = $actual_tmp;
+                $actual_comp = $actual_tmp;
+            } else {
+                $row[] = $actual_comp;
+            }
         }
 
         return $row;

@@ -2,7 +2,7 @@ KB.component('chart-project-burndown', function (containerElement, options) {
 
     this.render = function () {
         var metrics = options.metrics;
-        var columns = [[options.labelTotal]];
+        var columns = [];
         var categories = [];
         var inputFormat = d3.time.format("%Y-%m-%d");
         var outputFormat = d3.time.format(options.dateFormat);
@@ -17,13 +17,7 @@ KB.component('chart-project-burndown', function (containerElement, options) {
                     }
                 } else {
                     if (j > 0) {
-                        columns[j].push(currentValue);
-
-                        if (typeof columns[0][i] === 'undefined') {
-                            columns[0].push(0);
-                        }
-
-                        columns[0][i] += currentValue;
+                        columns[j-1].push(currentValue);
                     } else {
                         categories.push(outputFormat(inputFormat.parse(currentValue)));
                     }

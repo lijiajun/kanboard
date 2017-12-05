@@ -171,8 +171,13 @@ class AnalyticController extends BaseController
 
         list($from, $to, $sprintID) = $this->getDates($project);
 
-        $displayGraph = $this->projectDailyColumnStatsModel->countDays($project['id'], $from, $to) >= 2;
-        $metrics = $displayGraph ? $this->projectDailyColumnStatsModel->getAggregatedMetrics($project['id'], $from, $to, $column) : array();
+        if ($template == 'analytic/burndown') {
+            $displayGraph = True;
+            $metrics = $this->projectDailyColumnStatsModel->getAggregatedMetricsBurn($project['id'], $from, $to, $column);
+        } else {
+            $displayGraph = $this->projectDailyColumnStatsModel->countDays($project['id'], $from, $to) >= 2;
+            $metrics = $displayGraph ? $this->projectDailyColumnStatsModel->getAggregatedMetrics($project['id'], $from, $to, $column) : array();
+        }
 
         $this->response->html($this->helper->layout->analytic($template, array(
             'values'        => array(

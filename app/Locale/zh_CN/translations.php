@@ -623,6 +623,8 @@ return array(
     'User that will receive the email' => '用户将收到邮件',
     'Email subject' => '邮件主题',
     'Date' => '日期',
+    'Actual completion' => '实际完成',
+    'Plan completion' => '计划完成',
     'Add a comment log when moving the task between columns' => '当任务移动到任务栏时添加评论日志',
     'Move the task to another column when the category is changed' => '当任务分类改变时移动到任务栏',
     'Send a task by email to someone' => '发送任务邮件到用户',

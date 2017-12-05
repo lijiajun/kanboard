@@ -166,7 +166,6 @@ class ColumnModel extends Base
             ->columns('(SELECT MAX(' .self::TABLE. '.id) from ' .self::TABLE. ' WHERE ' .self::TABLE. '.project_id = ' . $project_id . ')');
         $listing = $this->db->hashtable(self::TABLE)
             ->eq('project_id', $project_id)
-            ->neq('id','5')
             ->notInSubquery(self::TABLE.'.id', $subquery)
             ->asc('position')
             ->getAll('id', 'title');
