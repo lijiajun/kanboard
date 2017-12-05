@@ -120,17 +120,6 @@ class AnalyticController extends BaseController
         $this->commonAggregateMetrics('analytic/cfd', 'total', t('Cumulative flow diagram'));
     }
 
-    public function cfd_readonly()
-    {
-        $token = $this->request->getStringParam('token');
-        $project = $this->projectModel->getByToken($token);
-
-        if (empty($project)) {
-            throw AccessForbiddenException::getInstance()->withoutLayout();
-        }
-
-        $this->commonAggregateMetrics('analytic/cfd', 'total', t('Cumulative flow diagram'),$project);
-    }
     /**
      * Show burndown chart
      *
@@ -138,10 +127,20 @@ class AnalyticController extends BaseController
      */
     public function burndown()
     {
-        $this->commonAggregateMetrics('analytic/burndown', 'score', t('Burndown chart'));
+        $this->commonAggregateMetrics('analytic/burndown', 'score', t('Burndown chart(Score)'));
     }
 
-    public function burndown_readonly()
+    /**
+     * Show burndown chart
+     *
+     * @access public
+     */
+    public function burndown_tasks()
+    {
+        $this->commonAggregateMetrics('analytic/burndown', 'total', t('Burndown chart(Tasks)'));
+    }
+
+    public function burndown_score_readonly()
     {
         $token = $this->request->getStringParam('token');
         $project = $this->projectModel->getByToken($token);
@@ -150,7 +149,19 @@ class AnalyticController extends BaseController
             throw AccessForbiddenException::getInstance()->withoutLayout();
         }
 
-        $this->commonAggregateMetrics('analytic/burndown', 'score', t('Burndown chart'),$project);
+        $this->commonAggregateMetrics('analytic/burndown', 'score', t('Burndown chart(Score)'),$project);
+    }
+
+    public function burndown_tasks_readonly()
+    {
+        $token = $this->request->getStringParam('token');
+        $project = $this->projectModel->getByToken($token);
+
+        if (empty($project)) {
+            throw AccessForbiddenException::getInstance()->withoutLayout();
+        }
+
+        $this->commonAggregateMetrics('analytic/burndown', 'total', t('Burndown chart(Tasks)'),$project);
     }
     /**
      * Common method for CFD and Burdown chart
@@ -189,6 +200,7 @@ class AnalyticController extends BaseController
             'metrics'       => $metrics,
             'project'       => $project,
             'title'         => $title,
+            'subTitle'      => $title,
             'no_layout'     => $noLayout,
         )));
     }

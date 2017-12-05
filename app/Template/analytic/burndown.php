@@ -1,6 +1,6 @@
 <?php if (! $is_ajax): ?>
     <div class="page-header">
-        <h2><?= t('Burndown chart') ?></h2>
+        <h2><?= $subTitle ?></h2>
     </div>
 <?php endif ?>
 

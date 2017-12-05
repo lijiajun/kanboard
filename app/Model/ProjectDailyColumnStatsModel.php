@@ -188,7 +188,7 @@ class ProjectDailyColumnStatsModel extends Base
     private function buildAggregateBurn(array &$metrics, array &$columns, $field, $from, $to)
     {
         $column_ids = array_keys($columns);
-        $rows = array(array_merge(array(e('Date')), array(e('Plan completion')), array(e('Actual completion'))));
+        $rows = array(array_merge(array(e('Date')), array(e('Plan remaining')), array(e('Actual remaining'))));
 
         $days = (strtotime($to) - strtotime($from)) / 86400 + 1;
         for($i=0; $i < $days; $i++){
@@ -210,17 +210,17 @@ class ProjectDailyColumnStatsModel extends Base
      */
     private function buildRowAggregateBurn(array &$metrics, array &$column_ids, $from, $day_index, $days, $field)
     {
-        static $actual_comp = 0;
+        static $actual_remain = 0;
         $actual_tmp = 0;
-        $plan_comp = 0;
+        $plan_remain = 0;
         $date = date('Y-m-d', strtotime($from) + (86400 * $day_index));
         $row = array($date);
 
         foreach ($column_ids as $column_id) {
-            $plan_comp += $this->findValueInMetrics($metrics, $from, $column_id, $field);
+            $plan_remain += $this->findValueInMetrics($metrics, $from, $column_id, $field);
         }
-        $plan_comp = $plan_comp - (float) ($plan_comp * $day_index)/ ($days - 1);
-        $row[] = round($plan_comp, 2);
+        $plan_remain = $plan_remain - (float) ($plan_remain * $day_index)/ ($days - 1);
+        $row[] = round($plan_remain, 2);
 
         if (strtotime(Date("Y-m-d")) > strtotime($date)) {
             foreach ($column_ids as $column_id) {
@@ -228,9 +228,9 @@ class ProjectDailyColumnStatsModel extends Base
             }
             if ($actual_tmp > 0) {
                 $row[] = $actual_tmp;
-                $actual_comp = $actual_tmp;
+                $actual_remain = $actual_tmp;
             } else {
-                $row[] = $actual_comp;
+                $row[] = $actual_remain;
             }
         }
 

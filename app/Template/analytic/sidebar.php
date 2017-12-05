@@ -9,8 +9,11 @@
         <li <?= $this->app->checkMenuSelection('AnalyticController', 'cfd') ?>>
             <?= $this->modal->replaceLink(t('Cumulative flow diagram'), 'AnalyticController', 'cfd', array('project_id' => $project['id'])) ?>
         </li>
+        <li <?= $this->app->checkMenuSelection('AnalyticController', 'burndown_tasks') ?>>
+            <?= $this->modal->replaceLink(t('Burndown chart(Tasks)'), 'AnalyticController', 'burndown_tasks', array('project_id' => $project['id'])) ?>
+        </li>
         <li <?= $this->app->checkMenuSelection('AnalyticController', 'burndown') ?>>
-            <?= $this->modal->replaceLink(t('Burndown chart'), 'AnalyticController', 'burndown', array('project_id' => $project['id'])) ?>
+            <?= $this->modal->replaceLink(t('Burndown chart(Score)'), 'AnalyticController', 'burndown', array('project_id' => $project['id'])) ?>
         </li>
         <li <?= $this->app->checkMenuSelection('AnalyticController', 'averageTimeByColumn') ?>>
             <?= $this->modal->replaceLink(t('Average time into each column'), 'AnalyticController', 'averageTimeByColumn', array('project_id' => $project['id'])) ?>
