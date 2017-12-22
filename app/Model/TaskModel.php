@@ -143,4 +143,18 @@ class TaskModel extends Base
 
         return round(($position * 100) / count($columns), 1);
     }
+
+    public function updateTaskScore($task_id, $score)
+    {
+        $result = $this->db->table(TaskModel::TABLE)->eq('id', $task_id)->update(array(
+            'score' => $score,
+        ));
+
+        if (! $result) {
+            $this->db->cancelTransaction();
+            return false;
+        }
+
+        return true;
+    }
 }

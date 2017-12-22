@@ -70,6 +70,10 @@ class UserSession extends Base
         return $this->sessionStorage->user['role'];
     }
 
+    public function getSubRole()
+    {
+        return $this->sessionStorage->user['sub_role'];
+    }
     /**
      * Return true if the user has validated the 2FA key
      *

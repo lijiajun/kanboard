@@ -13,6 +13,9 @@
 </div>
 <ul class="panel">
     <li><?= t('Role:') ?> <strong><?= $this->user->getRoleName($user['role']) ?></strong></li>
+    <?php if (! empty($user['sub_role'])): ?>
+        <li><?= t('Sub role:') ?> <strong><?= $this->user->getSubRoleName($user['sub_role']) ?></strong></li>
+    <?php endif ?>
     <li><?= t('Account type:') ?> <strong><?= $user['is_ldap_user'] ? t('Remote') : t('Local') ?></strong></li>
     <li><?= $user['twofactor_activated'] == 1 ? t('Two factor authentication enabled') :  t('Two factor authentication disabled') ?></li>
     <li><?= t('Number of failed login:') ?> <strong><?= $user['nb_failed_login'] ?></strong></li>

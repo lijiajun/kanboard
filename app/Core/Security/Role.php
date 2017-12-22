@@ -15,6 +15,11 @@ class Role
     const APP_USER        = 'app-user';
     const APP_PUBLIC      = 'app-public';
 
+    const SUB_NONE        = null;
+    const SUB_CODER       = 'sub-coder';
+    const SUB_TESTER      = 'sub-tester';
+    const SUB_LEADER      = 'sub-leader';
+
     const PROJECT_MANAGER = 'project-manager';
     const PROJECT_MEMBER  = 'project-member';
     const PROJECT_VIEWER  = 'project-viewer';
@@ -31,6 +36,16 @@ class Role
             self::APP_ADMIN => t('Administrator'),
             self::APP_MANAGER => t('Manager'),
             self::APP_USER => t('User'),
+        );
+    }
+
+    public function getApplicationSubRoles()
+    {
+        return array(
+            self::SUB_NONE => t('None'),
+            self::SUB_CODER => t('Coder'),
+            self::SUB_TESTER => t('Tester'),
+            self::SUB_LEADER => t('Leader'),
         );
     }
 
@@ -71,6 +86,12 @@ class Role
     public function getRoleName($role)
     {
         $roles = $this->getApplicationRoles() + $this->getProjectRoles();
+        return isset($roles[$role]) ? $roles[$role] : t('Unknown');
+    }
+
+    public function getSubRoleName($role)
+    {
+        $roles = $this->getApplicationSubRoles();
         return isset($roles[$role]) ? $roles[$role] : t('Unknown');
     }
 }

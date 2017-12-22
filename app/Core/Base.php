@@ -143,6 +143,7 @@ use Pimple\Container;
  * @property \Kanboard\Model\TaskPositionModel                       $taskPositionModel
  * @property \Kanboard\Model\TaskStatusModel                         $taskStatusModel
  * @property \Kanboard\Model\TaskTagModel                            $taskTagModel
+ * @property \Kanboard\Model\TaskScoreModel                          $taskScoreModel
  * @property \Kanboard\Model\TaskMetadataModel                       $taskMetadataModel
  * @property \Kanboard\Model\TimezoneModel                           $timezoneModel
  * @property \Kanboard\Model\TransitionModel                         $transitionModel

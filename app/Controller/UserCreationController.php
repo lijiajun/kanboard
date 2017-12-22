@@ -26,6 +26,7 @@ class UserCreationController extends BaseController
             'timezones' => $this->timezoneModel->getTimezones(true),
             'languages' => $this->languageModel->getLanguages(true),
             'roles' => $this->role->getApplicationRoles(),
+            'sub_roles' => $this->role->getApplicationSubRoles(),
             'projects' => $this->projectModel->getList(),
             'errors' => $errors,
             'values' => $values + array('role' => Role::APP_USER),

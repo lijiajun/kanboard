@@ -173,6 +173,18 @@ function version_102(PDO $pdo)
             UNIQUE(tag_id, task_id)
         )
     ");
+    
+    $pdo->exec("
+        CREATE TABLE task_has_scores (
+            task_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0 ,
+            is_done INTEGER DEFAULT 0,
+            FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE,
+            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+            UNIQUE(user_id, task_id)
+        )
+    ");
 }
 
 function version_101(PDO $pdo)
@@ -300,6 +312,7 @@ function version_92(PDO $pdo)
 function version_91(PDO $pdo)
 {
     $pdo->exec("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT '".Role::APP_USER."'");
+    $pdo->exec("ALTER TABLE users ADD COLUMN sub_role VARCHAR(255) DEFAULT NULL");
 
     $rq = $pdo->prepare('SELECT * FROM users');
     $rq->execute();
@@ -676,6 +689,8 @@ function version_64(PDO $pdo)
 function version_63(PDO $pdo)
 {
     $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN score INTEGER NOT NULL DEFAULT 0');
+    $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN remain_total INTEGER DEFAULT 0');
+    $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN remain_score INTEGER DEFAULT 0');
 }
 
 function version_62(PDO $pdo)
@@ -1359,6 +1374,7 @@ function version_4(PDO $pdo)
 function version_3(PDO $pdo)
 {
     $pdo->exec('ALTER TABLE projects ADD COLUMN token TEXT');
+    $pdo->exec('ALTER TABLE projects ADD COLUMN burn_tags TEXT');
 }
 
 function version_2(PDO $pdo)

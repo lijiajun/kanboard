@@ -39,6 +39,8 @@
 
                 <?= $this->form->label(t('Role'), 'role') ?>
                 <?= $this->form->select('role', $roles, $values, $errors) ?>
+                <?= $this->form->label(t('Sub role'), 'sub_role') ?>
+                <?= $this->form->select('sub_role', $sub_roles, $values, $errors) ?>
 
                 <?= $this->form->checkbox('disable_login_form', t('Disallow login form'), 1, isset($values['disable_login_form']) && $values['disable_login_form'] == 1) ?>
             </fieldset>

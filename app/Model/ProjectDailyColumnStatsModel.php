@@ -42,6 +42,8 @@ class ProjectDailyColumnStatsModel extends Base
                 'column_id' => $column_id,
                 'total' => $column['total'],
                 'score' => $column['score'],
+                'remain_total' => $column['remain_total'],
+                'remain_score' => $column['remain_score'],
             ));
         }
 
@@ -188,7 +190,7 @@ class ProjectDailyColumnStatsModel extends Base
     private function buildAggregateBurn(array &$metrics, array &$columns, $field, $from, $to)
     {
         $column_ids = array_keys($columns);
-        $rows = array(array_merge(array(e('Date')), array(e('Plan remaining')), array(e('Actual remaining'))));
+        $rows = array(array_merge(array(e('Date')), array(e('Ideal curve')), array(e('Plan tasks')), array(e('Unplan tasks'))));
 
         $days = (strtotime($to) - strtotime($from)) / 86400 + 1;
         for($i=0; $i < $days; $i++){
@@ -210,27 +212,36 @@ class ProjectDailyColumnStatsModel extends Base
      */
     private function buildRowAggregateBurn(array &$metrics, array &$column_ids, $from, $day_index, $days, $field)
     {
-        static $actual_remain = 0;
-        $actual_tmp = 0;
-        $plan_remain = 0;
+        static $plan_remain = 0;
+        static $unplan_remain = 0;
+        $plan_tmp = 0;
+        $unplan_tmp = 0;
+        $ideal_remain = 0;
         $date = date('Y-m-d', strtotime($from) + (86400 * $day_index));
         $row = array($date);
 
         foreach ($column_ids as $column_id) {
-            $plan_remain += $this->findValueInMetrics($metrics, $from, $column_id, $field);
+            $ideal_remain += $this->findValueInMetrics($metrics, $from, $column_id, $field);
         }
-        $plan_remain = $plan_remain - (float) ($plan_remain * $day_index)/ ($days - 1);
-        $row[] = round($plan_remain, 2);
+        $ideal_remain = $ideal_remain - (float) ($ideal_remain * $day_index)/ ($days - 1);
+        $row[] = round($ideal_remain, 2);
 
-        if (strtotime(Date("Y-m-d")) > strtotime($date)) {
+        if (strtotime(Date("Y-m-d")) >= strtotime($date)) {
             foreach ($column_ids as $column_id) {
-                $actual_tmp += $this->findValueInMetrics($metrics, $date, $column_id, $field);
+                $plan_tmp += $this->findValueInMetrics($metrics, $date, $column_id, $field);
+                $unplan_tmp += $this->findValueInMetrics($metrics, $date, $column_id, 'remain_'.$field);
             }
-            if ($actual_tmp > 0) {
-                $row[] = $actual_tmp;
-                $actual_remain = $actual_tmp;
+            if ($plan_tmp > 0) {
+                $row[] = $plan_tmp;
+                $plan_remain = $plan_tmp;
             } else {
-                $row[] = $actual_remain;
+                $row[] = $plan_remain;
+            }
+            if ($unplan_tmp > 0) {
+                $row[] = $unplan_tmp;
+                $unplan_remain = $unplan_tmp;
+            } else {
+                $row[] = $unplan_remain;
             }
         }
 
@@ -251,7 +262,7 @@ class ProjectDailyColumnStatsModel extends Base
     {
         foreach ($metrics as $metric) {
             if ($metric['day'] === $day && $metric['column_id'] == $column_id) {
-                if ($field == 'score') {
+                if ($field == 'score' || $field == 'remain_score') {
                     return (float) $metric[$field]/10;
                 } else {
                     return (int) $metric[$field];
@@ -271,16 +282,27 @@ class ProjectDailyColumnStatsModel extends Base
      */
     private function getStatsByColumns($project_id)
     {
-        $totals = $this->getTotalByColumns($project_id);
-        $scores = $this->getScoreByColumns($project_id);
+        $project = $this->projectModel->getById($project_id);
+        $totals = $this->getTotalByColumns($project_id, $project['burn_tags']);
+        $scores = $this->getScoreByColumns($project_id, $project['burn_tags']);
+        $remain_totals = $this->getRemainTotalByColumns($project_id, $project['burn_tags']);
+        $remain_scores = $this->getRemainScoreByColumns($project_id, $project['burn_tags']);
         $columns = array();
 
         foreach ($totals as $column_id => $total) {
-            $columns[$column_id] = array('total' => $total, 'score' => 0);
+            $columns[$column_id] = array('total' => $total, 'score' => 0, 'remain_total' => 0, 'remain_score' => 0);
         }
 
         foreach ($scores as $column_id => $score) {
             $columns[$column_id]['score'] = (int) $score;
+        }
+
+        foreach ($remain_totals as $column_id => $remain_total) {
+            $columns[$column_id]['remain_total'] = $remain_total;
+        }
+
+        foreach ($remain_scores as $column_id => $remain_score) {
+            $columns[$column_id]['remain_score'] = (int) $remain_score;
         }
 
         return $columns;
@@ -293,9 +315,9 @@ class ProjectDailyColumnStatsModel extends Base
      * @param  integer $project_id
      * @return array
      */
-    private function getScoreByColumns($project_id)
+    private function getScoreByColumns($project_id, $burn_tags)
     {
-        if (BURN_TAGS == null) {
+        if ($burn_tags == null) {
             $stats = $this->db->table(TaskModel::TABLE)
                 ->columns('column_id', 'SUM(score) AS score')
                 ->eq('project_id', $project_id)
@@ -309,8 +331,35 @@ class ProjectDailyColumnStatsModel extends Base
                 ->eq('project_id', $project_id)
                 ->eq('is_active', TaskModel::STATUS_OPEN)
                 ->notNull('score')
-                ->in(TaskTagModel::TABLE.'.tag_id',array(33))
+                ->in(TaskTagModel::TABLE.'.tag_id',explode(',',$burn_tags))
                 ->join(TaskTagModel::TABLE, 'task_id', 'id')
+                ->groupBy('column_id')
+                ->findAll();
+        }
+
+
+        return array_column($stats, 'score', 'column_id');
+    }
+
+    private function getRemainScoreByColumns($project_id, $burn_tags)
+    {
+        if ($burn_tags == null) {
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'SUM(score) AS score')
+                ->eq('project_id', $project_id)
+                ->eq('is_active', TaskModel::STATUS_OPEN)
+                ->notNull('score')
+                ->groupBy('column_id')
+                ->findAll();
+        } else {
+            $subquery = $this->db->table(TaskTagModel::TABLE)
+                ->columns('task_id')->in(TaskTagModel::TABLE.'.tag_id',explode(',',$burn_tags));
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'SUM(score) AS score')
+                ->eq('project_id', $project_id)
+                ->eq('is_active', TaskModel::STATUS_OPEN)
+                ->notNull('score')
+                ->notInSubquery(TaskModel::TABLE.'.id',$subquery)
                 ->groupBy('column_id')
                 ->findAll();
         }
@@ -326,9 +375,9 @@ class ProjectDailyColumnStatsModel extends Base
      * @param  integer $project_id
      * @return array
      */
-    private function getTotalByColumns($project_id)
+    private function getTotalByColumns($project_id, $burn_tags)
     {
-        if (BURN_TAGS == null) {
+        if ($burn_tags == null) {
             $stats = $this->db->table(TaskModel::TABLE)
                 ->columns('column_id', 'COUNT(*) AS total')
                 ->eq('project_id', $project_id)
@@ -340,12 +389,35 @@ class ProjectDailyColumnStatsModel extends Base
                 ->columns('column_id', 'COUNT(*) AS total')
                 ->eq('project_id', $project_id)
                 ->in('is_active', $this->getTaskStatusConfig())
-                ->in(TaskTagModel::TABLE.'.tag_id',array(BURN_TAGS))
+                ->in(TaskTagModel::TABLE.'.tag_id',explode(',',$burn_tags))
                 ->join(TaskTagModel::TABLE, 'task_id', 'id')
                 ->groupBy('column_id')
                 ->findAll();
         }
 
+        return array_column($stats, 'total', 'column_id');
+    }
+
+    private function getRemainTotalByColumns($project_id, $burn_tags)
+    {
+        if ($burn_tags == null) {
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'COUNT(*) AS total')
+                ->eq('project_id', $project_id)
+                ->in('is_active', $this->getTaskStatusConfig())
+                ->groupBy('column_id')
+                ->findAll();
+        } else {
+            $subquery = $this->db->table(TaskTagModel::TABLE)
+                ->columns('task_id')->in(TaskTagModel::TABLE.'.tag_id',explode(',',$burn_tags));
+            $stats = $this->db->table(TaskModel::TABLE)
+                ->columns('column_id', 'COUNT(*) AS total')
+                ->eq('project_id', $project_id)
+                ->in('is_active', $this->getTaskStatusConfig())
+                ->notInSubquery(TaskModel::TABLE.'.id',$subquery)
+                ->groupBy('column_id')
+                ->findAll();
+        }
 
         return array_column($stats, 'total', 'column_id');
     }

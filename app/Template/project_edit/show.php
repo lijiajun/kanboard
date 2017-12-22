@@ -61,6 +61,8 @@
 
         <?= $this->form->label(t('Highest priority'), 'priority_end') ?>
         <?= $this->form->number('priority_end', $values, $errors, array('tabindex="10"')) ?>
+
+        <?= $this->helper->projectHeader->renderBurnTagField($project) ?>
     </fieldset>
 
     <fieldset>

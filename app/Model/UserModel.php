@@ -362,6 +362,15 @@ class UserModel extends Base
                     ->save(array('token' => Token::getToken()));
     }
 
+    public function getUsertoNotification($user_id)
+    {
+        return $this->db
+                    ->table(self::TABLE)
+                    ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name', UserModel::TABLE.'.email', UserModel::TABLE.'.language', UserModel::TABLE.'.notifications_filter', UserModel::TABLE.'.sub_role')
+                    ->eq('id', $user_id)
+                    ->findAll();
+    }
+
     /**
      * Disable public access for a user
      *

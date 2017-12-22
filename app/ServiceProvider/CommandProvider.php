@@ -18,6 +18,7 @@ use Kanboard\Console\ResetTwoFactorCommand;
 use Kanboard\Console\SubtaskExportCommand;
 use Kanboard\Console\TaskExportCommand;
 use Kanboard\Console\TaskOverdueNotificationCommand;
+use Kanboard\Console\TaskEvaluateNotificationCommand;
 use Kanboard\Console\TaskTriggerCommand;
 use Kanboard\Console\TransitionExportCommand;
 use Kanboard\Console\WorkerCommand;
@@ -61,6 +62,7 @@ class CommandProvider implements ServiceProviderInterface
         $application->add(new PluginUninstallCommand($container));
         $application->add(new DatabaseMigrationCommand($container));
         $application->add(new DatabaseVersionCommand($container));
+        $application->add(new TaskEvaluateNotificationCommand($container));
 
         $container['cli'] = $application;
         return $container;

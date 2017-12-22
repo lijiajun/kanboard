@@ -110,6 +110,11 @@ class UserHelper extends Base
         return $this->role->getRoleName($role ?: $this->userSession->getRole());
     }
 
+    public function getSubRoleName($role = '')
+    {
+        return $this->role->getSubRoleName($role ?: $this->userSession->getSubRole());
+    }
+
     /**
      * Check application access
      *

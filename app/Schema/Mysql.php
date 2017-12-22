@@ -164,6 +164,18 @@ function version_111(PDO $pdo)
             UNIQUE(tag_id, task_id)
         ) ENGINE=InnoDB CHARSET=utf8
     ");
+
+    $pdo->exec("
+        CREATE TABLE task_has_scores (
+            task_id INT NOT NULL,
+            user_id INT NOT NULL,
+            score INT NOT NULL DEFAULT 0 ,
+            is_done TINYINT DEFAULT 0,
+            FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE,
+            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+            UNIQUE(user_id, task_id)
+        ) ENGINE=InnoDB CHARSET=utf8
+    ");
 }
 
 function version_110(PDO $pdo)
@@ -756,6 +768,8 @@ function version_65(PDO $pdo)
 function version_64(PDO $pdo)
 {
     $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN score INT NOT NULL DEFAULT 0');
+    $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN remain_total INT DEFAULT 0');
+    $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN remain_score INT DEFAULT 0');
 }
 
 function version_63(PDO $pdo)
@@ -1375,6 +1389,7 @@ function version_1(PDO $pdo)
             password VARCHAR(255),
             is_admin TINYINT DEFAULT 0,
             default_project_id INT DEFAULT 0,
+            sub_role VARCHAR(50),
             PRIMARY KEY (id)
         ) ENGINE=InnoDB CHARSET=utf8
     ");
@@ -1385,6 +1400,7 @@ function version_1(PDO $pdo)
             name VARCHAR(50) UNIQUE,
             is_active TINYINT DEFAULT 1,
             token VARCHAR(255),
+            burn_tags VARCHAR(255),
             PRIMARY KEY (id)
         ) ENGINE=InnoDB CHARSET=utf8
     ");

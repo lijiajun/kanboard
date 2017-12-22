@@ -455,6 +455,12 @@ class ProjectModel extends Base
             return false;
         }
 
+        if (!empty($values['tags'])) {
+            unset($values['tags'][0]);
+            $values['burn_tags'] = implode(',',$values['tags']);
+            unset($values['tags']);
+        }
+
         $this->helper->model->convertIntegerFields($values, array('priority_default', 'priority_start', 'priority_end'));
 
         return $this->exists($values['id']) &&

@@ -3,6 +3,12 @@
         <?= $this->user->getRoleName($user['role']) ?>
     </span>
 
+    <?php if (! empty($user['sub_role'])): ?>
+        <span class="table-list-category">
+            <?= $this->user->getSubRoleName($user['sub_role']) ?>
+        </span>
+    <?php endif ?>
+
     <?php if (! empty($user['name'])): ?>
         <span><?= $this->text->e($user['username']) ?></span>
     <?php endif ?>

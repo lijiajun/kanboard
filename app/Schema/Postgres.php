@@ -160,6 +160,18 @@ function version_90(PDO $pdo)
             UNIQUE(tag_id, task_id)
         )
     ");
+
+    $pdo->exec("
+        CREATE TABLE task_has_scores (
+            task_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            score INTEGER NOT NULL DEFAULT 0 ,
+            is_done BOOLEAN DEFAULT 0,
+            FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE,
+            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+            UNIQUE(user_id, task_id)
+        )
+    ");
 }
 
 function version_89(PDO $pdo)
@@ -725,6 +737,8 @@ function version_46(PDO $pdo)
 function version_45(PDO $pdo)
 {
     $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN score INTEGER NOT NULL DEFAULT 0');
+    $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN remain_total INTEGER DEFAULT 0');
+    $pdo->exec('ALTER TABLE project_daily_summaries ADD COLUMN remain_score INTEGER DEFAULT 0');
 }
 
 function version_44(PDO $pdo)
@@ -1227,6 +1241,7 @@ function version_1(PDO $pdo)
             default_project_id INTEGER DEFAULT 0,
             is_ldap_user BOOLEAN DEFAULT '0',
             name VARCHAR(255),
+            sub_role VARCHAR(50),
             email VARCHAR(255),
             google_id VARCHAR(255),
             github_id VARCHAR(30)
@@ -1259,6 +1274,7 @@ function version_1(PDO $pdo)
             name VARCHAR(255) UNIQUE,
             is_active BOOLEAN DEFAULT '1',
             token VARCHAR(255),
+            burn_tags VARCHAR(255),
             last_modified INTEGER DEFAULT 0
         );
 

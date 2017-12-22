@@ -161,7 +161,7 @@ class UserNotificationModel extends Base
     {
         return $this->db
             ->table(ProjectUserRoleModel::TABLE)
-            ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name', UserModel::TABLE.'.email', UserModel::TABLE.'.language', UserModel::TABLE.'.notifications_filter')
+            ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name', UserModel::TABLE.'.email', UserModel::TABLE.'.language', UserModel::TABLE.'.notifications_filter', UserModel::TABLE.'.sub_role')
             ->join(UserModel::TABLE, 'id', 'user_id')
             ->eq(ProjectUserRoleModel::TABLE.'.project_id', $project_id)
             ->eq(UserModel::TABLE.'.notifications_enabled', '1')
@@ -174,7 +174,7 @@ class UserNotificationModel extends Base
     {
         return $this->db
             ->table(ProjectGroupRoleModel::TABLE)
-            ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name', UserModel::TABLE.'.email', UserModel::TABLE.'.language', UserModel::TABLE.'.notifications_filter')
+            ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name', UserModel::TABLE.'.email', UserModel::TABLE.'.language', UserModel::TABLE.'.notifications_filter', UserModel::TABLE.'.sub_role')
             ->join(GroupMemberModel::TABLE, 'group_id', 'group_id', ProjectGroupRoleModel::TABLE)
             ->join(UserModel::TABLE, 'id', 'user_id', GroupMemberModel::TABLE)
             ->eq(ProjectGroupRoleModel::TABLE.'.project_id', $project_id)

@@ -31,6 +31,8 @@
         <legend><?= t('Security') ?></legend>
         <?= $this->form->label(t('Application role'), 'role') ?>
         <?= $this->form->select('role', $roles, $values, $errors) ?>
+        <?= $this->form->label(t('Sub role'), 'sub_role') ?>
+        <?= $this->form->select('sub_role', $sub_roles, $values, $errors) ?>
     </fieldset>
     <?php endif ?>
 

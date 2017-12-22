@@ -12,6 +12,7 @@ class CronjobCommand extends BaseCommand
     private $commands = array(
         'projects:daily-stats',
         'notification:overdue-tasks',
+        'notification:evaluate-tasks',
         'trigger:tasks',
     );
 

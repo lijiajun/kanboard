@@ -80,4 +80,31 @@ class ProjectHeaderHelper extends Base
 
         return $description;
     }
+
+    public function renderBurnTagField(array $project, array $tags = array())
+    {
+        $options = $this->tagModel->getAssignableList($project['id']);
+
+        $tags = array();
+        if ($project['burn_tags'] != null) {
+            $tags = explode(',',$project['burn_tags']);
+        }
+
+        $html = $this->helper->form->label(t('Burn tags'), 'tags[]');
+        $html .= '<input type="hidden" name="tags[]" value="">';
+        $html .= '<select name="tags[]" id="form-tags" class="tag-autocomplete" multiple>';
+
+        foreach ($options as $id => $tag) {
+            $html .= sprintf(
+                '<option value="%s" %s>%s</option>',
+                $this->helper->text->e($id),
+                in_array($id, $tags) ? 'selected="selected"' : '',
+                $this->helper->text->e($tag)
+            );
+        }
+
+        $html .= '</select>';
+
+        return $html;
+    }
 }

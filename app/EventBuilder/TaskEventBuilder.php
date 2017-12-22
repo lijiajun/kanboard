@@ -4,6 +4,7 @@ namespace Kanboard\EventBuilder;
 
 use Kanboard\Event\TaskEvent;
 use Kanboard\Model\TaskModel;
+use Kanboard\Model\TaskScoreModel;
 
 /**
  * Class TaskEventBuilder
@@ -216,6 +217,8 @@ class TaskEventBuilder extends BaseEventBuilder
                 return $nb > 1 ? e('%d overdue tasks', $nb) : e('Task #%d is overdue', $eventData['tasks'][0]['id']);
             case TaskModel::EVENT_USER_MENTION:
                 return e('You were mentioned in the task #%d', $eventData['task']['id']);
+            case TaskScoreModel::EVENT_EVALUATE:
+                return e('Complexity assessment notification');
             default:
                 return '';
         }
