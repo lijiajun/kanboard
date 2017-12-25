@@ -55,12 +55,7 @@ class TaskScoreModel extends Base
         foreach ($task_scores as $task_id => $score) {
             if ($score == null)
                 continue;
-            $result = $this->db->table(self::TABLE)->eq('task_id', $task_id)->eq('user_id', $curUser['id'])->remove();
-            if (!$result) {
-                $this->db->cancelTransaction();
-                return false;
-            }
-
+            $this->db->table(self::TABLE)->eq('task_id', $task_id)->eq('user_id', $curUser['id'])->remove();
             $result = $this->db->table(self::TABLE)->insert(array(
                 'task_id' => $task_id,
                 'user_id' => $curUser['id'],
