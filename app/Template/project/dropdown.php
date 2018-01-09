@@ -10,7 +10,9 @@
         <li>
             <?= $this->modal->medium('dashboard', t('Activity'), 'ActivityController', 'project', array('project_id' => $project['id'])) ?>
         </li>
-
+        <li>
+            <?= $this->url->icon('eye', t('Assessment'), 'TaskScoreController', 'show', array('project_id' => $project['id'])) ?>
+        </li>
         <?php if ($this->user->hasProjectAccess('AnalyticController', 'taskDistribution', $project['id'])): ?>
             <li>
                 <?= $this->modal->large('line-chart', t('Analytics'), 'AnalyticController', 'taskDistribution', array('project_id' => $project['id'])) ?>

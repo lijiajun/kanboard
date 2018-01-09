@@ -931,6 +931,7 @@ return array(
     'No plugin has registered a project notification method. You can still configure individual notifications in your user profile.' => '没有插件注册到项目通知接口，你仍然可以在你个人设置里启用单独的通知',
     'My dashboard' => '我的控制台',
     'My profile' => '我的个人信息',
+    'Assessment' => '评估',
     'Project owner: ' => '项目负责人',
     'The project identifier is optional and must be alphanumeric, example: MYPROJECT.' => '项目标识符是可选的,且只能是数字或字母组成，例如：MYPROJECT。',
     'Project owner' => '项目负责人',
@@ -1355,7 +1356,7 @@ return array(
     'Only for tasks assigned to the current user' => '仅适用于该任务当前被指派的用户',
     'Your are not member of any project.' => '你不是任一项目的成员。',
     'Only moving task between those columns is permitted for tasks assigned to the current user' => '只有分配给当前任务的用户才允许移动任务',
-    // '[DUPLICATE]' => '',
+    '[DUPLICATE]' => '[复制]',
     // 'DKK - Danish Krona' => '',
     'Remove user from group' => '从用户组删除用户',
     'Assign the task to its creator' => '将任务分配给创建者',
@@ -1375,5 +1376,8 @@ return array(
     'Coder' => '开发',
     'Tester' => '测试',
     'Leader' => '领导',
-    'Please choose' => '请选择'
+    'Please choose' => '请选择',
+    'Task is evaluated failed.' => '任务评估失败。',
+    '%d tasks are evaluated successfully.' => '成功评估%d条任务。',
+    'Score assessment' => '复杂度评估'
 );

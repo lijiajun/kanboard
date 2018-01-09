@@ -63,9 +63,15 @@ class TaskScoreController extends BaseController
         $user = $this->getUser();
 
         if (empty($values) || $user == '') {
+            $this->flash->failure(t('Task is evaluated failed.'));
             $this->response->redirect($this->helper->url->to('TaskScoreController', 'show', array('project_id' => $project['id'])), true);
         } else {
-            $this->taskScoreModel->insertTaskScore($user,$values,$project['id']);
+            $evaCount = $this->taskScoreModel->insertTaskScore($user,$values,$project['id']);
+            if ($evaCount > 0) {
+                $this->flash->success(t('%d tasks are evaluated successfully.',$evaCount));
+            } else {
+                $this->flash->failure(t('Task is evaluated failed.'));
+            }
             $this->response->redirect($this->helper->url->to('TaskScoreController', 'show', array('project_id' => $project['id'])), true);
         }
     }

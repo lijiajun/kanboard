@@ -71,5 +71,8 @@
         <li>
             <?= $this->url->icon('folder', t('Manage projects'), 'ProjectListController', 'show') ?>
         </li>
+        <li>
+            <?= $this->url->icon('eye', t('Score assessment'), 'TaskScoreController', 'show', array('project_id' => $project['id'])) ?>
+        </li>
     </ul>
 </div>

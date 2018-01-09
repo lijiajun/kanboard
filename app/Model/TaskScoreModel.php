@@ -50,7 +50,7 @@ class TaskScoreModel extends Base
                 $allUsers[$user['id']] = $user;
             }
         }
-
+        $evaCount = 0;
         $this->db->startTransaction();
         foreach ($task_scores as $task_id => $score) {
             if ($score == null)
@@ -64,22 +64,23 @@ class TaskScoreModel extends Base
             ));
             if (!$result) {
                 $this->db->cancelTransaction();
-                return false;
+                return $evaCount;
             }
 
+            $evaCount++;
             $evaScore = $this->getEvaScore($task_id,$curUser['sub_role'],count($allUsers));
             if ($evaScore > 0) {
                 $result = $this->taskModel->updateTaskScore($task_id,$evaScore);
                 if (!$result) {
                     $this->db->cancelTransaction();
-                    return false;
+                    return $evaCount;
                 }
                 $this->updateScoreState($task_id);
             }
         }
         $this->db->closeTransaction();
 
-        return true;
+        return $evaCount;
     }
 
     private function getEvaScore($task_id,$sub_role,$totalUserNum)
@@ -158,6 +159,16 @@ class TaskScoreModel extends Base
             ->findAll();
 
         return array_column($record, 'user_id','task_id');
+    }
+
+    public function getUserScorebyTask($task_id)
+    {
+        $record = $this->db->table(self::TABLE)
+            ->columns('user_id','score')
+            ->eq('task_id', $task_id)
+            ->findAll();
+
+        return array_column($record, 'score','user_id');
     }
 
     private function getProjectUserMembers($project_id, $sub_role)

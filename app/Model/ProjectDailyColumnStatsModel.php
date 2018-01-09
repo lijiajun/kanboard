@@ -227,21 +227,28 @@ class ProjectDailyColumnStatsModel extends Base
         $row[] = round($ideal_remain, 2);
 
         if (strtotime(Date("Y-m-d")) >= strtotime($date)) {
-            foreach ($column_ids as $column_id) {
-                $plan_tmp += $this->findValueInMetrics($metrics, $date, $column_id, $field);
-                $unplan_tmp += $this->findValueInMetrics($metrics, $date, $column_id, 'remain_'.$field);
+            $isNullDate = True;
+            foreach ($metrics as $metric) {
+                if ($metric['day'] === $date) {
+                    $isNullDate = False;
+                    break;
+                }
             }
-            if ($plan_tmp > 0) {
+
+            if ($isNullDate) {
+                $row[] = $plan_remain;
+                $row[] = $unplan_remain;
+            } else {
+                foreach ($column_ids as $column_id) {
+                    $plan_tmp += $this->findValueInMetrics($metrics, $date, $column_id, $field);
+                    $unplan_tmp += $this->findValueInMetrics($metrics, $date, $column_id, 'remain_'.$field);
+                }
+
                 $row[] = $plan_tmp;
                 $plan_remain = $plan_tmp;
-            } else {
-                $row[] = $plan_remain;
-            }
-            if ($unplan_tmp > 0) {
+
                 $row[] = $unplan_tmp;
                 $unplan_remain = $unplan_tmp;
-            } else {
-                $row[] = $unplan_remain;
             }
         }
 

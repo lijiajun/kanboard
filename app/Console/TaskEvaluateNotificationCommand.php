@@ -59,6 +59,10 @@ class TaskEvaluateNotificationCommand extends BaseCommand
         $user_tasks = array();
         $project_names = array();
 
+        if ($user['sub_role'] == "") {
+            return true;
+        }
+
         foreach ($tasks as $task) {
             if ($this->taskScoreModel->shouldReceiveNotification($user, $task)) {
                 $user_tasks[] = $task;
@@ -73,6 +77,8 @@ class TaskEvaluateNotificationCommand extends BaseCommand
                 array('tasks' => $user_tasks, 'project_name' => implode(', ', $project_names),'task_count' => count($user_tasks))
             );
         }
+
+        return true;
     }
 
     /**
