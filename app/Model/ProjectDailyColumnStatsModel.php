@@ -294,22 +294,18 @@ class ProjectDailyColumnStatsModel extends Base
         $scores = $this->getScoreByColumns($project_id, $project['burn_tags']);
         $remain_totals = $this->getRemainTotalByColumns($project_id, $project['burn_tags']);
         $remain_scores = $this->getRemainScoreByColumns($project_id, $project['burn_tags']);
+        $column_ids = $this->columnModel->getIdList($project_id);
+
         $columns = array();
-
-        foreach ($totals as $column_id => $total) {
-            $columns[$column_id] = array('total' => $total, 'score' => 0, 'remain_total' => 0, 'remain_score' => 0);
-        }
-
-        foreach ($scores as $column_id => $score) {
-            $columns[$column_id]['score'] = (int) $score;
-        }
-
-        foreach ($remain_totals as $column_id => $remain_total) {
-            $columns[$column_id]['remain_total'] = $remain_total;
-        }
-
-        foreach ($remain_scores as $column_id => $remain_score) {
-            $columns[$column_id]['remain_score'] = (int) $remain_score;
+        foreach ($column_ids as $key => $value) {
+            $col_id = $value['id'];
+            $total = isset($totals[$col_id]) ? $totals[$col_id] : "0";
+            $score = isset($scores[$col_id]) ? $scores[$col_id] : "0";
+            $remain_total = isset($remain_totals[$col_id]) ? $remain_totals[$col_id] : "0";
+            $remain_score = isset($remain_scores[$col_id]) ? $remain_scores[$col_id] : "0";
+            if ($total == "0" and $score == "0" and $remain_total == "0" and $remain_score == "0")
+                continue;
+            $columns[$col_id] = array('total' => $total, 'score' => $score, 'remain_total' => $remain_total, 'remain_score' => $remain_score);
         }
 
         return $columns;

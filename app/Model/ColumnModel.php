@@ -152,6 +152,12 @@ class ColumnModel extends Base
         return $prepend ? array(-1 => t('All columns')) + $listing : $listing;
     }
 
+    public function getIdList($project_id)
+    {
+        $listing = $this->db->table(self::TABLE)->columns('id')->eq('project_id', $project_id)->asc('position')->findAll();
+        return $listing;
+    }
+
     /**
      * Get the list of columns(without completed column) sorted by position [ column_id => title ]
      *
