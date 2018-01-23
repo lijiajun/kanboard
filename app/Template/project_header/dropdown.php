@@ -71,8 +71,10 @@
         <li>
             <?= $this->url->icon('folder', t('Manage projects'), 'ProjectListController', 'show') ?>
         </li>
-        <li>
-            <?= $this->url->icon('eye', t('Score assessment'), 'TaskScoreController', 'show', array('project_id' => $project['id'])) ?>
-        </li>
+        <?php if ($this->user->hasProjectAccess('TaskScoreController', 'show', $project['id'])): ?>
+            <li>
+                <?= $this->modal->large('eye', t('Score assessment'), 'TaskScoreController', 'show', array('project_id' => $project['id'])) ?>
+            </li>
+        <?php endif ?>
     </ul>
 </div>
