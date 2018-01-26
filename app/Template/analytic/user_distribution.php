@@ -14,6 +14,9 @@
     <table class="table-striped">
         <tr>
             <th><?= t('User') ?></th>
+            <th><?= t('Number of todo tasks') ?></th>
+            <th><?= t('Number of doing tasks') ?></th>
+            <th><?= t('Number of done tasks') ?></th>
             <th><?= t('Number of tasks') ?></th>
             <th><?= t('Percentage') ?></th>
         </tr>
@@ -21,6 +24,15 @@
         <tr>
             <td>
                 <?= $this->text->e($metric['user']) ?>
+            </td>
+            <td>
+                <?= $metric['nb_todo_tasks'] ?>
+            </td>
+            <td>
+                <?= $metric['nb_doing_tasks'] ?>
+            </td>
+            <td>
+                <?= $metric['nb_done_tasks'] ?>
             </td>
             <td>
                 <?= $metric['nb_tasks'] ?>
