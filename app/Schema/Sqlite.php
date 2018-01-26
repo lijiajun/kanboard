@@ -1375,6 +1375,7 @@ function version_3(PDO $pdo)
 {
     $pdo->exec('ALTER TABLE projects ADD COLUMN token TEXT');
     $pdo->exec('ALTER TABLE projects ADD COLUMN burn_tags TEXT');
+    $pdo->exec('ALTER TABLE projects ADD COLUMN not_eva_tags TEXT');
 }
 
 function version_2(PDO $pdo)

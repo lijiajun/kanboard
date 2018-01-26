@@ -410,7 +410,10 @@ return array(
     'Columns' => '栏目',
     'Task' => '任务',
     'Percentage' => '百分比',
-    'Number of tasks' => '任务数',
+    'Number of tasks' => '总任务数',
+    'Number of todo tasks' => '待处理',
+    'Number of doing tasks' => '处理中',
+    'Number of done tasks' => '已完成',
     'Task distribution' => '任务分布',
     'Analytics' => '分析',
     'Subtask' => '子任务',
@@ -1379,5 +1382,6 @@ return array(
     'Please choose' => '请选择',
     'Task is evaluated failed.' => '任务评估失败。',
     '%d tasks are evaluated successfully.' => '成功评估%d条任务。',
-    'Score assessment' => '复杂度评估'
+    'Score assessment' => '复杂度评估',
+    'Not evaluated tags' => '不进行复杂度评估的标签'
 );

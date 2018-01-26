@@ -63,6 +63,7 @@
         <?= $this->form->number('priority_end', $values, $errors, array('tabindex="10"')) ?>
 
         <?= $this->helper->projectHeader->renderBurnTagField($project) ?>
+        <?= $this->helper->projectHeader->renderUnEvaTagField($project) ?>
     </fieldset>
 
     <fieldset>

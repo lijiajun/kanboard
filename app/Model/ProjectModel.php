@@ -461,6 +461,12 @@ class ProjectModel extends Base
             unset($values['tags']);
         }
 
+        if (!empty($values['eva_tags'])) {
+            unset($values['eva_tags'][0]);
+            $values['not_eva_tags'] = implode(',',$values['eva_tags']);
+            unset($values['eva_tags']);
+        }
+
         $this->helper->model->convertIntegerFields($values, array('priority_default', 'priority_start', 'priority_end'));
 
         return $this->exists($values['id']) &&
@@ -559,5 +565,15 @@ class ProjectModel extends Base
                     ->table(self::TABLE)
                     ->eq('id', $project_id)
                     ->save(array('is_public' => 0, 'token' => ''));
+    }
+
+    public function getNotEvaTags($project_id)
+    {
+        $result = $this->db
+            ->table(self::TABLE)
+            ->columns('not_eva_tags')
+            ->eq('id', $project_id)
+            ->findAll();
+        return explode(',',$result[0]['not_eva_tags']);
     }
 }

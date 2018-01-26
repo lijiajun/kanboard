@@ -230,6 +230,8 @@ class TaskFinderModel extends Base
     {
         $subquery = $this->db->table(TaskScoreModel::TABLE)
             ->columns('task_id')->eq('user_id',$user_id);
+        $subquery1 = $this->db->table(TaskModel::TABLE)->columns('id')->eq('owner_id',$user_id)->gt('score',0);
+        ;
 
         return $this->db->table(TaskModel::TABLE)
             ->columns(
@@ -255,7 +257,7 @@ class TaskFinderModel extends Base
             ->eq(ProjectModel::TABLE.'.is_active', 1)
             ->eq(TaskModel::TABLE.'.is_active', 1)
             ->notInSubquery(TaskModel::TABLE.'.id', $subquery)
-            ->eq(TaskModel::TABLE.'.score',0);
+            ->notInSubquery(TaskModel::TABLE.'.id', $subquery1);
     }
     /**
      * Get a list of overdue tasks for all projects
@@ -282,7 +284,13 @@ class TaskFinderModel extends Base
 
     public function getEvaTasksByProject($project_id,$user_id)
     {
-        return $this->getEvaTasksQuery($user_id)->eq(TaskModel::TABLE.'.project_id', $project_id)->findAll();
+        $notEvaTags = $this->projectModel->getNotEvaTags($project_id);
+        $subquery = $this->db->table(TaskTagModel::TABLE)->columns('task_id')->in(TaskTagModel::TABLE.'.tag_id', $notEvaTags);
+
+        return $this->getEvaTasksQuery($user_id)
+            ->eq(TaskModel::TABLE.'.project_id', $project_id)
+            ->notInSubquery(TaskModel::TABLE.'.id', $subquery)
+            ->findAll();
     }
      /**
      * Get a list of overdue tasks by user

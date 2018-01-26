@@ -157,4 +157,20 @@ class TaskModel extends Base
 
         return true;
     }
+
+    public function getTaskScore($task_id)
+    {
+        $result = $this->db->table(TaskModel::TABLE)->columns('score')->eq('id', $task_id)->findAll();
+        return $result[0]['score'];
+    }
+
+    public function getOwnerScore($task_id)
+    {
+        $result = $this->db->table(TaskModel::TABLE)
+            ->columns('owner_id','score')
+            ->eq(TaskModel::TABLE.'.id', $task_id)
+            ->findAll();
+
+        return array_column($result, 'score','owner_id');
+    }
 }

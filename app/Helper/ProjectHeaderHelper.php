@@ -107,4 +107,31 @@ class ProjectHeaderHelper extends Base
 
         return $html;
     }
+
+    public function renderUnEvaTagField(array $project, array $tags = array())
+    {
+        $options = $this->tagModel->getAssignableList($project['id']);
+
+        $tags = array();
+        if ($project['not_eva_tags'] != null) {
+            $tags = explode(',',$project['not_eva_tags']);
+        }
+
+        $html = $this->helper->form->label(t('Not evaluated tags'), 'eva_tags[]');
+        $html .= '<input type="hidden" name="eva_tags[]" value="">';
+        $html .= '<select name="eva_tags[]" id="form-tags" class="tag-autocomplete" multiple>';
+
+        foreach ($options as $id => $tag) {
+            $html .= sprintf(
+                '<option value="%s" %s>%s</option>',
+                $this->helper->text->e($id),
+                in_array($id, $tags) ? 'selected="selected"' : '',
+                $this->helper->text->e($tag)
+            );
+        }
+
+        $html .= '</select>';
+
+        return $html;
+    }
 }

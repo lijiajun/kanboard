@@ -7,7 +7,6 @@
         <th style="border: 1px solid #eee;"><?= t('Category') ?></th>
         <th style="border: 1px solid #eee;"><?= t('Assignee') ?></th>
         <th style="border: 1px solid #eee;"><?= t('Create date') ?></th>
-        <th style="border: 1px solid #eee;"><?= t('Score') ?></th>
     </tr>
 
     <?php foreach ($tasks as $task): ?>
@@ -27,7 +26,6 @@
                 <?php endif ?>
             </td>
             <td style="border: 1px solid #eee;"><?= $this->dt->datetime($task['date_creation']) ?></td>
-            <td style="border: 1px solid #eee;"><?= $task['score'] ?></td>
         </tr>
     <?php endforeach ?>
 </table>

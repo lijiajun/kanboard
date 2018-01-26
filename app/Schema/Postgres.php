@@ -1275,6 +1275,7 @@ function version_1(PDO $pdo)
             is_active BOOLEAN DEFAULT '1',
             token VARCHAR(255),
             burn_tags VARCHAR(255),
+            not_eva_tags VARCHAR(255),
             last_modified INTEGER DEFAULT 0
         );
 

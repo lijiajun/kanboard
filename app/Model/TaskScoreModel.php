@@ -37,6 +37,9 @@ class TaskScoreModel extends Base
         if ($this->getRecordbyUserTask($user['id'],$task['id']) != null)
             return false;
 
+        if ($user['id'] == $task['owner_id'] and $task['score'] > 0)
+            return false;
+
         return true;
     }
 
@@ -68,7 +71,7 @@ class TaskScoreModel extends Base
             }
 
             $evaCount++;
-            $evaScore = $this->getEvaScore($task_id,$curUser['sub_role'],count($allUsers));
+            $evaScore = $this->getEvaScore($task_id,$curUser,count($allUsers));
             if ($evaScore > 0) {
                 $result = $this->taskModel->updateTaskScore($task_id,$evaScore);
                 if (!$result) {
@@ -83,10 +86,19 @@ class TaskScoreModel extends Base
         return $evaCount;
     }
 
-    private function getEvaScore($task_id,$sub_role,$totalUserNum)
+    private function getEvaScore($task_id,array $curUser, $totalUserNum)
     {
         $FinalScore = 0;
-        $EvaUsers = $this->getEvaUsersbyTask($task_id,$sub_role);
+        $OwnerId = 0;
+        $OwnerScore = $this->taskModel->getOwnerScore($task_id);
+        $EvaUsers = $this->getEvaUsersbyTask($task_id,$curUser['sub_role']);
+
+        foreach ($OwnerScore as $user_id => $score) {
+            if ($score != "0" and !isset($EvaUsers[$user_id]))
+                $EvaUsers[$user_id] = $score;
+            $OwnerId = $user_id;
+        }
+
         if (count($EvaUsers) != $totalUserNum)
             return $FinalScore;
 
@@ -102,13 +114,12 @@ class TaskScoreModel extends Base
                 $AveScore += $EvaScores[$i];
             }
             $AveScore = $AveScore / (count($EvaScores) - 2);
-            $TaskOwner = $this->getOwnerScore($task_id);
             for($i = 0; $i < count($RefScores); ++$i){
                 if ($AveScore == $RefScores[$i]) {
                     $FinalScore = $AveScore;
                     break;
                 } elseif ($AveScore < $RefScores[$i]) {
-                    if ($AveScore < $EvaUsers[$TaskOwner[0]['owner_id']]) {
+                    if ($AveScore < $EvaUsers[$OwnerId]) {
                         $FinalScore = $RefScores[$i];
                     } else {
                         $FinalScore = $RefScores[$i - 1];
@@ -119,8 +130,7 @@ class TaskScoreModel extends Base
         } elseif (count($EvaScores) == 1) {
             $FinalScore = $EvaScores[0];
         } elseif (count($EvaScores) == 2) {
-            $TaskOwner = $this->getOwnerScore($task_id);
-            $FinalScore = $EvaUsers[$TaskOwner[0]['owner_id']];
+            $FinalScore = $EvaUsers[$OwnerId];
         } elseif (count($EvaScores) == 3) {
             $FinalScore = $EvaScores[1];
         }
@@ -138,16 +148,6 @@ class TaskScoreModel extends Base
             ->findAll();
 
         return array_column($result, 'score','user_id');
-    }
-
-    public function getOwnerScore($task_id)
-    {
-        $result = $this->db->table(TaskModel::TABLE)
-            ->columns('owner_id','score')
-            ->eq(TaskModel::TABLE.'.id', $task_id)
-            ->findAll();
-
-        return $result;
     }
 
     public function getRecordbyUserTask($user_id,$task_id)

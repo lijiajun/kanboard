@@ -1401,6 +1401,7 @@ function version_1(PDO $pdo)
             is_active TINYINT DEFAULT 1,
             token VARCHAR(255),
             burn_tags VARCHAR(255),
+            not_eva_tags VARCHAR(255),
             PRIMARY KEY (id)
         ) ENGINE=InnoDB CHARSET=utf8
     ");
