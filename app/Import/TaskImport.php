@@ -52,6 +52,7 @@ class TaskImport extends Base
             'score'             => 'Complexity',
             'time_estimated'    => 'Time Estimated',
             'time_spent'        => 'Time Spent',
+            'tags'               => 'Tags',
             'date_due'          => 'Due Date',
             'is_active'         => 'Closed',
         );
@@ -125,6 +126,10 @@ class TaskImport extends Base
 
         if (! empty($row['date_due'])) {
             $values['date_due'] = $this->dateParser->getTimestamp($row['date_due']);
+        }
+
+        if (! empty($row['tags'])) {
+            $values['tags'] = explode(',', $row['tags']);
         }
 
         $this->helper->model->removeEmptyFields(
