@@ -3,7 +3,7 @@ header( 'Content-Type:text/html;charset=utf-8 ');
 //echo "{$_SERVER['DOCUMENT_ROOT']},{$_SERVER['PHP_SELF']}";
 
 $cfgQueueRelPath = "queue";
-$cfgSprintXlsFile = "scrum_feedback_all_#SprintId.xls";
+$cfgSprintXlsFile = "scrum_feedback_all_#SprintId.txt";
 
 $scriptAbsPath = get_scriptAbsPath();
 $saveFilePath = "{$scriptAbsPath}/{$cfgQueueRelPath}";
@@ -14,11 +14,16 @@ $scrumFeedback = new ScrumFeedback();
 
 if($pageMethod == "submitSuggest") {
 	save_FBInfo();
-} 
+}
+
+if($pageMethod == "showSuggest") {
+    read_FBInfo();
+}
 
 class ScrumFeedback {
-	public $sprintId="";
-    public $iterSuggest="";
+	public $sprintId = "";
+    public $iterSuggest = "";
+    public $feedBackContents = Array();
 
 	function __construct() {
 		$this->sprintId	= calc_sprintId();
@@ -92,13 +97,30 @@ function save_FBInfo() {
 	global $cfgSprintXlsFile;
 
     $scrumFeedback->iterSuggest=$_POST['suggest'];
-	
+    $content = str_replace("\n",'',$scrumFeedback->iterSuggest);
+    $content = str_replace("\r",'',$content);
+    $content = str_replace(" ",'',$content);
+    if ($content == "") {
+        return;
+    }
+
 	$saveDateTime = date("Ymd_His", time());
-	$saveFileName = "{$saveDateTime}_scurm_feedback_{$scrumFeedback->sprintId}.csv";
-	$saveContent = "{$scrumFeedback->iterSuggest}\n";
+	$saveFileName = "{$saveDateTime}_scurm_feedback_{$scrumFeedback->sprintId}.txt";
+	$saveContent = "{$scrumFeedback->iterSuggest}\n\n";
 
 	file_put_contents("{$saveFilePath}/ins/{$saveFileName}", $saveContent);
 	file_put_contents("{$saveFilePath}/{$cfgSprintXlsFile}",	$saveContent, FILE_APPEND);
+}
+
+function read_FBInfo() {
+    global $saveFilePath;
+    global $cfgSprintXlsFile;
+    global $scrumFeedback;
+
+    $content = trim(file_get_contents("{$saveFilePath}/{$cfgSprintXlsFile}"));
+    $content = str_replace("\n\n",",",$content);
+    $content = str_replace("\r\n",'<br/>',$content);
+    $scrumFeedback->feedBackContents = explode(',',$content);
 }
 
 ?> 
@@ -176,6 +198,13 @@ function save_FBInfo() {
 		document.all("editSubmitBtn").disabled = true;
 		theForm.submit();
 	}
+
+    function doShow() {
+        theForm.action = theFormAction;
+        theForm.elements["method"].value="showSuggest";
+        document.all("editSubmitBtn").disabled = true;
+        theForm.submit();
+    }
 	
 	function doModifySubmit() {
 		document.all("FeedbackViewObj").style.display = "none";
@@ -198,19 +227,49 @@ if($pageMethod == "submitSuggest") {
 			&nbsp;&nbsp;
 			<input type="button" value="修改再录" onclick="doModifySubmit();"/>
 		<br/>
+        </form>
+
+        <hr size="1" color="blue" width="1015px">
+        <small>
+            <br/>
+            反馈信息随时可提交，记录到后台
+            <br/>
+            <input type="button" value="点击查看当前迭代所有反馈" onclick="doShow();"/>
+            <br/>
+        </small>
+        <br/>
 	</center>
-	</form>
 	</div>
 <?php
 }
+?>
 
-?> 
-	<div id="FeedbackEditObj" style="display:<?php if($pageMethod == "submitSuggest") echo "none"; ?>">
+<?php
+if($pageMethod == "showSuggest") {
+?>
+    <div id="FeedbackViewObj">
+        <center>
+            <h1 style="text-align:center">反馈结果</h1>
+            <table border="0" align="center" class="gridtable">
+                <?php foreach($scrumFeedback->feedBackContents as $key => $content) { ?>
+                    <tr>
+                        <th align="center" width="40"> <?php echo $key + 1 ?></th> <td colspan="3" align="left"> <?php echo $content ?></td>
+                    </tr>
+                <?php } ?>
+            </table>
+            <br/><br/>
+            <input type="button" value="返回录入" onclick="doModifySubmit();doReset(false);"/>
+        </center>
+    </div>
+<?php
+}
+?>
+	<div id="FeedbackEditObj" style="display:<?php if($pageMethod == "submitSuggest"  or $pageMethod == "showSuggest") echo "none"; ?>">
 	<center>
 		<b style="font-size:40px;font-family:微软雅黑">信·敏捷意见反馈</b>
 		<br/>
 		<br/>
-	</center> 
+	</center>
 	<form name="scrumForm" method="post">
 	<input type="hidden" name="method" value="" />
 	<table border="0" align="center" class="gridtable">
@@ -232,18 +291,20 @@ if($pageMethod == "submitSuggest") {
 			</td>
 		</tr>
 	</table>
+    </form>
+
+    <center>
+        <hr size="1" color="blue" width="1015px">
+        <small>
+            <br/>
+            反馈信息随时可提交，记录到后台
+            <br/>
+            <input type="button" value="点击查看当前迭代所有反馈" onclick="doShow();"/>
+            <br/>
+        </small>
+        <br/>
+    </center>
 	</div>
-	</form>
-	<center>
-		<hr size="1" color="blue" width="1015px">
-		<small>
-		<br/>
-		反馈信息随时可提交，记录到后台
-		<br/>
-		<a href="<?="./{$cfgQueueRelPath}/{$cfgSprintXlsFile}"?>">点击下载当前迭代所有反馈</a>
-		<br/>
-		</small>
-		<br/>
-	</center>
+
 </body>
 </html>
