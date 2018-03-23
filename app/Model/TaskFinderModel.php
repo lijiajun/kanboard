@@ -259,6 +259,33 @@ class TaskFinderModel extends Base
             ->notInSubquery(TaskModel::TABLE.'.id', $subquery)
             ->notInSubquery(TaskModel::TABLE.'.id', $subquery1);
     }
+
+    public function getEvaTaskbyId($task_id)
+    {
+        return $this->db->table(TaskModel::TABLE)
+            ->columns(
+                TaskModel::TABLE.'.id',
+                TaskModel::TABLE.'.title',
+                TaskModel::TABLE.'.date_creation',
+                TaskModel::TABLE.'.project_id',
+                TaskModel::TABLE.'.creator_id',
+                TaskModel::TABLE.'.owner_id',
+                TaskModel::TABLE.'.score',
+                TaskModel::TABLE.'.category_id',
+                CategoryModel::TABLE.'.name AS category_name',
+                ColumnModel::TABLE.'.title AS column_name',
+                ProjectModel::TABLE.'.name AS project_name',
+                UserModel::TABLE.'.username AS assignee_username',
+                UserModel::TABLE.'.name AS assignee_name',
+                UserModel::TABLE.'.sub_role'
+            )
+            ->join(ProjectModel::TABLE, 'id', 'project_id')
+            ->join(UserModel::TABLE, 'id', 'owner_id')
+            ->join(ColumnModel::TABLE, 'id', 'column_id')
+            ->join(CategoryModel::TABLE, 'id', 'category_id', TaskModel::TABLE)
+            ->eq(TaskModel::TABLE.'.id', $task_id)
+            ->findAll();
+    }
     /**
      * Get a list of overdue tasks for all projects
      *

@@ -219,6 +219,8 @@ class TaskEventBuilder extends BaseEventBuilder
                 return e('You were mentioned in the task #%d', $eventData['task']['id']);
             case TaskScoreModel::EVENT_EVALUATE:
                 return e('Complexity assessment notification');
+            case TaskScoreModel::EVENT_EVALUATE_RESULT:
+                return e('Complexity assessment result notification');
             default:
                 return '';
         }

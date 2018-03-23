@@ -1,6 +1,6 @@
 <?php if (! $is_ajax): ?>
     <div class="page-header">
-        <h2><?= t('User repartition') ?></h2>
+        <h2><?= t('User tasks repartition') ?></h2>
     </div>
 <?php endif ?>
 
@@ -14,9 +14,9 @@
     <table class="table-striped">
         <tr>
             <th><?= t('User') ?></th>
-            <th><?= t('Number of todo tasks') ?></th>
-            <th><?= t('Number of doing tasks') ?></th>
-            <th><?= t('Number of done tasks') ?></th>
+            <th><?= t('Number of todo') ?></th>
+            <th><?= t('Number of doing') ?></th>
+            <th><?= t('Number of done') ?></th>
             <th><?= t('Number of tasks') ?></th>
             <th><?= t('Percentage') ?></th>
         </tr>
@@ -38,7 +38,7 @@
                 <?= $metric['nb_tasks'] ?>
             </td>
             <td>
-                <?= n($metric['percentage']) ?>%
+                <?= n($metric['tasks_percentage']) ?>%
             </td>
         </tr>
         <?php endforeach ?>

@@ -63,8 +63,7 @@ class TaskModificationController extends BaseController
                             "50" => "L(5点)",
                             "80" => "XL(8点)",
                             "130" => "XXL(13点)",
-                            "200" => "XXXL(20点)",
-                            "400" => "XXXXL(40点)");
+                            "200" => "XXXL(20点)");
 
         $params = array(
             'project' => $project,

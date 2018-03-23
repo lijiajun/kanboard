@@ -20,6 +20,7 @@ class TaskScoreModel extends Base
     const TABLE = 'task_has_scores';
 
     const EVENT_EVALUATE = 'task.evaluate';
+    const EVENT_EVALUATE_RESULT = 'task.evaluate.result';
 
     public function shouldReceiveNotification(array $user, array $task)
     {
@@ -79,6 +80,8 @@ class TaskScoreModel extends Base
                     return $evaCount;
                 }
                 $this->updateScoreState($task_id);
+                //notify task owner
+                $this->sendEvaTaskResult($task_id);
             }
         }
         $this->db->closeTransaction();
@@ -206,6 +209,30 @@ class TaskScoreModel extends Base
             $this->db->cancelTransaction();
             return false;
         }
+
+        return true;
+    }
+
+    private function sendEvaTaskResult($task_id)
+    {
+        if ($task_id > 0) {
+            $tasks = $this->taskFinderModel->getEvaTaskbyId($task_id);
+        }
+        else {
+            return false;
+        }
+        if (!empty($tasks)) {
+            $task = $tasks[0];
+            $users = $this->userModel->getUsertoNotification($task['owner_id']);
+        }
+        else {
+            return false;
+        }
+
+        $this->userNotificationModel->sendUserNotification(
+            $users[0],
+            TaskScoreModel::EVENT_EVALUATE_RESULT,
+            array('task' => $task));
 
         return true;
     }

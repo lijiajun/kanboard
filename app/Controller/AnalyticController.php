@@ -99,14 +99,25 @@ class AnalyticController extends BaseController
      *
      * @access public
      */
-    public function userDistribution()
+    public function userTaskDistribution()
     {
         $project = $this->getProject();
 
-        $this->response->html($this->helper->layout->analytic('analytic/user_distribution', array(
+        $this->response->html($this->helper->layout->analytic('analytic/user_tasks_distribution', array(
             'project' => $project,
             'metrics' => $this->userDistributionAnalytic->build($project['id']),
-            'title' => t('User repartition'),
+            'title' => t('User tasks repartition'),
+        )));
+    }
+
+    public function userScoreDistribution()
+    {
+        $project = $this->getProject();
+
+        $this->response->html($this->helper->layout->analytic('analytic/user_scores_distribution', array(
+            'project' => $project,
+            'metrics' => $this->userDistributionAnalytic->build($project['id']),
+            'title' => t('User scores repartition'),
         )));
     }
 

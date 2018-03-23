@@ -51,7 +51,7 @@ class TaskEvaluateNotificationCommand extends BaseCommand
             }
         }
 
-        return $tasks;
+        return true;
     }
 
     public function sendUserEvaTaskNotifications(array $user, array $tasks)

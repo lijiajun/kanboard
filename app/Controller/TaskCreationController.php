@@ -37,8 +37,7 @@ class TaskCreationController extends BaseController
                             "50" => "L(5点)",
                             "80" => "XL(8点)",
                             "130" => "XXL(13点)",
-                            "200" => "XXXL(20点)",
-                            "400" => "XXXXL(40点)");
+                            "200" => "XXXL(20点)");
 
         $this->response->html($this->template->render('task_creation/show', array(
             'project' => $project,
