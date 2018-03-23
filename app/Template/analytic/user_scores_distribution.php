@@ -7,7 +7,7 @@
 <?php if (empty($metrics)): ?>
     <p class="alert"><?= t('Not enough data to show the graph.') ?></p>
 <?php else: ?>
-    <?= $this->app->component('chart-project-user-distribution', array(
+    <?= $this->app->component('chart-project-user-scores-distribution', array(
         'metrics' => $metrics,
     )) ?>
 
