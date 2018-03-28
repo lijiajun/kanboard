@@ -3,6 +3,7 @@
 namespace Kanboard\Console;
 
 use Kanboard\Model\TaskScoreModel;
+use Kanboard\Core\Security\Role;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,37 +22,32 @@ class TaskEvaluateNotificationCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $project_id = 0;
         if ($input->getOption('score')) {
             $project_id = $input->getOption('score');
+        }
+        if ($project_id <= 0){
+            return flase;
         }
 
         $user_id = 0;
         if ($input->getOption('user')) {
             $user_id = $input->getOption('user');
         }
-
-        $tasks = $this->taskFinderModel->getEvaTasksByProject($project_id,'');
-        $tasks = $this->sendEvaTaskNotifications($tasks,$user_id);
-    }
-
-    public function sendEvaTaskNotifications(array $tasks, $user_id)
-    {
         if ($user_id > 0) {
             $users = $this->userModel->getUsertoNotification($user_id);
+        } else {
+            $users = $this->userNotificationModel->getUsersWithNotificationEnabled($project_id);
         }
 
-        foreach ($this->groupByColumn($tasks, 'project_id') as $project_id => $project_tasks) {
-            if ($user_id <= 0) {
-                $users = $this->userNotificationModel->getUsersWithNotificationEnabled($project_id);
+        $tasks = $this->taskFinderModel->getEvaTasksByProject($project_id,'');
+        foreach ($users as $user) {
+            $role = $this->projectUserRoleModel->getUserRole($project_id, $user['id']);
+            if ($role == Role::PROJECT_VIEWER) {
+                continue;
             }
-
-            foreach ($users as $user) {
-                //$role = $this->projectUserRoleModel->getUserRole($project_id, $user['id']);
-                $this->sendUserEvaTaskNotifications($user, $project_tasks);
-            }
+            $this->sendUserEvaTaskNotifications($user, $tasks);
         }
-
-        return true;
     }
 
     public function sendUserEvaTaskNotifications(array $user, array $tasks)

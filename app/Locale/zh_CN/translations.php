@@ -1391,5 +1391,7 @@ return array(
     'Task is evaluated failed.' => '任务评估失败。',
     '%d tasks are evaluated successfully.' => '成功评估%d条任务。',
     'Score assessment' => '复杂度评估',
-    'Not evaluated tags' => '不进行复杂度评估的标签'
+    'Not evaluated tags' => '不进行复杂度评估的标签',
+    'You are an observer of the project and cannot participate in the complexity assessment.' => '您是该项目的观察员，无法参与复杂度评估。',
+    'You are not assigned sub-role and cannot participate in complexity evaluation.' => '您没有被分配子角色，不能参与复杂度评估。',
 );

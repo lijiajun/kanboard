@@ -45,6 +45,8 @@
             <?= $this->modal->submitButtons() ?>
         </div>
      </form>
+<?php elseif (isset($remark)): ?>
+    <p class="alert"><?= $remark ?></p>
 <?php else: ?>
     <p class="alert"><?= t('No tasks to evaluate') ?></p>
 <?php endif ?>

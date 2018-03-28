@@ -10,6 +10,7 @@ use Kanboard\Model\SwimlaneModel;
 use Kanboard\Model\CategoryModel;
 use Kanboard\Model\ProjectModel;
 use Kanboard\Model\UserModel;
+use Kanboard\Core\Security\Role;
 
 /**
  * Task Controller
@@ -21,13 +22,21 @@ class TaskScoreController extends BaseController
 {
     public function show(array $values = array(), array $errors = array())
     {
+        $showTasks = array();
+        $remark = "";
         $project = $this->getProject();
         $user = $this->getUser();
-        $tasks = $this->taskFinderModel->getEvaTasksByProject($project['id'],$user['id']);
-        $showTasks = array();
-        foreach ($tasks as $task) {
-            if ($user['sub_role'] == $task['sub_role'])
-                $showTasks[] = $task;
+        $role = $this->projectUserRoleModel->getUserRole($project['id'], $user['id']);
+        if ($role == Role::PROJECT_VIEWER) {
+            $remark = e('You are an observer of the project and cannot participate in the complexity assessment.');
+        } elseif ($user['sub_role'] == "") {
+            $remark = e('You are not assigned sub-role and cannot participate in complexity evaluation.');
+        } else {
+            $tasks = $this->taskFinderModel->getEvaTasksByProject($project['id'],$user['id']);
+            foreach ($tasks as $task) {
+                if ($user['sub_role'] == $task['sub_role'])
+                    $showTasks[] = $task;
+            }
         }
 
         $score_list = array(null =>e('Please choose'),
@@ -49,6 +58,7 @@ class TaskScoreController extends BaseController
             'errors' => $errors,
             'values' => $values,
             'title' => $project['name'],
+            'remark' => $remark,
             'description' => $this->helper->projectHeader->getDescription($project),
             'board_private_refresh_interval' => $this->configModel->get('board_private_refresh_interval'),
             'board_highlight_period' => $this->configModel->get('board_highlight_period'),

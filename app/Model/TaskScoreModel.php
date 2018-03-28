@@ -3,6 +3,7 @@
 namespace Kanboard\Model;
 
 use Kanboard\Core\Base;
+use Kanboard\Core\Security\Role;
 
 /**
  * Class TaskScoreModel
@@ -133,7 +134,11 @@ class TaskScoreModel extends Base
         } elseif (count($EvaScores) == 1) {
             $FinalScore = $EvaScores[0];
         } elseif (count($EvaScores) == 2) {
-            $FinalScore = $EvaUsers[$OwnerId];
+            if (isset($EvaUsers[$OwnerId])) {
+                $FinalScore = $EvaUsers[$OwnerId];
+            } else {
+                $FinalScore = $EvaScores[0];
+            }
         } elseif (count($EvaScores) == 3) {
             $FinalScore = $EvaScores[1];
         }
@@ -183,6 +188,7 @@ class TaskScoreModel extends Base
             ->eq(ProjectUserRoleModel::TABLE.'.project_id', $project_id)
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->eq(UserModel::TABLE.'.sub_role', $sub_role)
+            ->neq(ProjectUserRoleModel::TABLE.'.role', Role::PROJECT_VIEWER)
             ->findAll();
     }
 
@@ -196,6 +202,7 @@ class TaskScoreModel extends Base
             ->eq(ProjectGroupRoleModel::TABLE.'.project_id', $project_id)
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->eq(UserModel::TABLE.'.sub_role', $sub_role)
+            ->neq(ProjectGroupRoleModel::TABLE.'.role', Role::PROJECT_VIEWER)
             ->findAll();
     }
 
