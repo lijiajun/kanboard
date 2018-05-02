@@ -70,49 +70,50 @@ class AuthenticationProvider implements ServiceProviderInterface
     {
         $acl = new AccessMap;
         $acl->setDefaultRole(Role::PROJECT_VIEWER);
-        $acl->setRoleHierarchy(Role::PROJECT_MANAGER, array(Role::PROJECT_MEMBER, Role::PROJECT_VIEWER));
-        $acl->setRoleHierarchy(Role::PROJECT_MEMBER, array(Role::PROJECT_VIEWER));
+        $acl->setRoleHierarchy(Role::PROJECT_MANAGER, array(Role::PROJECT_MEMBER, Role::PROJECT_EXT_MEMBER, Role::PROJECT_VIEWER));
+        $acl->setRoleHierarchy(Role::PROJECT_MEMBER, array(Role::PROJECT_EXT_MEMBER, Role::PROJECT_VIEWER));
+        $acl->setRoleHierarchy(Role::PROJECT_EXT_MEMBER, array(Role::PROJECT_VIEWER));
 
         $acl->add('ActionController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectActionDuplicationController', '*', Role::PROJECT_MANAGER);
         $acl->add('ActionCreationController', '*', Role::PROJECT_MANAGER);
         $acl->add('AnalyticController', '*', Role::PROJECT_MANAGER);
-        $acl->add('BoardAjaxController', 'save', Role::PROJECT_MEMBER);
-        $acl->add('BoardPopoverController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskPopoverController', '*', Role::PROJECT_MEMBER);
-        $acl->add('CalendarController', 'save', Role::PROJECT_MEMBER);
+        $acl->add('BoardAjaxController', 'save', Role::PROJECT_EXT_MEMBER);
+        $acl->add('BoardPopoverController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskPopoverController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('CalendarController', 'save', Role::PROJECT_EXT_MEMBER);
         $acl->add('CategoryController', '*', Role::PROJECT_MANAGER);
         $acl->add('ColumnController', '*', Role::PROJECT_MANAGER);
-        $acl->add('CommentController', array('create', 'save', 'edit', 'update', 'confirm', 'remove'), Role::PROJECT_MEMBER);
-        $acl->add('CommentListController', array('save'), Role::PROJECT_MEMBER);
-        $acl->add('CommentMailController', '*', Role::PROJECT_MEMBER);
-        $acl->add('CustomFilterController', '*', Role::PROJECT_MEMBER);
+        $acl->add('CommentController', array('create', 'save', 'edit', 'update', 'confirm', 'remove'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('CommentListController', array('save'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('CommentMailController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('CustomFilterController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('ExportController', '*', Role::PROJECT_MANAGER);
-        $acl->add('TaskFileController', array('screenshot', 'create', 'save', 'remove', 'confirm'), Role::PROJECT_MEMBER);
+        $acl->add('TaskFileController', array('screenshot', 'create', 'save', 'remove', 'confirm'), Role::PROJECT_EXT_MEMBER);
         $acl->add('ProjectViewController', array('share', 'updateSharing', 'integrations', 'updateIntegrations', 'notifications', 'updateNotifications', 'duplicate', 'doDuplication'), Role::PROJECT_MANAGER);
         $acl->add('ProjectPermissionController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectEditController', '*', Role::PROJECT_MANAGER);
-        $acl->add('ProjectFileController', '*', Role::PROJECT_MEMBER);
+        $acl->add('ProjectFileController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('ProjectUserOverviewController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectStatusController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectTagController', '*', Role::PROJECT_MANAGER);
-        $acl->add('SubtaskController', '*', Role::PROJECT_MEMBER);
-        $acl->add('SubtaskConverterController', '*', Role::PROJECT_MEMBER);
-        $acl->add('SubtaskRestrictionController', '*', Role::PROJECT_MEMBER);
-        $acl->add('SubtaskStatusController', '*', Role::PROJECT_MEMBER);
+        $acl->add('SubtaskController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('SubtaskConverterController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('SubtaskRestrictionController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('SubtaskStatusController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('SwimlaneController', '*', Role::PROJECT_MANAGER);
-        $acl->add('TaskSuppressionController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskCreationController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskBulkController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskDuplicationController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskRecurrenceController', '*', Role::PROJECT_MEMBER);
+        $acl->add('TaskSuppressionController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskCreationController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskBulkController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskDuplicationController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskRecurrenceController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('TaskImportController', '*', Role::PROJECT_MANAGER);
-        $acl->add('TaskInternalLinkController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskExternalLinkController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskModificationController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskStatusController', '*', Role::PROJECT_MEMBER);
-        $acl->add('TaskMailController', '*', Role::PROJECT_MEMBER);
-        $acl->add('UserAjaxController', array('mention'), Role::PROJECT_MEMBER);
+        $acl->add('TaskInternalLinkController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskExternalLinkController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskModificationController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskStatusController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskMailController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('UserAjaxController', array('mention'), Role::PROJECT_EXT_MEMBER);
 
         return $acl;
     }
@@ -197,14 +198,15 @@ class AuthenticationProvider implements ServiceProviderInterface
     {
         $acl = new AccessMap;
         $acl->setDefaultRole(Role::PROJECT_VIEWER);
-        $acl->setRoleHierarchy(Role::PROJECT_MANAGER, array(Role::PROJECT_MEMBER, Role::PROJECT_VIEWER));
-        $acl->setRoleHierarchy(Role::PROJECT_MEMBER, array(Role::PROJECT_VIEWER));
+        $acl->setRoleHierarchy(Role::PROJECT_MANAGER, array(Role::PROJECT_MEMBER, Role::PROJECT_EXT_MEMBER, Role::PROJECT_VIEWER));
+        $acl->setRoleHierarchy(Role::PROJECT_MEMBER, array(Role::PROJECT_EXT_MEMBER, Role::PROJECT_VIEWER));
+        $acl->setRoleHierarchy(Role::PROJECT_EXT_MEMBER, array(Role::PROJECT_VIEWER));
 
         $acl->add('ActionProcedure', array('removeAction', 'getActions', 'createAction'), Role::PROJECT_MANAGER);
         $acl->add('CategoryProcedure', array('removeCategory', 'createCategory', 'updateCategory'), Role::PROJECT_MANAGER);
         $acl->add('ColumnProcedure', array('updateColumn', 'addColumn', 'removeColumn', 'changeColumnPosition'), Role::PROJECT_MANAGER);
         $acl->add('CommentProcedure', array('removeComment', 'createComment', 'updateComment'), Role::PROJECT_MEMBER);
-        $acl->add('ProjectPermissionProcedure', array('addProjectUser', 'addProjectGroup', 'removeProjectUser', 'removeProjectGroup', 'changeProjectUserRole', 'changeProjectGroupRole'), Role::PROJECT_MANAGER);
+        $acl->add('ProjectPermissionProcedure', array('addProjectUser', 'addProjectGroup', 'removeProjectUser', 'removeProjectGroup', 'changeProjectUserRole', 'changeProjectGroupRole','addProjectExtUser', 'addProjectExtGroup'), Role::PROJECT_MANAGER);
         $acl->add('ProjectProcedure', array('updateProject', 'removeProject', 'enableProject', 'disableProject', 'enableProjectPublicAccess', 'disableProjectPublicAccess'), Role::PROJECT_MANAGER);
         $acl->add('SubtaskProcedure', array('removeSubtask', 'createSubtask', 'updateSubtask'), Role::PROJECT_MEMBER);
         $acl->add('SubtaskTimeTrackingProcedure', array('setSubtaskStartTime', 'setSubtaskEndTime'), Role::PROJECT_MEMBER);
@@ -216,6 +218,17 @@ class AuthenticationProvider implements ServiceProviderInterface
         $acl->add('TaskProcedure', array('openTask', 'closeTask', 'removeTask', 'moveTaskPosition', 'moveTaskToProject', 'duplicateTaskToProject', 'createTask', 'updateTask'), Role::PROJECT_MEMBER);
         $acl->add('TaskTagProcedure', array('setTaskTags'), Role::PROJECT_MEMBER);
         $acl->add('TagProcedure', array('createTag', 'updateTag', 'removeTag'), Role::PROJECT_MEMBER);
+
+        $acl->add('CommentProcedure', array('removeComment', 'createComment', 'updateComment'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('SubtaskProcedure', array('removeSubtask', 'createSubtask', 'updateSubtask'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('SubtaskTimeTrackingProcedure', array('setSubtaskStartTime', 'setSubtaskEndTime'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('ProjectFileProcedure', array('createProjectFile', 'removeProjectFile', 'removeAllProjectFiles'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskFileProcedure', array('createTaskFile', 'removeTaskFile', 'removeAllTaskFiles'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskLinkProcedure', array('createTaskLink', 'updateTaskLink', 'removeTaskLink'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskExternalLinkProcedure', array('createExternalTaskLink', 'updateExternalTaskLink', 'removeExternalTaskLink'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskProcedure', array('openTask', 'closeTask', 'removeTask', 'moveTaskPosition', 'moveTaskToProject', 'duplicateTaskToProject', 'createTask', 'updateTask'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskTagProcedure', array('setTaskTags'), Role::PROJECT_EXT_MEMBER);
+        $acl->add('TagProcedure', array('createTag', 'updateTag', 'removeTag'), Role::PROJECT_EXT_MEMBER);
 
         return $acl;
     }

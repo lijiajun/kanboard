@@ -97,6 +97,11 @@ class ProjectUserOverviewController extends BaseController
         $this->role(Role::PROJECT_MEMBER, 'members', t('People who are project members'), 'Projects where "%s" is member');
     }
 
+    public function ext_members()
+    {
+        $this->role(Role::PROJECT_EXT_MEMBER, 'ext_members', t('People who are project ext members'), 'Projects where "%s" is ext member');
+    }
+
     /**
      * Display the list of open taks
      *

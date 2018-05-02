@@ -23,6 +23,7 @@ class Role
     const PROJECT_MANAGER = 'project-manager';
     const PROJECT_MEMBER  = 'project-member';
     const PROJECT_VIEWER  = 'project-viewer';
+    const PROJECT_EXT_MEMBER  = 'project-ext-member';
 
     /**
      * Get application roles
@@ -61,6 +62,7 @@ class Role
             self::PROJECT_MANAGER => t('Project Manager'),
             self::PROJECT_MEMBER => t('Project Member'),
             self::PROJECT_VIEWER => t('Project Viewer'),
+            self::PROJECT_EXT_MEMBER => t('Project Ext Member'),
         );
     }
 
@@ -73,7 +75,7 @@ class Role
      */
     public function isCustomProjectRole($role)
     {
-        return ! empty($role) && $role !== self::PROJECT_MANAGER && $role !== self::PROJECT_MEMBER && $role !== self::PROJECT_VIEWER;
+        return ! empty($role) && $role !== self::PROJECT_MANAGER && $role !== self::PROJECT_MEMBER && $role !== self::PROJECT_EXT_MEMBER && $role !== self::PROJECT_VIEWER;
     }
 
     /**

@@ -37,6 +37,18 @@ class ProjectPermissionProcedure extends BaseProcedure
         return $this->projectGroupRoleModel->addGroup($project_id, $group_id, $role);
     }
 
+    public function addProjectExtUser($project_id, $user_id, $role = Role::PROJECT_EXT_MEMBER)
+    {
+        ProjectAuthorization::getInstance($this->container)->check($this->getClassName(), 'addProjectExtUser', $project_id);
+        return $this->projectUserRoleModel->addUser($project_id, $user_id, $role);
+    }
+
+    public function addProjectExtGroup($project_id, $group_id, $role = Role::PROJECT_EXT_MEMBER)
+    {
+        ProjectAuthorization::getInstance($this->container)->check($this->getClassName(), 'addProjectExtGroup', $project_id);
+        return $this->projectGroupRoleModel->addGroup($project_id, $group_id, $role);
+    }
+
     public function removeProjectUser($project_id, $user_id)
     {
         ProjectAuthorization::getInstance($this->container)->check($this->getClassName(), 'removeProjectUser', $project_id);

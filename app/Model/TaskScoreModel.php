@@ -189,6 +189,7 @@ class TaskScoreModel extends Base
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->eq(UserModel::TABLE.'.sub_role', $sub_role)
             ->neq(ProjectUserRoleModel::TABLE.'.role', Role::PROJECT_VIEWER)
+            ->neq(ProjectUserRoleModel::TABLE.'.role', Role::PROJECT_EXT_MEMBER)
             ->findAll();
     }
 
@@ -203,6 +204,7 @@ class TaskScoreModel extends Base
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->eq(UserModel::TABLE.'.sub_role', $sub_role)
             ->neq(ProjectGroupRoleModel::TABLE.'.role', Role::PROJECT_VIEWER)
+            ->neq(ProjectGroupRoleModel::TABLE.'.role', Role::PROJECT_EXT_MEMBER)
             ->findAll();
     }
 

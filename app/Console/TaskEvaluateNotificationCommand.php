@@ -43,7 +43,7 @@ class TaskEvaluateNotificationCommand extends BaseCommand
         $tasks = $this->taskFinderModel->getEvaTasksByProject($project_id,'');
         foreach ($users as $user) {
             $role = $this->projectUserRoleModel->getUserRole($project_id, $user['id']);
-            if ($role == Role::PROJECT_VIEWER) {
+            if ($role == Role::PROJECT_VIEWER || $role == Role::PROJECT_EXT_MEMBER) {
                 continue;
             }
             $this->sendUserEvaTaskNotifications($user, $tasks);

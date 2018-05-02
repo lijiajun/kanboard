@@ -23,12 +23,14 @@ class TaskScoreController extends BaseController
     public function show(array $values = array(), array $errors = array())
     {
         $showTasks = array();
-        $remark = "";
+        $remark = e('No tasks to evaluate');
         $project = $this->getProject();
         $user = $this->getUser();
         $role = $this->projectUserRoleModel->getUserRole($project['id'], $user['id']);
         if ($role == Role::PROJECT_VIEWER) {
             $remark = e('You are an observer of the project and cannot participate in the complexity assessment.');
+        } elseif ($role == Role::PROJECT_EXT_MEMBER) {
+            $remark = e('You are a ext_member of the project and cannot participate in the complexity assessment.');
         } elseif ($user['sub_role'] == "") {
             $remark = e('You are not assigned sub-role and cannot participate in complexity evaluation.');
         } else {
