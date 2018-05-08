@@ -386,6 +386,7 @@ class TaskFinderModel extends Base
                 ColumnModel::TABLE.'.title AS column_title',
                 UserModel::TABLE.'.username AS assignee_username',
                 UserModel::TABLE.'.name AS assignee_name',
+                UserModel::TABLE.'.sub_role',
                 'uc.username AS creator_username',
                 'uc.name AS creator_name',
                 CategoryModel::TABLE.'.description AS category_description',

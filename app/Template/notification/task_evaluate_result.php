@@ -18,7 +18,7 @@
             <?php endif ?>
         </td>
         <td style="border: 1px solid #eee;"><?= $this->text->e($task['category_name']) ?></td>
-        <td style="border: 1px solid #eee;"><?= $this->text->e($task['score']) ?></td>
+        <td style="border: 1px solid #eee;"><?= $task['score'] / 10  ?></td>
     </tr>
 </table>
 

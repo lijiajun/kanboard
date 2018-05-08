@@ -1091,6 +1091,7 @@ return array(
     'Assign automatically a color based on a priority' => '基于优先级自动标记颜色',
     'Overdue tasks for the project(s) "%s"' => '"%s"项目下的超期任务',
     'Unevaluated tasks for the "%s" project(%d)' => '"%s"项目下待评估的任务(%d条)',
+    'There is a task under the "%s" project that needs to be reassessed' => '"%s"项目下有一条任务需要重新评估',
     '"%s" project has a task to complete the assessment' => '"%s"项目下有一条任务的复杂度完成评估',
     'Evaluation result' => '评估结果',
     'Upload files' => '上传文件',
@@ -1383,6 +1384,7 @@ return array(
     'Search by user'=> '按用户名查询',
     'Complexity assessment(%d tasks)' => '复杂度评估（%d条任务）',
     'Complexity assessment notification' => '复杂度评估通知',
+    'Complexity reassessment notification' => '复杂度重评通知',
     'Complexity assessment result notification' => '复杂度评估结果通知',
     'Create date' => '创建时间',
     'Click this link to evaluate on Kanboard' => '点此链接在看板中进行评估',
@@ -1399,4 +1401,7 @@ return array(
     'You are an observer of the project and cannot participate in the complexity assessment.' => '您是该项目的观察员，无法参与复杂度评估。',
     'You are a ext_member of the project and cannot participate in the complexity assessment.' => '您是该项目的外援，无需参与复杂度评估。',
     'You are not assigned sub-role and cannot participate in complexity evaluation.' => '您没有被分配子角色，不能参与复杂度评估。',
+    'Reassessment of complexity' => '复杂度重评',
+    'The assessment record for this task(#%d) has been cleared. Please reassess.' => '该任务(#%d)的评估记录已清除，请重新评估。',
+    'Last score' => '原复杂度',
 );

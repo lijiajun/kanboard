@@ -21,6 +21,7 @@ class TaskScoreModel extends Base
     const TABLE = 'task_has_scores';
 
     const EVENT_EVALUATE = 'task.evaluate';
+    const EVENT_REVALUATE = 'task.revaluate';
     const EVENT_EVALUATE_RESULT = 'task.evaluate.result';
 
     public function shouldReceiveNotification(array $user, array $task)
@@ -242,6 +243,16 @@ class TaskScoreModel extends Base
             $users[0],
             TaskScoreModel::EVENT_EVALUATE_RESULT,
             array('task' => $task));
+
+        return true;
+    }
+
+    public function clearTaskScore($task_id)
+    {
+        $this->db->startTransaction();
+        $this->db->table(self::TABLE)->eq('task_id', $task_id)->remove();
+        $this->taskModel->updateTaskScore($task_id,0);
+        $this->db->closeTransaction();
 
         return true;
     }

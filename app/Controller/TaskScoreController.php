@@ -10,6 +10,7 @@ use Kanboard\Model\SwimlaneModel;
 use Kanboard\Model\CategoryModel;
 use Kanboard\Model\ProjectModel;
 use Kanboard\Model\UserModel;
+use Kanboard\Model\TaskScoreModel;
 use Kanboard\Core\Security\Role;
 
 /**
@@ -84,6 +85,31 @@ class TaskScoreController extends BaseController
                 $this->flash->failure(t('Task is evaluated failed.'));
             }
             $this->response->redirect($this->helper->url->to('TaskScoreController', 'show', array('project_id' => $project['id'])), true);
+        }
+    }
+
+    public function revaluation(array $values = array(), array $errors = array())
+    {
+        $task = $this->getTask();
+        $score = $task['score'];
+        $task['score'] = 0;
+        $this->taskScoreModel->clearTaskScore($task['id']);
+        $this->response->html($this->helper->layout->app('task/revaluation', array('task' => $task)));
+
+        $users = $this->userNotificationModel->getUsersWithNotificationEnabled($task['project_id']);
+        foreach ($users as $user) {
+            $role = $this->projectUserRoleModel->getUserRole($task['project_id'], $user['id']);
+            if ($user['sub_role'] == "" || $role == Role::PROJECT_VIEWER || $role == Role::PROJECT_EXT_MEMBER) {
+                continue;
+            }
+
+            if ($this->taskScoreModel->shouldReceiveNotification($user, $task)) {
+                $this->userNotificationModel->sendUserNotification(
+                    $user,
+                    TaskScoreModel::EVENT_REVALUATE,
+                    array('task' => $task, 'project_name' => $task['project_name'], 'score' => $score)
+                );
+            }
         }
     }
 }

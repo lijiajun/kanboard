@@ -34,6 +34,9 @@
             <?= $this->modal->large('edit', t('Edit the task'), 'TaskModificationController', 'edit', array('task_id' => $task['id'], 'project_id' => $task['project_id'])) ?>
         </li>
         <li>
+            <?= $this->modal->medium('eye', t('Reassessment of complexity'), 'TaskScoreController', 'revaluation', array('task_id' => $task['id'])) ?>
+        </li>
+        <li>
             <?= $this->modal->medium('refresh fa-rotate-90', t('Edit recurrence'), 'TaskRecurrenceController', 'edit', array('task_id' => $task['id'], 'project_id' => $task['project_id'])) ?>
         </li>
         <?php endif ?>
