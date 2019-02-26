@@ -243,8 +243,10 @@ class TaskFinderModel extends Base
                 TaskModel::TABLE.'.owner_id',
                 TaskModel::TABLE.'.score',
                 TaskModel::TABLE.'.category_id',
+                TaskModel::TABLE.'.swimlane_id',
                 CategoryModel::TABLE.'.name AS category_name',
                 ColumnModel::TABLE.'.title AS column_name',
+                SwimlaneModel::TABLE.'.name AS swimlane_name',
                 ProjectModel::TABLE.'.name AS project_name',
                 UserModel::TABLE.'.username AS assignee_username',
                 UserModel::TABLE.'.name AS assignee_name',
@@ -253,6 +255,7 @@ class TaskFinderModel extends Base
             ->join(ProjectModel::TABLE, 'id', 'project_id')
             ->join(UserModel::TABLE, 'id', 'owner_id')
             ->join(ColumnModel::TABLE, 'id', 'column_id')
+            ->join(SwimlaneModel::TABLE, 'id', 'swimlane_id')
             ->join(CategoryModel::TABLE, 'id', 'category_id', TaskModel::TABLE)
             ->eq(ProjectModel::TABLE.'.is_active', 1)
             ->eq(TaskModel::TABLE.'.is_active', 1)

@@ -9,6 +9,7 @@
             <tr style="background: #fbfbfb; text-align: left; padding-top: .5em; padding-bottom: .5em; padding-left: 3px; padding-right: 3px;">
                 <th style="border: 1px solid #eee;"><?= t('Id') ?></th>
                 <th style="border: 1px solid #eee;"><?= t('Title') ?></th>
+                <th style="border: 1px solid #eee;"><?= t('Swimlanes') ?></th>
                 <th style="border: 1px solid #eee;"><?= t('Category') ?></th>
                 <th style="border: 1px solid #eee;"><?= t('Assignee') ?></th>
                 <th style="border: 1px solid #eee;"><?= t('Create date') ?></th>
@@ -25,6 +26,7 @@
                             <?= $this->text->e($task['title']) ?>
                         <?php endif ?>
                     </td>
+                    <td style="border: 1px solid #eee;"><?= $this->text->e($task['swimlane_name']) ?></td>
                     <td style="border: 1px solid #eee;"><?= $this->text->e($task['category_name']) ?></td>
                     <td style="border: 1px solid #eee;">
                         <?php if (! empty($task['assignee_username'])): ?>
