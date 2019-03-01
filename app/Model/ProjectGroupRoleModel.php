@@ -110,7 +110,10 @@ class ProjectGroupRoleModel extends Base
     public function getAssignableUsers($project_id)
     {
         return $this->db->table(UserModel::TABLE)
-            ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name')
+            ->columns(UserModel::TABLE.'.id',
+                UserModel::TABLE.'.username',
+                UserModel::TABLE.'.name',
+                UserModel::TABLE.'.sub_role')
             ->join(GroupMemberModel::TABLE, 'user_id', 'id', UserModel::TABLE)
             ->join(self::TABLE, 'group_id', 'group_id', GroupMemberModel::TABLE)
             ->eq(self::TABLE.'.project_id', $project_id)

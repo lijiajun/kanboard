@@ -168,7 +168,10 @@ class ProjectUserRoleModel extends Base
         }
 
         $userMembers = $this->db->table(self::TABLE)
-            ->columns(UserModel::TABLE.'.id', UserModel::TABLE.'.username', UserModel::TABLE.'.name')
+            ->columns(UserModel::TABLE.'.id',
+                UserModel::TABLE.'.username',
+                UserModel::TABLE.'.name',
+                UserModel::TABLE.'.sub_role')
             ->join(UserModel::TABLE, 'id', 'user_id')
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->eq(self::TABLE.'.project_id', $project_id)
@@ -178,7 +181,7 @@ class ProjectUserRoleModel extends Base
         $groupMembers = $this->projectGroupRoleModel->getAssignableUsers($project_id);
         $members = array_merge($userMembers, $groupMembers);
 
-        return $this->userModel->prepareList($members);
+        return $members;
     }
 
     /**
@@ -191,9 +194,21 @@ class ProjectUserRoleModel extends Base
      * @param  bool      $singleUser    If there is only one user return only this user
      * @return array
      */
-    public function getAssignableUsersList($project_id, $unassigned = true, $everybody = false, $singleUser = false)
+    public function getAssignableUsersList($project_id, $unassigned = true, $everybody = false, $singleUser = false, $groupFlag = false)
     {
-        $users = $this->getAssignableUsers($project_id);
+        $userDetails = $this->getAssignableUsers($project_id);
+
+        if ($groupFlag) {
+            foreach ($userDetails as $user) {
+                $users[$user['id']] = array($user['name'], $user['sub_role']?$user['sub_role']:'sub_null');
+            }
+            if ($unassigned) {
+                $users = array(0 => array(t('Unassigned'), 'sub_null')) + $users;
+            }
+            return $users;
+        }
+
+        $users = $this->userModel->prepareList($userDetails);
 
         if ($singleUser && count($users) === 1) {
             return $users;
