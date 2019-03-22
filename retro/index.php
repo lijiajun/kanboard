@@ -20,6 +20,10 @@ if($pageMethod == "showSuggest") {
     read_FBInfo();
 }
 
+if($pageMethod == "showAll") {
+    read_AllInfo();
+}
+
 class ScrumFeedback {
 	public $sprintId = "";
     public $iterSuggest = "";
@@ -123,6 +127,32 @@ function read_FBInfo() {
     $scrumFeedback->feedBackContents = explode(',',$content);
 }
 
+function read_AllInfo() {
+    global $saveFilePath;               // retro/queue
+    global $scrumFeedback;
+
+    $sprintid = calc_sprintId();
+    $iteration = array();
+    $msg = array();
+    for($x = 0;$x <=3; $x++)
+    {
+        $sprintAllFile = "scrum_feedback_all_" . $sprintid . ".txt";
+        $content = trim(file_get_contents("{$saveFilePath}/{$sprintAllFile}"));
+        $content = str_replace("\n\n","<br/>",$content);
+        $content = str_replace("\r\n",'<br/>',$content);
+        //$content_array = explode("<br/>",$content);
+//        for($i = 0;$i < sizeof($content_array); $i++)
+//        {
+//            $content_array[$i] = strval(intval($i)+1) . ":<br/>" . $content_array[$i] . "<br/>";
+//        }
+        //$content = implode(" ", $content_array);
+        array_push($iteration,"第" .$sprintid ."迭代");
+        array_push($msg,$content);
+        $sprintid = $sprintid -1;
+    }
+    $scrumFeedback->feedBackContents = array_combine($iteration,$msg);
+}
+
 ?> 
  
 <html>
@@ -132,34 +162,51 @@ function read_FBInfo() {
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.5, user-scalable=yes"/>
 	<style type="text/css">
-		table.gridtable {
-			width:1015px;
-			font-family: 微软雅黑; 
-			font-size:22px;
-			color:#333333;  
-			border-width: 1px;  
-			border-color: #666666;  
-			border-collapse: collapse;  
-		}  
-		table.gridtable th {  
-			font-family: 微软雅黑;  
-			font-size:28px;
-			border-width: 1px;  
-			padding: 8px;  
-			border-style: solid;  
-			border-color: #666666;  
-			background-color: #fcfcfc;  
-		}
-		table.gridtable td {  
-			font-family: 微软雅黑; 
-			font-size:20px;
-			border-width: 1px;  
-			padding: 8px;  
-			border-style: solid;  
-			border-color: #666666;  
-			background-color: #ffffff;  
-		}
-	</style>  
+        table.gridtable {
+            width:1015px;
+            font-family: 微软雅黑;
+            font-size:22px;
+            color:#333333;
+            border-width: 1px;
+            border-color: #666666;
+            border-collapse: collapse;
+        }
+        table.gridtable th {
+            font-family: 微软雅黑;
+            font-size:28px;
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #fcfcfc;
+        }
+        table.gridtable td {
+            font-family: 微软雅黑;
+            font-size:20px;
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #666666;
+            background-color: #ffffff;
+        }
+
+        table.alltable {
+            width:700px;
+            border-collapse: collapse;
+            cellspacing: 0;
+            cellpadding: 0;
+            border-width: 0;
+        }
+
+        table.alltable td {
+            font-family: 微软雅黑;
+            font-size:15px;
+            padding: 4px;
+
+        }
+
+
+	</style>
 	<script type="text/javascript">
 	var theForm = null;
 	var theInputObjBgnVal = null;
@@ -202,6 +249,13 @@ function read_FBInfo() {
     function doShow() {
         theForm.action = theFormAction;
         theForm.elements["method"].value="showSuggest";
+        document.all("editSubmitBtn").disabled = true;
+        theForm.submit();
+    }
+
+    function doShowAll() {
+        theForm.action = theFormAction;
+        theForm.elements["method"].value="showAll";
         document.all("editSubmitBtn").disabled = true;
         theForm.submit();
     }
@@ -264,7 +318,38 @@ if($pageMethod == "showSuggest") {
 <?php
 }
 ?>
-	<div id="FeedbackEditObj" style="display:<?php if($pageMethod == "submitSuggest"  or $pageMethod == "showSuggest") echo "none"; ?>">
+
+<?php
+if($pageMethod == "showAll") {
+?>
+    <div id="FeedbackViewObj">
+        <center>
+            <h1 style="text-align:center">反馈结果</h1>
+            <table border="1" align="center" class="alltable">
+                <?php foreach($scrumFeedback->feedBackContents as $key => $content) { ?>
+                    <tr>
+                        <th align="center" width="40"> <?php echo $key ?></th>
+                        <td>
+                        <table border="1" align="center"  cellspacing="0" cellpadding="0" style="border-collapse: collapse;border-width:0px; border-style:hidden;">
+                            <?php foreach(explode("<br/>",$content) as  $key => $content_array) { ?>
+                                <tr colspan="3" align="left"><td width="30px" align="center"><?php echo $key+1 ?></td><td width="670px"><?php echo $content_array ?></td></tr>
+                            <?php } ?>
+
+                        </table>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </table>
+            <br/><br/>
+            <input type="button" value="返回录入" onclick="doModifySubmit();doReset(false);"/>
+        </center>
+    </div>
+<?php
+}
+?>
+
+
+	<div id="FeedbackEditObj" style="display:<?php if($pageMethod == "submitSuggest"  or $pageMethod == "showSuggest" or $pageMethod == "showAll") echo "none"; ?>">
 	<center>
 		<b style="font-size:40px;font-family:微软雅黑">信·敏捷意见反馈</b>
 		<br/>
@@ -300,6 +385,7 @@ if($pageMethod == "showSuggest") {
             反馈信息随时可提交，记录到后台
             <br/>
             <input type="button" value="点击查看当前迭代所有反馈" onclick="doShow();"/>
+            <input type="button" value="点击查看最近四个迭代反馈" onclick="doShowAll();"/>
             <br/>
         </small>
         <br/>
