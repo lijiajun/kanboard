@@ -122,12 +122,12 @@ function read_FBInfo() {
     $msg =  array();
     $date = array($currDate);
     $msg =  array($content);
-    for($x = 1;$x <=6; $x++)
+    for($x = 1;$x <=27; $x++)
     {
         $currDate = date("Ymd",(strtotime($currDate) - 3600*24));
         array_push($date,$currDate);
         $fileName = "check_all_" . $currDate . ".txt";
-        if(@file_get_contents("{$saveFilePath}/{$fileName}") != 0)
+        if(filesize("{$saveFilePath}/{$fileName}") !== 0)
         {
             $content = trim(file_get_contents("{$saveFilePath}/{$fileName}"));
             $content = str_replace("\n\n",",",$content);
@@ -247,7 +247,7 @@ if($pageMethod == "submitSuggest") {
 
         <hr size="1" color="blue" width="1015px">
         <small>
-            <input type="button" value="点击查看最近一周所有反馈" onclick="doShow();"/>
+            <input type="button" value="点击查看最近四周所有反馈" onclick="doShow();"/>
             <br/>
         </small>
         <br/>
@@ -309,7 +309,7 @@ if($pageMethod == "showSuggest") {
     <center>
         <hr size="1" color="blue" width="1015px">
         <small>
-            <input type="button" value="点击查看最近一周所有反馈" onclick="doShow();"/>
+            <input type="button" value="点击查看最近四周所有反馈" onclick="doShow();"/>
             <br/>
         </small>
         <br/>
