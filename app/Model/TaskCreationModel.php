@@ -45,6 +45,18 @@ class TaskCreationModel extends Base
                 $task_id,
                 array(TaskModel::EVENT_CREATE_UPDATE, TaskModel::EVENT_CREATE)
             ));
+/*
+            if ($values['score'] != 0)
+            {
+                $this->db->table(TaskScoreModel::TABLE)->insert(array(
+                    'task_id' => $task_id,
+                    'user_id' => $values['owner_id'],
+                    'score' => $values['score'],
+                    'evaluate_time' => $values['date_creation'],
+                    'is_done' => 0,
+                ));
+            }
+*/
         }
 
         return (int) $task_id;
@@ -64,8 +76,15 @@ class TaskCreationModel extends Base
         $this->helper->model->removeFields($values, array('another_task', 'duplicate_multiple_projects'));
         $this->helper->model->resetFields($values, array('creator_id', 'owner_id', 'date_due', 'date_started', 'score', 'category_id', 'time_estimated', 'time_spent'));
 
+        $firstColumnId = $this->columnModel->getFirstColumnId($values['project_id']);
         if (empty($values['column_id'])) {
-            $values['column_id'] = $this->columnModel->getFirstColumnId($values['project_id']);
+            $values['column_id'] = $firstColumnId;
+        }
+
+        if (empty($values['date_started'])) {
+            if ($values['column_id'] != $firstColumnId) {
+                $values['date_started'] = time();
+            }
         }
 
         if (empty($values['color_id'])) {

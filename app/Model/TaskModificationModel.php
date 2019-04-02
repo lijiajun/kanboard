@@ -117,6 +117,12 @@ class TaskModificationModel extends Base
         $this->helper->model->convertIntegerFields($values, array('priority', 'is_active', 'recurrence_status', 'recurrence_trigger', 'recurrence_factor', 'recurrence_timeframe', 'recurrence_basedate'));
 
         $values['date_modification'] = time();
+        if (isset($values['project_id']) and isset($values['column_id'])) {
+            $lastColumnId = $this->columnModel->getLastColumnId($values['project_id']);
+            if ($values['column_id'] == $lastColumnId) {
+                $values['date_completed'] = time();
+            }
+        }
 
         $this->hook->reference('model:task:modification:prepare', $values);
     }

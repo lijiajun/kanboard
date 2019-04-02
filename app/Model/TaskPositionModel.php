@@ -76,7 +76,7 @@ class TaskPositionModel extends Base
         $this->db->startTransaction();
         $r1 = $this->saveTaskPositions($project_id, $task_id, 0, $original_column_id, $original_swimlane_id);
         $r2 = $this->saveTaskPositions($project_id, $task_id, $position, $new_column_id, $new_swimlane_id);
-        $r3 = $this->saveTaskTimestamps($task_id);
+        $r3 = $this->saveTaskTimestamps($project_id, $task_id, $original_column_id, $new_column_id);
         $this->db->closeTransaction();
 
         return $r1 && $r2 && $r3;
@@ -99,7 +99,7 @@ class TaskPositionModel extends Base
         $this->db->startTransaction();
         $r1 = $this->saveTaskPositions($project_id, $task_id, 0, $original_column_id, $swimlane_id);
         $r2 = $this->saveTaskPositions($project_id, $task_id, $position, $new_column_id, $swimlane_id);
-        $r3 = $this->saveTaskTimestamps($task_id);
+        $r3 = $this->saveTaskTimestamps($project_id, $task_id, $original_column_id, $new_column_id);
         $this->db->closeTransaction();
 
         return $r1 && $r2 && $r3;
@@ -183,14 +183,25 @@ class TaskPositionModel extends Base
      * @param  integer $task_id
      * @return bool
      */
-    private function saveTaskTimestamps($task_id)
+    private function saveTaskTimestamps($project_id, $task_id, $original_column_id, $new_column_id)
     {
         $now = time();
 
-        return $this->db->table(TaskModel::TABLE)->eq('id', $task_id)->update(array(
+        $lastColumnId = $this->columnModel->getLastColumnId($project_id);
+        $updateDate = array(
             'date_moved' => $now,
             'date_modification' => $now,
-        ));
+        );
+
+        if ($original_column_id != $new_column_id) {
+            if ($original_column_id == $lastColumnId) {
+                $updateDate = array_merge($updateDate, array('date_completed' => null));
+            } elseif ($new_column_id == $lastColumnId) {
+                $updateDate = array_merge($updateDate, array('date_completed' => $now));
+            }
+        }
+
+        return $this->db->table(TaskModel::TABLE)->eq('id', $task_id)->update($updateDate);
     }
 
     /**

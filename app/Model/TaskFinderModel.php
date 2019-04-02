@@ -238,6 +238,8 @@ class TaskFinderModel extends Base
                 TaskModel::TABLE.'.id',
                 TaskModel::TABLE.'.title',
                 TaskModel::TABLE.'.date_creation',
+                TaskModel::TABLE.'.date_started',
+                TaskModel::TABLE.'.date_completed',
                 TaskModel::TABLE.'.project_id',
                 TaskModel::TABLE.'.creator_id',
                 TaskModel::TABLE.'.owner_id',
