@@ -77,6 +77,7 @@ class TaskCreationModel extends Base
         $this->helper->model->resetFields($values, array('creator_id', 'owner_id', 'date_due', 'date_started', 'score', 'category_id', 'time_estimated', 'time_spent'));
 
         $firstColumnId = $this->columnModel->getFirstColumnId($values['project_id']);
+        $lastColumnId = $this->columnModel->getLastColumnId($values['project_id']);
         if (empty($values['column_id'])) {
             $values['column_id'] = $firstColumnId;
         }
@@ -85,6 +86,10 @@ class TaskCreationModel extends Base
             if ($values['column_id'] != $firstColumnId) {
                 $values['date_started'] = time();
             }
+        }
+
+        if ($values['column_id'] == $lastColumnId) {
+            $values['date_completed'] = time();
         }
 
         if (empty($values['color_id'])) {
