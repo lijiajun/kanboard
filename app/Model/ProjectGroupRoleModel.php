@@ -107,8 +107,14 @@ class ProjectGroupRoleModel extends Base
      * @param  integer $project_id
      * @return array
      */
-    public function getAssignableUsers($project_id)
+    public function getAssignableUsers($project_id, $memberFlag = false)
     {
+        $filterRole = array(Role::PROJECT_MEMBER, Role::PROJECT_EXT_MEMBER);
+        if (!$memberFlag)
+        {
+            array_push($filterRole, Role::PROJECT_MANAGER);
+        }
+
         return $this->db->table(UserModel::TABLE)
             ->columns(UserModel::TABLE.'.id',
                 UserModel::TABLE.'.username',
@@ -118,7 +124,7 @@ class ProjectGroupRoleModel extends Base
             ->join(self::TABLE, 'group_id', 'group_id', GroupMemberModel::TABLE)
             ->eq(self::TABLE.'.project_id', $project_id)
             ->eq(UserModel::TABLE.'.is_active', 1)
-            ->in(self::TABLE.'.role', array(Role::PROJECT_MANAGER, Role::PROJECT_MEMBER, Role::PROJECT_EXT_MEMBER))
+            ->in(self::TABLE.'.role', $filterRole)
             ->asc(UserModel::TABLE.'.id')
             ->findAll();
     }

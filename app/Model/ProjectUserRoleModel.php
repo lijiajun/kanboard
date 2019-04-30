@@ -161,10 +161,16 @@ class ProjectUserRoleModel extends Base
      * @param  integer $project_id
      * @return array
      */
-    public function getAssignableUsers($project_id)
+    public function getAssignableUsers($project_id, $memberFlag = false)
     {
         if ($this->projectPermissionModel->isEverybodyAllowed($project_id)) {
             return $this->userModel->getActiveUsersList();
+        }
+
+        $filterRole = array(Role::PROJECT_MEMBER, Role::PROJECT_EXT_MEMBER);
+        if (!$memberFlag)
+        {
+            array_push($filterRole, Role::PROJECT_MANAGER);
         }
 
         $userMembers = $this->db->table(self::TABLE)
@@ -175,10 +181,10 @@ class ProjectUserRoleModel extends Base
             ->join(UserModel::TABLE, 'id', 'user_id')
             ->eq(UserModel::TABLE.'.is_active', 1)
             ->eq(self::TABLE.'.project_id', $project_id)
-            ->neq(self::TABLE.'.role', Role::PROJECT_VIEWER)
+            ->in(self::TABLE.'.role', $filterRole)
             ->findAll();
 
-        $groupMembers = $this->projectGroupRoleModel->getAssignableUsers($project_id);
+        $groupMembers = $this->projectGroupRoleModel->getAssignableUsers($project_id, $memberFlag);
         $members = array_merge($userMembers, $groupMembers);
 
         return $members;
@@ -194,9 +200,14 @@ class ProjectUserRoleModel extends Base
      * @param  bool      $singleUser    If there is only one user return only this user
      * @return array
      */
-    public function getAssignableUsersList($project_id, $unassigned = true, $everybody = false, $singleUser = false, $groupFlag = false)
+    public function getAssignableUsersList($project_id,
+                                           $unassigned = true,
+                                           $everybody = false,
+                                           $singleUser = false,
+                                           $groupFlag = false,
+                                           $memberFlag = false)
     {
-        $userDetails = $this->getAssignableUsers($project_id);
+        $userDetails = $this->getAssignableUsers($project_id, $memberFlag);
 
         if ($groupFlag) {
             foreach ($userDetails as $user) {
