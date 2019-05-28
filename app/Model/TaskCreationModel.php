@@ -88,8 +88,10 @@ class TaskCreationModel extends Base
             }
         }
 
-        if ($values['column_id'] == $lastColumnId) {
-            $values['date_completed'] = time();
+        if (empty($values['date_completed'])) {
+            if ($values['column_id'] == $lastColumnId) {
+                $values['date_completed'] = time();
+             }
         }
 
         if (empty($values['color_id'])) {

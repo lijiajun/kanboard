@@ -23,7 +23,7 @@ class TaskModificationController extends BaseController
     {
         $task = $this->getTask();
         $values = array('id' => $task['id'], 'date_started' => time());
-        if (! $this->helper->projectRole->canUpdateTask($task)) {
+        if (!$this->helper->projectRole->canUpdateTask($task)) {
             throw new AccessForbiddenException(t('You are not allowed to update tasks assigned to someone else.'));
         }
         $this->taskModificationModel->update($values);
@@ -42,12 +42,35 @@ class TaskModificationController extends BaseController
     public function edit(array $values = array(), array $errors = array())
     {
         $task = $this->getTask();
+        $score_list = array();
 
-        if (! $this->helper->projectRole->canUpdateTask($task)) {
+        if (!$this->helper->projectRole->canUpdateTask($task)) {
             throw new AccessForbiddenException(t('You are not allowed to update tasks assigned to someone else.'));
         }
 
         $project = $this->projectModel->getById($task['project_id']);
+        $task_tags = $this->taskTagModel->getList($task['id']);
+        $not_eva_tags = $this->projectModel->getNotEvaTags($task['project_id']);
+        foreach ($not_eva_tags as $key => $tag_id) {
+            foreach ($task_tags as $task_tag_id => $task_tag_name) {
+                if ($tag_id == $task_tag_id) {
+                    $score_list = array("0" => "Zero(0点)",
+                        "5" => "XXS(½点)",
+                        "10" => "XS(1点)",
+                        "20" => "S(2点)",
+                        "30" => "M(3点)",
+                        "50" => "L(5点)",
+                        "80" => "XL(8点)",
+                        "130" => "XXL(13点)",
+                        "200" => "XXXL(20点)");
+                    break;
+                }
+            }
+            if (count($score_list) > 0) {
+                break;
+            }
+        }
+
 
         if (empty($values)) {
             $values = $task;
@@ -55,15 +78,8 @@ class TaskModificationController extends BaseController
 
         $values = $this->hook->merge('controller:task:form:default', $values, array('default_values' => $values));
         $values = $this->hook->merge('controller:task-modification:form:default', $values, array('default_values' => $values));
-        $score_list = array("0" => "Zero(0点)",
-                            "5" => "XXS(½点)",
-                            "10" => "XS(1点)",
-                            "20" => "S(2点)",
-                            "30" => "M(3点)",
-                            "50" => "L(5点)",
-                            "80" => "XL(8点)",
-                            "130" => "XXL(13点)",
-                            "200" => "XXXL(20点)");
+
+
 
         $params = array(
             'project' => $project,
@@ -128,13 +144,13 @@ class TaskModificationController extends BaseController
             throw new AccessForbiddenException(t('You are not allowed to change the assignee.'));
         }
 
-        if (! $this->helper->projectRole->canUpdateTask($task)) {
+        if (!$this->helper->projectRole->canUpdateTask($task)) {
             throw new AccessForbiddenException(t('You are not allowed to update tasks assigned to someone else.'));
         }
 
         $result = $this->taskModificationModel->update($values);
 
-        if ($result && ! empty($task['external_uri'])) {
+        if ($result && !empty($task['external_uri'])) {
             try {
                 $taskProvider = $this->externalTaskManager->getProvider($task['external_provider']);
                 $result = $taskProvider->save($task['external_uri'], $values, $errors);
