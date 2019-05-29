@@ -94,6 +94,22 @@ class AnalyticController extends BaseController
         )));
     }
 
+    public function taskDistribution_readonly()
+    {
+        $token = $this->request->getStringParam('token');
+        $project = $this->projectModel->getByToken($token);
+        if (empty($project)) {
+            throw AccessForbiddenException::getInstance()->withoutLayout();
+        }
+
+        $this->response->html($this->helper->layout->analytic('analytic/task_distribution', array(
+            'project' => $project,
+            'metrics' => $this->taskDistributionAnalytic->build($project['id']),
+            'title' => t('Task distribution'),
+            'no_layout' => true,
+        )));
+    }
+
     /**
      * Show users repartition
      *
@@ -107,6 +123,22 @@ class AnalyticController extends BaseController
             'project' => $project,
             'metrics' => $this->userDistributionAnalytic->build($project['id']),
             'title' => t('User tasks repartition'),
+        )));
+    }
+
+    public function userTaskDistribution_readonly()
+    {
+        $token = $this->request->getStringParam('token');
+        $project = $this->projectModel->getByToken($token);
+        if (empty($project)) {
+            throw AccessForbiddenException::getInstance()->withoutLayout();
+        }
+
+        $this->response->html($this->helper->layout->analytic('analytic/user_tasks_distribution', array(
+            'project' => $project,
+            'metrics' => $this->userDistributionAnalytic->build($project['id']),
+            'title' => t('User tasks repartition'),
+            'no_layout' => true,
         )));
     }
 
