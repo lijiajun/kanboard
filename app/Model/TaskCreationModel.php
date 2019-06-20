@@ -45,19 +45,9 @@ class TaskCreationModel extends Base
                 $task_id,
                 array(TaskModel::EVENT_CREATE_UPDATE, TaskModel::EVENT_CREATE)
             ));
-/*
-            if ($values['score'] != 0)
-            {
-                $this->db->table(TaskScoreModel::TABLE)->insert(array(
-                    'task_id' => $task_id,
-                    'user_id' => $values['owner_id'],
-                    'score' => $values['score'],
-                    'evaluate_time' => $values['date_creation'],
-                    'is_done' => 0,
-                ));
-            }
-*/
         }
+
+        $this->hook->reference('model:task:creation:aftersave', $task_id);
 
         return (int) $task_id;
     }

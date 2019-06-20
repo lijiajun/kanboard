@@ -103,6 +103,14 @@ class Paginator
     private $action = '';
 
     /**
+     * URL anchor
+     *
+     * @access private
+     * @var string
+     */
+    private $anchor = '';
+
+    /**
      * Url params
      *
      * @access private
@@ -161,10 +169,16 @@ class Paginator
     public function executeQuery()
     {
         if ($this->query !== null) {
+
             $this->query
                 ->offset($this->offset)
-                ->limit($this->limit)
-                ->orderBy($this->order, $this->direction);
+                ->limit($this->limit);
+
+            if (preg_match('/^[a-zA-Z0-9._]+$/', $this->order)) {
+                $this->query->orderBy($this->order, $this->direction);
+            } else {
+                $this->order = '';
+            }
 
             if ($this->formatter !== null) {
                 return $this->formatter->withQuery($this->query)->format();
@@ -183,13 +197,15 @@ class Paginator
      * @param  string      $controller
      * @param  string      $action
      * @param  array       $params
+     * @param  string      $anchor
      * @return $this
      */
-    public function setUrl($controller, $action, array $params = array())
+    public function setUrl($controller, $action, array $params = array(), $anchor = '')
     {
         $this->controller = $controller;
         $this->action = $action;
         $this->params = $params;
+        $this->anchor = $anchor;
         return $this;
     }
 
@@ -342,7 +358,7 @@ class Paginator
     }
 
     /**
-     * Calculate the offset value accoring to url params and the page number
+     * Calculate the offset value according to url params and the page number
      *
      * @access public
      * @return $this
@@ -399,7 +415,10 @@ class Paginator
                 $this->action,
                 $this->getUrlParams($this->page - 1, $this->order, $this->direction),
                 false,
-                'js-modal-replace'
+                'js-modal-replace',
+                t('Previous'),
+                false,
+                $this->anchor
             );
         } else {
             $html .= '&larr; '.t('Previous');
@@ -427,7 +446,10 @@ class Paginator
                 $this->action,
                 $this->getUrlParams($this->page + 1, $this->order, $this->direction),
                 false,
-                'js-modal-replace'
+                'js-modal-replace',
+                t('Next'),
+                false,
+                $this->anchor
             );
         } else {
             $html .= t('Next').' &rarr;';

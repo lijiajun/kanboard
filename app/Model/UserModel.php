@@ -29,6 +29,24 @@ class UserModel extends Base
      */
     const EVERYBODY_ID = -1;
 
+    public function isValidSession($userID, $sessionRole)
+    {
+        return $this->db->table(self::TABLE)
+            ->eq('id', $userID)
+            ->eq('is_active', 1)
+            ->eq('role', $sessionRole)
+            ->exists();
+    }
+
+    public function has2FA($username)
+    {
+        return $this->db->table(self::TABLE)
+            ->eq('username', $username)
+            ->eq('is_active', 1)
+            ->eq('twofactor_activated', 1)
+            ->exists();
+    }
+
     /**
      * Return true if the user exists
      *
@@ -286,7 +304,11 @@ class UserModel extends Base
      */
     public function disable($user_id)
     {
-        return $this->db->table(self::TABLE)->eq('id', $user_id)->update(array('is_active' => 0));
+        $this->db->startTransaction();
+        $result1 = $this->db->table(self::TABLE)->eq('id', $user_id)->update(array('is_active' => 0));
+        $result2 = $this->db->table(ProjectModel::TABLE)->eq('is_private', 1)->eq('owner_id', $user_id)->update(array('is_active' => 0));
+        $this->db->closeTransaction();
+        return $result1 && $result2;
     }
 
     /**
@@ -384,5 +406,21 @@ class UserModel extends Base
                     ->table(self::TABLE)
                     ->eq('id', $user_id)
                     ->save(array('token' => ''));
+    }
+
+    public function getOrCreateExternalUserId($username, $name, $externalIdColumn, $externalId)
+    {
+        $userId = $this->db->table(self::TABLE)->eq($externalIdColumn, $externalId)->findOneColumn('id');
+
+        if (empty($userId)) {
+            $userId = $this->create(array(
+                'username' => $username,
+                'name' => $name,
+                'is_ldap_user' => 1,
+                $externalIdColumn => $externalId,
+            ));
+        }
+
+        return $userId;
     }
 }

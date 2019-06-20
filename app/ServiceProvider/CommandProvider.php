@@ -11,6 +11,8 @@ use Kanboard\Console\LocaleSyncCommand;
 use Kanboard\Console\PluginInstallCommand;
 use Kanboard\Console\PluginUninstallCommand;
 use Kanboard\Console\PluginUpgradeCommand;
+use Kanboard\Console\ProjectActivityArchiveCommand;
+use Kanboard\Console\ProjectArchiveCommand;
 use Kanboard\Console\ProjectDailyColumnStatsExportCommand;
 use Kanboard\Console\ProjectDailyStatsCalculationCommand;
 use Kanboard\Console\ResetPasswordCommand;
@@ -21,6 +23,7 @@ use Kanboard\Console\TaskOverdueNotificationCommand;
 use Kanboard\Console\TaskEvaluateNotificationCommand;
 use Kanboard\Console\TaskTriggerCommand;
 use Kanboard\Console\TransitionExportCommand;
+use Kanboard\Console\VersionCommand;
 use Kanboard\Console\WorkerCommand;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -46,6 +49,8 @@ class CommandProvider implements ServiceProviderInterface
         $application->add(new TaskOverdueNotificationCommand($container));
         $application->add(new SubtaskExportCommand($container));
         $application->add(new TaskExportCommand($container));
+        $application->add(new ProjectArchiveCommand($container));
+        $application->add(new ProjectActivityArchiveCommand($container));
         $application->add(new ProjectDailyStatsCalculationCommand($container));
         $application->add(new ProjectDailyColumnStatsExportCommand($container));
         $application->add(new TransitionExportCommand($container));
@@ -63,6 +68,7 @@ class CommandProvider implements ServiceProviderInterface
         $application->add(new DatabaseMigrationCommand($container));
         $application->add(new DatabaseVersionCommand($container));
         $application->add(new TaskEvaluateNotificationCommand($container));
+        $application->add(new VersionCommand($container));
 
         $container['cli'] = $application;
         return $container;

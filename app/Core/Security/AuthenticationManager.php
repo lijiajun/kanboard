@@ -31,6 +31,11 @@ class AuthenticationManager extends Base
      */
     private $providers = array();
 
+    public function reset()
+    {
+        $this->providers = [];
+    }
+
     /**
      * Register a new authentication provider
      *
@@ -72,7 +77,7 @@ class AuthenticationManager extends Base
             foreach ($this->filterProviders('SessionCheckProviderInterface') as $provider) {
                 if (! $provider->isValidSession()) {
                     $this->logger->debug('Invalidate session for '.$this->userSession->getUsername());
-                    $this->sessionStorage->flush();
+                    session_flush();
                     $this->preAuthentication();
                     return false;
                 }

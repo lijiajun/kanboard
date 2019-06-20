@@ -182,6 +182,9 @@ class RouteProvider implements ServiceProviderInterface
             // PasswordReset
             $container['route']->addRoute('forgot-password', 'PasswordResetController', 'create');
             $container['route']->addRoute('forgot-password/change/:token', 'PasswordResetController', 'change');
+
+            // Cronjob
+            $container['route']->addRoute('cronjob', 'CronjobController', 'run');
         }
 
         return $container;

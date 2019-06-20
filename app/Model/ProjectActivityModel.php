@@ -21,13 +21,6 @@ class ProjectActivityModel extends Base
     const TABLE = 'project_activities';
 
     /**
-     * Maximum number of events
-     *
-     * @var integer
-     */
-    const MAX_EVENTS = 1000;
-
-    /**
      * Add a new event for the project
      *
      * @access public
@@ -40,17 +33,14 @@ class ProjectActivityModel extends Base
      */
     public function createEvent($project_id, $task_id, $creator_id, $event_name, array $data)
     {
-        $values = array(
+        return $this->db->table(self::TABLE)->insert(array(
             'project_id' => $project_id,
             'task_id' => $task_id,
             'creator_id' => $creator_id,
             'event_name' => $event_name,
             'date_creation' => time(),
             'data' => json_encode($data),
-        );
-
-        $this->cleanup(self::MAX_EVENTS - 1);
-        return $this->db->table(self::TABLE)->insert($values);
+        ));
     }
 
     /**
@@ -80,15 +70,10 @@ class ProjectActivityModel extends Base
      * Remove old event entries to avoid large table
      *
      * @access public
-     * @param  integer    $max    Maximum number of items to keep in the table
+     * @param  integer $ts Timestamp
      */
-    public function cleanup($max)
+    public function cleanup($ts)
     {
-        $total = $this->db->table(self::TABLE)->count();
-
-        if ($total > $max) {
-            $ids = $this->db->table(self::TABLE)->asc('id')->limit($total - $max)->findAllByColumn('id');
-            $this->db->table(self::TABLE)->in('id', $ids)->remove();
-        }
+        $this->db->table(self::TABLE)->lt('date_creation', $ts)->remove();
     }
 }

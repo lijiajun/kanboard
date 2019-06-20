@@ -25,21 +25,25 @@ class Token extends Base
     }
 
     /**
-     * Generate and store a CSRF token in the current session
+     * Generate and store a one-time CSRF token
      *
      * @access public
      * @return string  Random token
      */
     public function getCSRFToken()
     {
-        if (! isset($this->sessionStorage->csrf)) {
-            $this->sessionStorage->csrf = array();
-        }
+        return $this->createSessionToken('csrf');
+    }
 
-        $nonce = self::getToken();
-        $this->sessionStorage->csrf[$nonce] = true;
-
-        return $nonce;
+    /**
+     * Generate and store a reusable CSRF token
+     *
+     * @access public
+     * @return string
+     */
+    public function getReusableCSRFToken()
+    {
+        return $this->createSessionToken('pcsrf');
     }
 
     /**
@@ -51,11 +55,35 @@ class Token extends Base
      */
     public function validateCSRFToken($token)
     {
-        if (isset($this->sessionStorage->csrf[$token])) {
-            unset($this->sessionStorage->csrf[$token]);
+        $tokens = session_get('csrf');
+        if (isset($tokens[$token])) {
+            unset($tokens[$token]);
+            session_set('csrf', $tokens);
             return true;
         }
 
         return false;
+    }
+
+    public function validateReusableCSRFToken($token)
+    {
+        $tokens = session_get('pcsrf');
+        if (isset($tokens[$token])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function createSessionToken($key)
+    {
+        if (! session_exists($key)) {
+            session_set($key, []);
+        }
+
+        $nonce = self::getToken();
+        session_merge($key, [$nonce => true]);
+
+        return $nonce;
     }
 }

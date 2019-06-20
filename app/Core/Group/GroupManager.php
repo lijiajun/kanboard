@@ -5,7 +5,7 @@ namespace Kanboard\Core\Group;
 /**
  * Group Manager
  *
- * @package  group
+ * @package  Kanboard\Core\Group
  * @author   Frederic Guillot
  */
 class GroupManager
@@ -13,10 +13,10 @@ class GroupManager
     /**
      * List of backend providers
      *
-     * @access private
+     * @access protected
      * @var array
      */
-    private $providers = array();
+    protected $providers = array();
 
     /**
      * Register a new group backend provider
@@ -52,11 +52,11 @@ class GroupManager
     /**
      * Remove duplicated groups
      *
-     * @access private
+     * @access protected
      * @param  array $groups
      * @return GroupProviderInterface[]
      */
-    private function removeDuplicates(array $groups)
+    protected function removeDuplicates(array $groups)
     {
         $result = array();
 

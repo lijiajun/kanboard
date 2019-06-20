@@ -3,13 +3,12 @@
 </div>
 <form method="post" action="<?= $this->url->href('TaskModificationController', 'update', array('task_id' => $task['id'], 'project_id' => $task['project_id'])) ?>" autocomplete="off">
     <?= $this->form->csrf() ?>
-    <?= $this->form->hidden('id', $values) ?>
-    <?= $this->form->hidden('project_id', $values) ?>
 
     <div class="task-form-container">
         <div class="task-form-main-column">
             <?= $this->task->renderTitleField($values, $errors) ?>
             <?= $this->task->renderDescriptionField($values, $errors) ?>
+            <?= $this->task->renderDescriptionTemplateDropdown($project['id']) ?>
             <?= $this->task->renderTagField($project, $tags) ?>
 
             <?= $this->hook->render('template:task:form:first-column', array('values' => $values, 'errors' => $errors)) ?>

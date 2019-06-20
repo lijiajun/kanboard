@@ -1,14 +1,14 @@
 <div class="page-header">
-    <h2><?= $this->text->e($project['name']) ?> &gt; <?= t('New task') ?><?= $this->task->getNewTaskDropdown($project['id'], $values['swimlane_id'], $values['column_id']) ?></h2>
+    <h2><?= $this->text->e($project['name']) ?> &gt; <?= t('New task') ?></h2>
 </div>
 <form method="post" action="<?= $this->url->href('TaskCreationController', 'save', array('project_id' => $project['id'])) ?>" autocomplete="off">
     <?= $this->form->csrf() ?>
-    <?= $this->form->hidden('project_id', $values) ?>
 
     <div class="task-form-container">
         <div class="task-form-main-column">
             <?= $this->task->renderTitleField($values, $errors) ?>
             <?= $this->task->renderDescriptionField($values, $errors) ?>
+            <?= $this->task->renderDescriptionTemplateDropdown($project['id']) ?>
             <?= $this->task->renderTagField($project) ?>
 
             <?= $this->hook->render('template:task:form:first-column', array('values' => $values, 'errors' => $errors)) ?>

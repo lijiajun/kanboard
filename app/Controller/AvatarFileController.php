@@ -30,6 +30,7 @@ class AvatarFileController extends BaseController
      */
     public function upload()
     {
+        $this->checkCSRFParam();
         $user = $this->getUser();
 
         if (! $this->avatarFileModel->uploadImageFile($user['id'], $this->request->getFileInfo('avatar'))) {
@@ -58,6 +59,12 @@ class AvatarFileController extends BaseController
     {
         $user_id = $this->request->getIntegerParam('user_id');
         $size = $this->request->getStringParam('size', 48);
+
+        if ($size > 100) {
+            $this->response->status(400);
+            return;
+        }
+
         $filename = $this->avatarFileModel->getFilename($user_id);
         $etag = md5($filename.$size);
 

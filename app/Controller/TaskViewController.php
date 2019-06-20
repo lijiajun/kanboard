@@ -45,7 +45,7 @@ class TaskViewController extends BaseController
             'task' => $task,
             'columns_list' => $this->columnModel->getList($task['project_id']),
             'colors_list' => $this->colorModel->getList(),
-            'tags' => $this->taskTagModel->getList($task['id']),
+            'tags' => $this->taskTagModel->getTagsByTask($task['id']),
             'title' => $task['title'],
             'no_layout' => true,
             'auto_refresh' => true,
@@ -74,7 +74,7 @@ class TaskViewController extends BaseController
             'internal_links' => $this->taskLinkModel->getAllGroupedByLabel($task['id']),
             'external_links' => $this->taskExternalLinkModel->getAll($task['id']),
             'link_label_list' => $this->linkModel->getList(0, false),
-            'tags' => $this->taskTagModel->getList($task['id']),
+            'tags' => $this->taskTagModel->getTagsByTask($task['id']),
         )));
     }
 
@@ -93,7 +93,7 @@ class TaskViewController extends BaseController
             'lead_time' => $this->taskAnalyticModel->getLeadTime($task),
             'cycle_time' => $this->taskAnalyticModel->getCycleTime($task),
             'time_spent_columns' => $this->taskAnalyticModel->getTimeSpentByColumn($task),
-            'tags' => $this->taskTagModel->getList($task['id']),
+            'tags' => $this->taskTagModel->getTagsByTask($task['id']),
         )));
     }
 
@@ -118,7 +118,7 @@ class TaskViewController extends BaseController
             'task' => $task,
             'project' => $this->projectModel->getById($task['project_id']),
             'subtask_paginator' => $subtask_paginator,
-            'tags' => $this->taskTagModel->getList($task['id']),
+            'tags' => $this->taskTagModel->getTagsByTask($task['id']),
         )));
     }
 
@@ -135,7 +135,7 @@ class TaskViewController extends BaseController
             'task' => $task,
             'project' => $this->projectModel->getById($task['project_id']),
             'transitions' => $this->transitionModel->getAllByTask($task['id']),
-            'tags' => $this->taskTagModel->getList($task['id']),
+            'tags' => $this->taskTagModel->getTagsByTask($task['id']),
         )));
     }
 }

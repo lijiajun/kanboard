@@ -1,9 +1,339 @@
+Version 1.2.9 (April 5, 2019)
+-----------------------------
+
+* Add Slovak translation
+* Update translations
+* Changes search by reference to case insentive
+* Fix postgres explicit schema name usage
+* Simplify local Docker image build
+* Show a 404 when accessing data folder from URL (Docker Image)
+* Clarify the comment about MAIL_SMTP_ENCRYPTION
+* Remove dependency on Bower
+* Replaces accordion Javascript component by <details> HTML element
+* Fix MySQL migration when using increment values different from 1
+* Add missing webhook event: task.move.project
+* Add new actions to reorder tasks by column
+
+Version 1.2.8 (February 2, 2019)
+--------------------------------
+
+Breaking Changes:
+
+* Authorize only API tokens when 2FA is enabled (no user password)
+* Disable by default plugin installer for security reasons:
+    - There is no code review or any approval process to submit a plugin.
+    - This is up to the Kanboard instance owner to validate if a plugin is legit.
+
+Fixes and Improvements:
+
+* Limit avatar image size
+* Avoid CSRF in users CSV import
+* Avoid XSS in pagination sorting
+* Do not show projects dropdown when prompting the 2FA code
+* Always returns a 404 instead of 403 to avoid people discovering users
+* Check if user role has changed while the session is open
+* Add missing CSRF check in TwoFactorController::deactivate()
+* Hide edit button when user cannot edit task
+* Fix permission check before "Assign to me"
+* Fix permission check before showing project options
+* Fix assignable users on a group with a custom role
+* Fix import of automatic actions when parameters are "unassigned" or "no category"
+* Update license year
+* Update Docker image to Alpine 3.9
+* Update translations
+* Fix PHP error in task views (tag colors)
+* Limit assignee drop-down selector scope
+
+Version 1.2.7 (December 19, 2018)
+---------------------------------
+
+* Write log entry on file removal
+* Auto link duplicated tasks
+* Auto link tasks duplicated to another project
+* Auto link tasks created from a subtask
+* Redirect to board view of the current task after duplication
+* Fix broken link to contributor page
+* Add automatic action for moving a task to a swimlane based on category change
+* Add automatic action to assign a category based on swimlane change
+* Add ordering comments by id along with creation date
+* Fix custom roles duplication (source and destination column_id)
+* Add locale en_GB
+* New automatic action: move the task to another swimlane when assigned
+* Disable php_uname() warning for restrictive environments
+* Add hook to board settings
+* Add method remove() to settings model
+* Add php7-bcmath to Docker image
+* Add sorting by reference in list view
+* Added priority, swimlane, and column values from parent task to task converted from subtask
+* Update translations
+
+Version 1.2.6 (October 10, 2018)
+--------------------------------
+
+* Escape table name 'groups' because groups is a reserved word as of MySql 8.0.2
+* Reduce number of SQL queries when doing groups sync
+* Make swimlane filter compatible with numeric title
+* Duplicate reference fields when duplicating a task
+* Do not try to redirect to login page when offline
+* Define fixed width for auto-complete dropdown
+* Fix task drag and drop slowdown when a column is hidden
+* Make PLUGINS_DIR absolute in config.default.php
+* Add custom roles project duplication
+* Allow 'No assignee' for external task on single user public boards
+* Add tag and category colors
+* Exclude task links and user mentions from nesting (Markdown parser)
+* When forcing HTTPS, handle subfolder URLs properly
+* Add search within a range of dates for completion, modification, creation, and moved fields
+* Update Docker image to Alpine Linux 3.8
+* Make sure the presense of mod_env is checked in .htaccess
+* Make HTTP client timeout configurable
+* Use SET NAMES instead of charset for MySQL connection
+* Vendoring deprecated Composer libs
+* Update translations and fix typos
+
+Version 1.2.5 (June 15, 2018)
+-----------------------------
+
+* Update jQuery to latest version
+* Defer javascript files loading by default
+* Add quick link "assign me" in different views
+* Add bulk task operations in list view
+* Add checkboxes in list view to move tasks to another column at once
+* Make sure automatic actions are applied to all tasks when using bulk operations
+* Add ability to run cron jobs by calling URL
+* Add basic print stylesheet
+* Add dashboard and search task footer hooks
+* Reword project settings label
+* Improve Docker image config overrides
+* Fix cronjob in Docker image
+* Increase Nginx fastcgi buffers for Docker image
+* Increase size of the "users.language" column
+* Update translations and improve English texts
+
+Version 1.2.4 (May 16, 2018)
+----------------------------
+
+* Rewrite tooltip code without jQuery
+* Update Parsedown library
+* Remove all attachments when removing a project
+* Improve whitespace handling in "cli locale:compare" command
+* Don't markdown project owner's name in header tooltip
+* Add SSL to Docker image
+* Avoid people to remove themselves from project permissions
+* Fix escaping issue in Markdown editor
+* Add data/config.php to .gitignore
+* Clarified text label for notification settings
+* Add Ukrainian translation
+* Do not show inactive users in group members dropdown
+* Improve dashboard pagination
+* Make list view more compact
+* Hide private projects checkbox if the feature is disabled
+* Make cli locale commands working outside of source tree
+* Make subtask title text field wider when editing subtasks
+* Add link to open images in a new tab
+* Make hardcoded hours string translatable
+* Translation updates
+
+Version 1.2.3 (April 18, 2018)
+------------------------------
+
+New features:
+
+* Add Project MetaData API calls
+* Add default filter per user
+
+Improvements:
+
+* Use utf8mb4 encoding for MySQL instead of utf8 (Emoji support)
+* Increase text fields length in several tables
+* Move documentation to https://docs.kanboard.org/
+* Make sure no empty group is submitted on project permissions page
+* Translate subtasks status and internal links labels in notifications
+* Add link to tasks and projects in overdue notifications
+* Add missing translations
+* Move custom libs to the source tree
+
+Bug fixes:
+
+* Fix margin for task recurrence tooltip
+
+Version 1.2.2 (March 30, 2018)
+------------------------------
+
+Improvements:
+
+* Add thumbnail quality parameter (default to 95)
+* Always display SQL errors
+* Move SimpleLogger lib into app source tree
+* Add system log driver and use it by default
+* Display exceptions from plugins while refreshing board
+* Redirect to original URL after OAuth login
+* Add author name and email arguments to mail client
+* Improve HTTP client to raise exceptions
+* Update translations
+
+Bug fixes:
+
+* Fix broken daily summary export
+* Fix role precedence in LDAP integration
+
+Version 1.2.1 (February 28, 2018)
+---------------------------------
+
+New features:
+
+* Add automatic action to change column once a start date is reached
+* Add automatic action to change color once start date is reached
+* Add CSS class to categories to allow custom styling
+* Add option to disable Mysql SSL server verification
+* Add timeout parameter for database connection
+* Add error log for authentication failure to allow fail2ban integration
+
+Improvements:
+
+* Set the correct swimlane/column ID when moving a task via its internal dialog
+* Allow filtering for tasks without due date
+* Add plugin hook 'aftersave' after creating Task
+* Run SessionHandler::write() into a transaction
+* Remove dependency on PicoFeed
+* Add CSRF check for task and project files upload
+* Add missing CSRF check on avatar upload form
+* Add missing CSRF check in saveUploadDB() method
+* Update Vagrantfile to use Ubuntu Xenial
+* Send event author in webhook notification
+* Update translations
+* Update documentation
+
+Version 1.2.0 (December 27, 2017)
+---------------------------------
+
+Breaking changes:
+
+* Kanboard supports only PHP >= 5.6 (PHP 5.3, 5.4 and 5.5 are not supported anymore)
+
+New features:
+
+* PHP sessions are now stored into the database,
+  In this way, it's easier to run Kanboard behind a load-balancer
+
+Improvements:
+
+* Copy category from parent task when creating a task from a subtask
+* Translation updates and improvements
+
+Version 1.1.1 (December 9, 2017)
+--------------------------------
+
+Breaking changes:
+
+* The Docker tag "stable" is not used anymore, instead use a specific version tag
+* Task limit apply across all swimlanes
+* Kanboard is now using the domain kanboard.org
+
+New features:
+
+* New automatic action to create a subtask assigned to the creator and start the timer
+* New automatic action to stop the timer of subtasks
+* Add command line tool to remove project activities after one year
+* Add command line tool to disable projects not touched during one year
+* Add config option to exclude fields from auth providers sync
+* Add new plugin hooks
+
+Improvements:
+
+* Open audio files in a new tab
+* Upgrade Docker image to Alpine Linux 3.7
+* Improve Docker build to use Docker Hub hooks
+* The application version is now included into the Docker image
+* Disable private projects when disabling a user
+* Allow administrators to update username of remote users
+* Improve layout on mobile/tablet devices
+* Changed board column headings to show swimlane-column total in bold
+* Enable dragging to collapsed columns
+* Add missing checks for requirements
+
+Bug fixes:
+
+* Add class "js-modal-replace" to icons to make it clickable
+* Improve permission checks on custom filters page to avoid forbidden access
+
+Version 1.1.0 (November 20, 2017)
+---------------------------------
+
+Breaking changes:
+
+* Remove feature "Allow everybody to access to this project" (You must define project members and groups)
+* Composer dependencies are now included in the repository to be able to use git-archive (except development dependencies)
+
+New features:
+
+* Add predefined templates for task descriptions
+* Add the possibility to send tasks and comments to multiple recipients
+* Add users, groups and projects search
+* Add command line argument to display Kanboard version
+* Add user backend provider system (to be used by external plugins)
+* Add Romanian and Chinese (Taiwan) translation
+
+Improvements:
+
+* Minor CSS improvements
+* Add help message on project sharing page
+* Task CSV import is now able to handle the priority, start date, tags and one external link
+* Improve iCalendar feed to include tasks with start/end date and due date with a time
+* Check if the start date is before due date
+* You can get an archive of Kanboard by using the download button in Github or the command git archive
+* Translation updates
+
+Bug fixes:
+
+* Fix project dropdown visibility when page is scrolled down
+* Task move events must be executed synchronously
+* Handle CSV files with only "\r" line endings
+
+Version 1.0.48 (October 23, 2017)
+---------------------------------
+
+Improvements:
+
+* Add bulk subtasks creation
+* Add filter by score/complexity
+* Improved display of the header bar
+* Displays bullets from lists in tooltips
+* Updated translations
+* Add tags and priority to task export
+* Make the number of events stored in project activities configurable
+* Do not use jQuery tooltip for task title in collapsed mode
+* Remove dependency on Yarn
+* Improve external task integration
+* Add support for array parameters in automatic actions
+* Add tooltip to subtask icons
+* Add attribute title to external links
+* Render a link if the reference is a URL
+* Add icon to edit a task quickly on the board
+* Improve .htaccess when using HTTP Basic Authentication for Apache/FastCGI
+* Add note to specify incompatibility with mod_security
+
+Version 1.0.47 (October 3, 2017)
+--------------------------------
+
+New features:
+
+* Vietnamese translation
+
+Improvements:
+
+* Updated translations
+
+Security Issues:
+
+* Avoid people to alter other project resources by changing form data
+
 Version 1.0.46 (August 13, 2017)
 --------------------------------
 
 Security Issues:
 
-* Fix two privilege escalation issues: a standard user could reset the password 
+* Fix two privilege escalation issues: a standard user could reset the password
 of another user (including admin) by altering form data.
 (CVE-2017-12850 and CVE-2017-12851, discovered by "chbi").
 

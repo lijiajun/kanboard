@@ -14,20 +14,59 @@ use Kanboard\Core\ExternalTask\ExternalTaskException;
  */
 class TaskModificationController extends BaseController
 {
+    public function assignToMe()
+    {
+        $task = $this->getTask();
+        $values = ['id' => $task['id'], 'owner_id' => $this->userSession->getId()];
+
+        if (! $this->helper->projectRole->canUpdateTask($task)) {
+            throw new AccessForbiddenException(t('You are not allowed to update tasks assigned to someone else.'));
+        }
+        
+        if (! $this->helper->projectRole->canChangeAssignee($task)) {
+            throw new AccessForbiddenException(t('You are not allowed to change the assignee.'));
+        }
+
+        $this->taskModificationModel->update($values);
+        $this->redirectAfterQuickAction($task);
+    }
+
     /**
-     * Set automatically the start date
+     * Set the start date automatically
      *
      * @access public
      */
     public function start()
     {
         $task = $this->getTask();
-        $values = array('id' => $task['id'], 'date_started' => time());
-        if (!$this->helper->projectRole->canUpdateTask($task)) {
+        $values = ['id' => $task['id'], 'date_started' => time()];
+
+        if (! $this->helper->projectRole->canUpdateTask($task)) {
             throw new AccessForbiddenException(t('You are not allowed to update tasks assigned to someone else.'));
         }
+
         $this->taskModificationModel->update($values);
-        $this->response->redirect($this->helper->url->to('TaskViewController', 'show', array('project_id' => $task['project_id'], 'task_id' => $task['id'])));
+        $this->redirectAfterQuickAction($task);
+    }
+
+    protected function redirectAfterQuickAction(array $task)
+    {
+        switch ($this->request->getStringParam('redirect')) {
+            case 'board':
+                $this->response->redirect($this->helper->url->to('BoardViewController', 'show', ['project_id' => $task['project_id']]));
+                break;
+            case 'list':
+                $this->response->redirect($this->helper->url->to('TaskListController', 'show', ['project_id' => $task['project_id']]));
+                break;
+            case 'dashboard':
+                $this->response->redirect($this->helper->url->to('DashboardController', 'show', [], 'project-tasks-'.$task['project_id']));
+                break;
+            case 'dashboard-tasks':
+                $this->response->redirect($this->helper->url->to('DashboardController', 'tasks', ['user_id' => $this->userSession->getId()]));
+                break;
+            default:
+                $this->response->redirect($this->helper->url->to('TaskViewController', 'show', ['project_id' => $task['project_id'], 'task_id' => $task['id']]));
+        }
     }
 
     /**
@@ -79,8 +118,6 @@ class TaskModificationController extends BaseController
         $values = $this->hook->merge('controller:task:form:default', $values, array('default_values' => $values));
         $values = $this->hook->merge('controller:task-modification:form:default', $values, array('default_values' => $values));
 
-
-
         $params = array(
             'project' => $project,
             'values' => $values,
@@ -126,6 +163,8 @@ class TaskModificationController extends BaseController
     {
         $task = $this->getTask();
         $values = $this->request->getValues();
+        $values['id'] = $task['id'];
+        $values['project_id'] = $task['project_id'];
 
         list($valid, $errors) = $this->taskValidator->validateModification($values);
 

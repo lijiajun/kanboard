@@ -8,7 +8,42 @@ use Kanboard\Core\Security\Token;
 use Kanboard\Core\Security\Role;
 use PDO;
 
-const VERSION = 115;
+const VERSION = 120;
+
+function version_120(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE tags ADD COLUMN color_id TEXT DEFAULT NULL');
+}
+
+function version_119(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE project_has_categories ADD COLUMN color_id TEXT DEFAULT NULL');
+}
+
+function version_118(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE users ADD COLUMN filter TEXT');
+}
+
+function version_117(PDO $pdo)
+{
+    $pdo->exec("CREATE TABLE sessions (
+        id TEXT PRIMARY KEY,
+        expire_at INTEGER NOT NULL,
+        data TEXT DEFAULT ''
+    )");
+}
+
+function version_116(PDO $pdo)
+{
+    $pdo->exec('CREATE TABLE predefined_task_descriptions (
+        id INTEGER PRIMARY KEY,
+        project_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
+    )');
+}
 
 function version_115(PDO $pdo)
 {

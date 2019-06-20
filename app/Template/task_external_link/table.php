@@ -1,12 +1,15 @@
 <?php if (! empty($links)): ?>
 <table class="table-striped table-scrolling">
-    <tr>
-        <th class="column-15"><?= t('Type') ?></th>
-        <th><?= t('Title') ?></th>
-        <th class="column-10"><?= t('Dependency') ?></th>
-        <th class="column-15"><?= t('Creator') ?></th>
-        <th class="column-15"><?= t('Date') ?></th>
-    </tr>
+    <thead>
+        <tr>
+            <th class="column-15"><?= t('Type') ?></th>
+            <th><?= t('Title') ?></th>
+            <th class="column-10"><?= t('Dependency') ?></th>
+            <th class="column-15"><?= t('Creator') ?></th>
+            <th class="column-15"><?= t('Date') ?></th>
+        </tr>
+    </thead>
+    <tbody>
     <?php foreach ($links as $link): ?>
         <tr>
             <td>
@@ -26,7 +29,7 @@
                 <?= $this->text->e($link['type']) ?>
             </td>
             <td>
-                <a href="<?= $link['url'] ?>" target="_blank"><?= $this->text->e($link['title']) ?></a>
+                <a href="<?= $link['url'] ?>" title="<?= $this->text->e($link['url']) ?>" target="_blank"><?= $this->text->e($link['title']) ?></a>
             </td>
             <td>
                 <?= $this->text->e($link['dependency_label']) ?>
@@ -39,5 +42,6 @@
             </td>
         </tr>
     <?php endforeach ?>
+    </tbody>
 </table>
 <?php endif ?>

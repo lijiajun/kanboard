@@ -59,6 +59,7 @@ class CustomFilterController extends BaseController
         $project = $this->getProject();
 
         $values = $this->request->getValues();
+        $values['project_id'] = $project['id'];
         $values['user_id'] = $this->userSession->getId();
 
         list($valid, $errors) = $this->customFilterValidator->validateCreation($values);
@@ -84,7 +85,7 @@ class CustomFilterController extends BaseController
     public function confirm()
     {
         $project = $this->getProject();
-        $filter = $this->customFilterModel->getById($this->request->getIntegerParam('filter_id'));
+        $filter = $this->getCustomFilter($project);
 
         $this->response->html($this->helper->layout->project('custom_filter/remove', array(
             'project' => $project,
@@ -102,7 +103,7 @@ class CustomFilterController extends BaseController
     {
         $this->checkCSRFParam();
         $project = $this->getProject();
-        $filter = $this->customFilterModel->getById($this->request->getIntegerParam('filter_id'));
+        $filter = $this->getCustomFilter($project);
 
         $this->checkPermission($project, $filter);
 
@@ -153,6 +154,8 @@ class CustomFilterController extends BaseController
         $this->checkPermission($project, $filter);
 
         $values = $this->request->getValues();
+        $values['id'] = $filter['id'];
+        $values['project_id'] = $project['id'];
 
         if (! isset($values['is_shared'])) {
             $values += array('is_shared' => 0);
@@ -179,10 +182,12 @@ class CustomFilterController extends BaseController
 
     private function checkPermission(array $project, array $filter)
     {
-        $user_id = $this->userSession->getId();
+        $userID = $this->userSession->getId();
 
-        if ($filter['user_id'] != $user_id && ($this->projectUserRoleModel->getUserRole($project['id'], $user_id) === Role::PROJECT_MANAGER || ! $this->userSession->isAdmin())) {
-            throw new AccessForbiddenException();
+        if ($filter['user_id'] != $userID) {
+            if ($this->projectUserRoleModel->getUserRole($project['id'], $userID) !== Role::PROJECT_MANAGER && ! $this->userSession->isAdmin()) {
+                throw new AccessForbiddenException();
+            }
         }
     }
 }

@@ -26,8 +26,7 @@ class CommentValidator extends BaseValidator
             new Validators\Required('task_id', t('This value is required')),
             new Validators\Required('user_id', t('This value is required')),
             new Validators\Required('subject', t('This field is required')),
-            new Validators\Required('email', t('This field is required')),
-            new Validators\Email('email', t('Email address invalid')),
+            new Validators\Required('emails', t('This field is required')),
         );
 
         $v = new Validator($values, array_merge($rules, $this->commonValidationRules()));
@@ -92,7 +91,7 @@ class CommentValidator extends BaseValidator
             new Validators\Integer('id', t('This value must be an integer')),
             new Validators\Integer('task_id', t('This value must be an integer')),
             new Validators\Integer('user_id', t('This value must be an integer')),
-            new Validators\MaxLength('reference', t('The maximum length is %d characters', 50), 50),
+            new Validators\MaxLength('reference', t('The maximum length is %d characters', 191), 191),
             new Validators\Required('comment', t('Comment is required'))
         );
     }

@@ -15,10 +15,10 @@ class ColorModel extends Base
     /**
      * Default colors
      *
-     * @access private
+     * @access protected
      * @var array
      */
-    private $default_colors = array(
+    protected $default_colors = array(
         'yellow' => array(
             'name' => 'Yellow',
             'background' => 'rgb(245, 247, 196)',
@@ -218,7 +218,7 @@ class ColorModel extends Base
         $buffer = '';
 
         foreach ($this->default_colors as $color => $values) {
-            $buffer .= '.task-board.color-'.$color.', .task-summary-container.color-'.$color.', .color-picker-square.color-'.$color.' {';
+            $buffer .= '.task-board.color-'.$color.', .task-summary-container.color-'.$color.', .color-picker-square.color-'.$color.', .task-board-category.color-'.$color.', .table-list-category.color-'.$color.', .task-tag.color-'.$color.' {';
             $buffer .= 'background-color: '.$values['background'].';';
             $buffer .= 'border-color: '.$values['border'];
             $buffer .= '}';

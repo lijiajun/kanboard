@@ -16,15 +16,13 @@
         <!-- column in expanded mode -->
         <div class="board-column-expanded">
             <?php if (! $not_editable && $this->projectRole->canCreateTaskInColumn($column['project_id'], $column['id'])): ?>
-                <div class="board-add-icon">
-                    <?= $this->modal->largeIcon('plus', t('Add a new task'), 'TaskCreationController', 'show', array('project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id'])) ?>
-                </div>
+                <?= $this->task->getNewBoardTaskButton($swimlane, $column) ?>
             <?php endif ?>
 
-            <?php if ($swimlane['nb_swimlanes'] > 1 && ! empty($column['column_nb_tasks'])): ?>
-                <span title="<?= t('Total number of tasks in this column across all swimlanes') ?>" class="board-column-header-task-count">
-                    (<span><?= $column['column_nb_tasks'] ?></span>)
-                </span>
+            <?php if ($column['nb_tasks'] > 0): ?>
+            <span title="<?= t('Task count') ?>">
+                (<span id="task-number-column-<?= $column['id'] ?>"><?= $column['nb_tasks'] ?></span>)
+            </span>
             <?php endif ?>
 
             <span class="board-column-title">
@@ -50,6 +48,27 @@
                                 </li>
                             <?php endif ?>
 
+                            <?php if ($column['nb_tasks'] > 0 && $this->user->hasProjectAccess('TaskModificationController', 'update', $column['project_id'])): ?>
+                                <li>
+                                    <?= $this->url->icon('sort-numeric-asc', t('Reorder this column by priority (ASC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'priority', 'direction' => 'asc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->url->icon('sort-numeric-desc', t('Reorder this column by priority (DESC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'priority', 'direction' => 'desc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->url->icon('sort-amount-asc', t('Reorder this column by assignee and priority (ASC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'assignee-priority', 'direction' => 'asc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->url->icon('sort-amount-desc', t('Reorder this column by assignee and priority (DESC)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'assignee-priority', 'direction' => 'desc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->url->icon('sort-alpha-asc', t('Reorder this column by assignee (A-Z)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'assignee', 'direction' => 'asc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                </li>
+                                <li>
+                                    <?= $this->url->icon('sort-alpha-desc', t('Reorder this column by assignee (Z-A)'), 'TaskReorderController', 'reorderColumn', ['sort' => 'assignee', 'direction' => 'desc', 'project_id' => $column['project_id'], 'column_id' => $column['id'], 'swimlane_id' => $swimlane['id']]) ?>
+                                </li>
+                            <?php endif ?>
+
                             <?= $this->hook->render('template:board:column:dropdown', array('swimlane' => $swimlane, 'column' => $column)) ?>
                         </ul>
                     </span>
@@ -70,23 +89,20 @@
                 <?php endif ?>
 
                 <?php if (! $not_editable && ! empty($column['description'])): ?>
-                    <span class="tooltip" title="<?= $this->text->markdownAttribute($column['description']) ?>">
-                        &nbsp;<i class="fa fa-info-circle"></i>
-                    </span>
+                    <?= $this->app->tooltipMarkdown($column['description']) ?>
                 <?php endif ?>
-
             </span>
 
-            <?php if ($column['task_limit']): ?>
-                <span title="<?= t('Task limit') ?>">
-                    (<span id="task-number-column-<?= $column['id'] ?>"><?= $column['nb_tasks'] ?></span>/<?= $this->text->e($column['task_limit']) ?>)
-                </span>
-            <?php else: ?>
-                <span title="<?= t('Task count') ?>" class="board-column-header-task-count">
-                    (<span id="task-number-column-<?= $column['id'] ?>"><?= $column['nb_tasks'] ?></span>)
-                </span>
+            <?php if (! empty($column['column_nb_tasks'])): ?>
+            <span title="<?= t('Total number of tasks in this column across all swimlanes') ?>" class="board-column-header-task-count">
+                <?php if ($column['task_limit'] > 0): ?>
+                    (<span><?= $column['column_nb_tasks'] ?></span> / <span title="<?= t('Task limit') ?>"><?= $this->text->e($column['task_limit']) ?></span>)
+                <?php else: ?>
+                    (<span><?= $column['column_nb_tasks'] ?></span>)
+                <?php endif ?>
+            </span>
             <?php endif ?>
-	    <?= $this->hook->render('template:board:column:header', array('swimlane' => $swimlane, 'column' => $column)) ?> 
+            <?= $this->hook->render('template:board:column:header', array('swimlane' => $swimlane, 'column' => $column)) ?>
         </div>
 
     </th>

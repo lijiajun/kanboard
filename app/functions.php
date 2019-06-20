@@ -2,6 +2,54 @@
 
 use Kanboard\Core\Translator;
 
+function session_get($key)
+{
+    return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+}
+
+function session_set($key, $value)
+{
+    $_SESSION[$key] = $value;
+}
+
+function session_remove($key)
+{
+    unset($_SESSION[$key]);
+}
+
+function session_exists($key)
+{
+    return isset($_SESSION[$key]);
+}
+
+function session_is_true($key)
+{
+    return isset($_SESSION[$key]) && $_SESSION[$key] === true;
+}
+
+function session_merge($key, array $value)
+{
+    $_SESSION[$key] = array_merge($_SESSION[$key], $value);
+}
+
+function session_flush()
+{
+    $_SESSION = [];
+}
+
+/**
+ * Split CSV string
+ *
+ * @param  string $str
+ * @return string[]
+ */
+function explode_csv_field($str)
+{
+    $fields = explode(',', $str);
+    array_walk($fields, function (&$value) { $value = trim($value); });
+    return array_filter($fields);
+}
+
 /**
  * Associate another dict to a dict based on a common key
  *
@@ -118,8 +166,6 @@ function array_column_sum(array &$input, $column)
  */
 function build_app_version($ref, $commit_hash)
 {
-    $version = 'master';
-
     if ($ref !== '$Format:%d$') {
         $tag = preg_replace('/\s*\(.*tag:\sv([^,]+).*\)/i', '\1', $ref);
 
@@ -129,10 +175,12 @@ function build_app_version($ref, $commit_hash)
     }
 
     if ($commit_hash !== '$Format:%H$') {
-        $version .= '.'.$commit_hash;
+        return 'master.'.$commit_hash;
+    } else if (file_exists('/version.txt')) {
+        return file_get_contents('/version.txt');
     }
 
-    return $version;
+    return 'master.unknown_revision';
 }
 
 /**

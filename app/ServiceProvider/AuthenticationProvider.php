@@ -2,13 +2,13 @@
 
 namespace Kanboard\ServiceProvider;
 
-use Kanboard\Auth\ApiAccessTokenAuth;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Kanboard\Core\Security\AuthenticationManager;
 use Kanboard\Core\Security\AccessMap;
 use Kanboard\Core\Security\Authorization;
 use Kanboard\Core\Security\Role;
+use Kanboard\Auth\ApiAccessTokenAuth;
 use Kanboard\Auth\RememberMeAuth;
 use Kanboard\Auth\DatabaseAuth;
 use Kanboard\Auth\LdapAuth;
@@ -94,6 +94,8 @@ class AuthenticationProvider implements ServiceProviderInterface
         $acl->add('ProjectPermissionController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectEditController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectFileController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('ProjectPredefinedContentController', '*', Role::PROJECT_MANAGER);
+        $acl->add('PredefinedTaskDescriptionController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectUserOverviewController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectStatusController', '*', Role::PROJECT_MANAGER);
         $acl->add('ProjectTagController', '*', Role::PROJECT_MANAGER);
@@ -107,6 +109,8 @@ class AuthenticationProvider implements ServiceProviderInterface
         $acl->add('TaskBulkController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('TaskDuplicationController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('TaskRecurrenceController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskBulkMoveColumnController', '*', Role::PROJECT_EXT_MEMBER);
+        $acl->add('TaskBulkChangePropertyController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('TaskImportController', '*', Role::PROJECT_MANAGER);
         $acl->add('TaskInternalLinkController', '*', Role::PROJECT_EXT_MEMBER);
         $acl->add('TaskExternalLinkController', '*', Role::PROJECT_EXT_MEMBER);
@@ -145,6 +149,7 @@ class AuthenticationProvider implements ServiceProviderInterface
         $acl->add('AnalyticController', 'burndown_score_readonly', Role::APP_PUBLIC);
         $acl->add('AnalyticController', 'taskDistribution_readonly', Role::APP_PUBLIC);
         $acl->add('AnalyticController', 'userTaskDistribution_readonly', Role::APP_PUBLIC);
+        $acl->add('CronjobController', array('run'), Role::APP_PUBLIC);
 
         $acl->add('ConfigController', '*', Role::APP_ADMIN);
         $acl->add('TagController', '*', Role::APP_ADMIN);

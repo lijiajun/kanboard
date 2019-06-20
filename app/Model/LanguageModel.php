@@ -25,10 +25,11 @@ class LanguageModel extends Base
         return array(
             'id_ID',
             'bs_BA',
-			'ca_ES',
+            'ca_ES',
             'cs_CZ',
             'da_DK',
             'de_DE',
+            'en_GB',
             'en_US',
             'es_ES',
             'fr_FR',
@@ -42,15 +43,20 @@ class LanguageModel extends Base
             'pl_PL',
             'pt_PT',
             'pt_BR',
+            'ro_RO',
             'ru_RU',
             'sr_Latn_RS',
             'fi_FI',
+            'sk_SK',
             'sv_SE',
             'tr_TR',
+            'uk_UA',
             'ko_KR',
             'zh_CN',
+            'zh_TW',
             'ja_JP',
             'th_TH',
+            'vi_VN',
         );
     }
 
@@ -81,11 +87,12 @@ class LanguageModel extends Base
         $languages = array(
             'id_ID' => 'Bahasa Indonesia',
             'bs_BA' => 'Bosanski',
-			'ca_ES' => 'Català',
+            'ca_ES' => 'Català',
             'cs_CZ' => 'Čeština',
             'da_DK' => 'Dansk',
             'de_DE' => 'Deutsch',
-            'en_US' => 'English',
+            'en_GB' => 'English (GB)',
+            'en_US' => 'English (US)',
             'es_ES' => 'Español',
             'fr_FR' => 'Français',
             'el_GR' => 'Grec',
@@ -98,15 +105,20 @@ class LanguageModel extends Base
             'pl_PL' => 'Polski',
             'pt_PT' => 'Português',
             'pt_BR' => 'Português (Brasil)',
+            'ro_RO' => 'Română',
             'ru_RU' => 'Русский',
             'sr_Latn_RS' => 'Srpski',
             'fi_FI' => 'Suomi',
+            'sk_SK' => 'Slovenčina',
             'sv_SE' => 'Svenska',
             'tr_TR' => 'Türkçe',
+            'uk_UA' => 'Українська',
             'ko_KR' => '한국어',
             'zh_CN' => '中文(简体)',
+            'zh_TW' => '中文(繁體)',
             'ja_JP' => '日本語',
             'th_TH' => 'ไทย',
+            'vi_VN' => 'Tiếng Việt',
         );
 
         if ($prepend) {
@@ -126,9 +138,10 @@ class LanguageModel extends Base
     {
         $languages = array(
             'cs_CZ' => 'cs',
-			'ca_ES' => 'ca',
+            'ca_ES' => 'ca',
             'da_DK' => 'da',
             'de_DE' => 'de',
+            'en_GB' => 'en-GB',
             'en_US' => 'en',
             'es_ES' => 'es',
             'fr_FR' => 'fr',
@@ -140,13 +153,17 @@ class LanguageModel extends Base
             'pl_PL' => 'pl',
             'pt_PT' => 'pt',
             'pt_BR' => 'pt-BR',
+            'ro_RO' => 'ro',
             'ru_RU' => 'ru',
             'sr_Latn_RS' => 'sr',
             'fi_FI' => 'fi',
+            'sk_SK' => 'sk',
             'sv_SE' => 'sv',
             'tr_TR' => 'tr',
+            'uk_UA' => 'uk',
             'ko_KR' => 'ko',
             'zh_CN' => 'zh-CN',
+            'zh_TW' => 'zh-TW',
             'ja_JP' => 'ja',
             'th_TH' => 'th',
             'id_ID' => 'id',
@@ -166,11 +183,7 @@ class LanguageModel extends Base
      */
     public function getCurrentLanguage()
     {
-        if ($this->userSession->isLogged() && ! empty($this->sessionStorage->user['language'])) {
-            return $this->sessionStorage->user['language'];
-        }
-
-        return $this->configModel->get('application_language', 'en_US');
+        return $this->userSession->getLanguage() ?: $this->configModel->get('application_language', 'en_US');
     }
 
     /**

@@ -21,6 +21,7 @@ class NotificationSubscriber extends BaseSubscriber implements EventSubscriberIn
             TaskModel::EVENT_CLOSE             => 'handleEvent',
             TaskModel::EVENT_OPEN              => 'handleEvent',
             TaskModel::EVENT_MOVE_COLUMN       => 'handleEvent',
+            TaskModel::EVENT_MOVE_PROJECT      => 'handleEvent',
             TaskModel::EVENT_MOVE_POSITION     => 'handleEvent',
             TaskModel::EVENT_MOVE_SWIMLANE     => 'handleEvent',
             TaskModel::EVENT_ASSIGNEE_CHANGE   => 'handleEvent',
@@ -32,6 +33,7 @@ class NotificationSubscriber extends BaseSubscriber implements EventSubscriberIn
             CommentModel::EVENT_DELETE         => 'handleEvent',
             CommentModel::EVENT_USER_MENTION   => 'handleEvent',
             TaskFileModel::EVENT_CREATE        => 'handleEvent',
+            TaskFileModel::EVENT_DESTROY       => 'handleEvent',
             TaskLinkModel::EVENT_CREATE_UPDATE => 'handleEvent',
             TaskLinkModel::EVENT_DELETE        => 'handleEvent',
         );

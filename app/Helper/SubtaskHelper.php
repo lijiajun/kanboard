@@ -3,6 +3,7 @@
 namespace Kanboard\Helper;
 
 use Kanboard\Core\Base;
+use Kanboard\Model\SubtaskModel;
 
 /**
  * Subtask helpers
@@ -19,7 +20,7 @@ class SubtaskHelper extends Base
      */
     public function hasSubtaskInProgress()
     {
-        return isset($this->sessionStorage->hasSubtaskInProgress) && $this->sessionStorage->hasSubtaskInProgress;
+        return session_is_true('hasSubtaskInProgress');
     }
 
     /**
@@ -66,9 +67,9 @@ class SubtaskHelper extends Base
             );
 
             if ($subtask['status'] == 0 && $this->hasSubtaskInProgress()) {
-                $html = $this->helper->url->link($title, 'SubtaskRestrictionController', 'show', $params, false, 'js-modal-confirm');
+                $html = $this->helper->url->link($title, 'SubtaskRestrictionController', 'show', $params, false, 'js-modal-confirm', $this->getSubtaskTooltip($subtask));
             } else {
-                $html = $this->helper->url->link($title, 'SubtaskStatusController', 'change', $params, false, 'js-subtask-toggle-status');
+                $html = $this->helper->url->link($title, 'SubtaskStatusController', 'change', $params, false, 'js-subtask-toggle-status', $this->getSubtaskTooltip($subtask));
             }
         }
 
@@ -91,12 +92,23 @@ class SubtaskHelper extends Base
         return $html;
     }
 
-    public function renderTitleField(array $values, array $errors = array(), array $attributes = array())
+    public function renderBulkTitleField(array $values, array $errors = array(), array $attributes = array())
     {
-        $attributes = array_merge(array('tabindex="1"', 'required', 'maxlength="255"'), $attributes);
+        $attributes = array_merge(array('tabindex="1"', 'required'), $attributes);
 
         $html = $this->helper->form->label(t('Title'), 'title');
-        $html .= $this->helper->form->text('title', $values, $errors, $attributes);
+        $html .= $this->helper->form->textarea('title', $values, $errors, $attributes);
+        $html .= '<p class="form-help">'.t('Enter one subtask by line.').'</p>';
+
+        return $html;
+    }
+
+    public function renderTitleField(array $values, array $errors = array(), array $attributes = array())
+    {
+        $attributes = array_merge(array('tabindex="1"', 'required'), $attributes);
+
+        $html = $this->helper->form->label(t('Title'), 'title');
+        $html .= $this->helper->form->text('title', $values, $errors, $attributes, 'form-max-width');
 
         return $html;
     }
@@ -135,5 +147,19 @@ class SubtaskHelper extends Base
         $html .= ' '.t('hours');
 
         return $html;
+    }
+
+    public function getSubtaskTooltip(array $subtask)
+    {
+        switch ($subtask['status']) {
+            case SubtaskModel::STATUS_TODO:
+                return t('Subtask not started');
+            case SubtaskModel::STATUS_INPROGRESS:
+                return t('Subtask currently in progress');
+            case SubtaskModel::STATUS_DONE:
+                return t('Subtask completed');
+        }
+
+        return '';
     }
 }

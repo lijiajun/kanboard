@@ -7,7 +7,7 @@ use Pimple\Container;
 /**
  * Base Class
  *
- * @package core
+ * @package Kanboard\Core
  * @author  Frederic Guillot
  *
  * @property \Kanboard\Analytic\TaskDistributionAnalytic             $taskDistributionAnalytic
@@ -22,6 +22,7 @@ use Pimple\Container;
  * @property \Kanboard\Core\Cache\BaseCache                          $cacheDriver
  * @property \Kanboard\Core\Event\EventManager                       $eventManager
  * @property \Kanboard\Core\Group\GroupManager                       $groupManager
+ * @property \Kanboard\Core\User\UserManager                         $userManager
  * @property \Kanboard\Core\Http\Client                              $httpClient
  * @property \Kanboard\Core\Http\OAuth2                              $oauth
  * @property \Kanboard\Core\Http\RememberMeCookie                    $rememberMeCookie
@@ -47,7 +48,6 @@ use Pimple\Container;
  * @property \Kanboard\Core\Security\Token                           $token
  * @property \Kanboard\Core\Session\FlashMessage                     $flash
  * @property \Kanboard\Core\Session\SessionManager                   $sessionManager
- * @property \Kanboard\Core\Session\SessionStorage                   $sessionStorage
  * @property \Kanboard\Core\User\Avatar\AvatarManager                $avatarManager
  * @property \Kanboard\Core\User\GroupSync                           $groupSync
  * @property \Kanboard\Core\User\UserProfile                         $userProfile
@@ -105,6 +105,7 @@ use Pimple\Container;
  * @property \Kanboard\Model\LinkModel                               $linkModel
  * @property \Kanboard\Model\NotificationModel                       $notificationModel
  * @property \Kanboard\Model\PasswordResetModel                      $passwordResetModel
+ * @property \Kanboard\Model\PredefinedTaskDescriptionModel          $predefinedTaskDescriptionModel
  * @property \Kanboard\Model\ProjectModel                            $projectModel
  * @property \Kanboard\Model\ProjectActivityModel                    $projectActivityModel
  * @property \Kanboard\Model\ProjectDuplicationModel                 $projectDuplicationModel
@@ -141,6 +142,7 @@ use Pimple\Container;
  * @property \Kanboard\Model\TaskLinkModel                           $taskLinkModel
  * @property \Kanboard\Model\TaskModificationModel                   $taskModificationModel
  * @property \Kanboard\Model\TaskPositionModel                       $taskPositionModel
+ * @property \Kanboard\Model\TaskReorderModel                        $taskReorderModel
  * @property \Kanboard\Model\TaskStatusModel                         $taskStatusModel
  * @property \Kanboard\Model\TaskTagModel                            $taskTagModel
  * @property \Kanboard\Model\TaskScoreModel                          $taskScoreModel
@@ -180,7 +182,7 @@ use Pimple\Container;
  * @property \Kanboard\Validator\TaskLinkValidator                   $taskLinkValidator
  * @property \Kanboard\Validator\TaskValidator                       $taskValidator
  * @property \Kanboard\Validator\UserValidator                       $userValidator
- * @property \Kanboard\Import\TaskImport                             $taskImport
+ * @property \Kanboard\Validator\PredefinedTaskDescriptionValidator  $predefinedTaskDescriptionValidator
  * @property \Kanboard\Import\UserImport                             $userImport
  * @property \Kanboard\Export\SubtaskExport                          $subtaskExport
  * @property \Kanboard\Export\TaskExport                             $taskExport

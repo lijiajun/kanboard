@@ -55,6 +55,7 @@ class UserModificationController extends BaseController
                 'email' => isset($values['email']) ? $values['email'] : '',
                 'timezone' => isset($values['timezone']) ? $values['timezone'] : '',
                 'language' => isset($values['language']) ? $values['language'] : '',
+                'filter' => isset($values['filter']) ? $values['filter'] : '',
             );
         }
 
